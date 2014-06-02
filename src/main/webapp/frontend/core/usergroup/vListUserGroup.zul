@@ -1,0 +1,55 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<panel height="100%"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
+    <panelchildren>
+        <auxhead>
+            <auxheader colspan="4" label="User Group List" />
+        </auxhead>
+        <toolbar>
+            <toolbarbutton label="New" onClick="@command('doNew')" />
+            <toolbarbutton label="Delete" disabled="true" />
+            <toolbarbutton label="Search" mode="toggle" />
+            <toolbarbutton label="Print Preview" />
+            <toolbarbutton label="Refresh" />
+        </toolbar>
+        <grid id="gridList"
+            mold="paging" pageSize="20" pagingPosition="bottom"
+            vflex="true"
+            model="@bind(vm.allUserGrps)">
+            <frozen columns="3" />
+            <columns sizable="true" >
+                <column width="50px" align="right"  />
+                <column width="80px" align="center" />
+                <column width="150px" label="Group Name" align="left" />
+                <column width="200px" label="Desc" align="left" />
+                <column width="80px" label="Deleted" align="center" />
+                <column width="140px" label="Deleted On" align="center" />
+                <column width="100px" label="Input By" align="center" />
+                <column width="140px" label="Input On" align="center" />
+                <column width="100px" label="Update By" align="center" />
+                <column width="140px" label="Update On" align="center" />
+            </columns>
+            <template name="model">
+                <row>
+                  <label value="1." />
+                  <checkbox checked="false"/>
+                  <label value="@bind(each.cuserGrpName)" />
+                  <label value="@bind(each.cuserGrpDesc)" />
+                  <label value="@bind(empty each.cuserGrpDeleteon ? 'No' : 'Yes')" />
+                  <label value="@bind(each.cuserGrpDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                  <label value="@bind(each.cuserGrpInputby)" />
+                  <label value="@bind(each.cuserGrpInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                  <label value="@bind(each.cuserGrpUpdateby)" />
+                  <label value="@bind(each.cuserGrpUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                </row>
+            </template>
+        </grid>
+    </panelchildren>
+</panel>
+
+</zk>

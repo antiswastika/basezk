@@ -1,0 +1,57 @@
+
+BODY {
+    padding: 0 0;
+}
+
+.z-window-content {
+    padding: 0 0;
+    border: 0;
+    background: none;
+}
+.z-west-splitter {
+    background: #D9E5EF;
+}
+.z-tab-selected .z-tab-text {
+    color: #0000FF;
+}
+.z-tab-text {
+    color: #555;
+}
+.z-center {
+    border: 0;
+    background: #D9E5EF;
+}
+.z-menubar {
+    border: 1px solid #cfcfcf;
+    background: none;
+    border: none;
+    border-top: 1px solid #cfcfcf;
+}
+
+.baseFrame {
+    padding: 0;
+    background: #D9E5EF;
+}
+.baseInclude {
+    padding: 10px;
+}
+.baseVeryLargeText {
+    font-size: 16px;
+    font-weight: bold;
+}
+.baseLargeText {
+
+}
+.baseMediumText {
+    font-size: 11px;
+    color: red;
+}
+.baseSmallText {
+
+}
+.baseVerySmallText {
+    font-size: 11px;
+}
+.baseTabPanelCenter {
+     background: #FFF;
+}

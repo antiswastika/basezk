@@ -1,0 +1,323 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<panel id="container" height="100%">
+    <panelchildren>
+        <auxhead>
+            <auxheader colspan="4" label="User List" />
+        </auxhead>
+        <toolbar>
+            <toolbarbutton label="Insert" />
+            <toolbarbutton label="Delete" />
+            <toolbarbutton label="Search" />
+            <toolbarbutton label="Print" />
+        </toolbar>
+        <grid
+            mold="paging" pageSize="20" pagingPosition="bottom"
+            vflex="true">
+            <columns>
+                <column width="80px" label="Order #" align="left" />
+                <column label="Item Purchased" align="center" />
+                <column label="Purchased Time" align="center" />
+                <column width="80px" label="Paid" align="center" />
+            </columns>
+            <rows>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <checkbox checked="false"/>
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+            </rows>
+        </grid>
+        <auxhead>
+            <auxheader colspan="4" label="User Detail" />
+        </auxhead>
+        <grid
+            mold="paging" pageSize="20" pagingPosition="bottom"
+            vflex="false" height="200px" >
+            <columns>
+                <column width="80px" label="Order #" align="left" />
+                <column label="Item Purchased" align="center" />
+                <column label="Purchased Time" align="center" />
+                <column width="80px" label="Paid" align="center" />
+            </columns>
+            <rows>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+                <row>
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                    <label value="1" />
+                </row>
+            </rows>
+        </grid>
+    </panelchildren>
+</panel>
+
+</zk>

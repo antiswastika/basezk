@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+    <session-factory>
+        <!--Untuk konfigurasi koneksi tidak ditaruh disini, karena sudah ada di koneksi "*-servlet.xml"
+        Jadi disini hanya untuk konfigurasi hibernate yang sifatnya opsional saja...!!!
+        # Aturan Mainnya:
+        # We can simply integrate hibernate application with spring application.
+        # In hibernate framework, we provide all the database information hibernate.cfg.xml file.
+        # But if we are going to integrate the hibernate application with spring,
+        # we don't need to create the hibernate.cfg.xml file.
+        # We can provide all the information in the applicationContext.xml file.-->
+
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hbm2ddl.auto">update</property> -->
+    </session-factory>
+
+</hibernate-configuration>

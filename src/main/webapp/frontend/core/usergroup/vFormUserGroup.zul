@@ -1,0 +1,50 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<window id="dialogWindow" title="Insert User Group"
+    height="180px" width="400px" mode="modal" border="normal" closable="false" position="center,center"
+    onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.FormUserGroupVM')">
+
+<panel height="100%" sclass="baseLayoutPanel"
+    form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
+    <panelchildren>
+        <vlayout style="padding: 10px;">
+
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Group Name" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 160px" value="@bind(frm.cuserGrpName)" maxlength="@bind(vm.txtMaxLength['cuserGrpName'])"/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Note" />
+                </vbox>
+                <vbox align="start">
+                    <textbox rows="3" style="width: 240px" value="@bind(frm.cuserGrpDesc)" maxlength="@bind(vm.txtMaxLength['cuserGrpDesc'])"/>
+                </vbox>
+            </hbox>
+
+        </vlayout>
+
+        <div style="float: left; padding-left: 10px">
+            <button id="btnReset" label="Reset" onClick="@command('doReload')" />
+        </div>
+        <div style="float: right; padding-right: 10px">
+            <button id="btnSave" label="Save" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" label="Delete" onClick="@command('doEdit')" />
+            <button id="btnClose" label="Close" onClick="@command('doClose')" />
+        </div>
+
+    </panelchildren>
+</panel>
+
+</window>
+
+</zk>

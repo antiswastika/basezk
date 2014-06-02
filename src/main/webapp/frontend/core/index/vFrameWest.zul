@@ -1,0 +1,23 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<tabbox id="tabAccordion" mold="accordion" panelSpacing="10" tabscroll="true" maximalHeight="true" height="100%">
+  <tabs>
+    <tab label="Shortcut Menu" />
+    <tab label="To Do List" selected="true" />
+    <tab label="Inbox" />
+    <tab label="Events / Reminder" />
+    <tab label="Log Activities" />
+  </tabs>
+  <tabpanels>
+    <tabpanel>...</tabpanel>
+    <tabpanel>...</tabpanel>
+    <tabpanel>...</tabpanel>
+    <tabpanel>...</tabpanel>
+    <tabpanel>...</tabpanel>
+  </tabpanels>
+</tabbox>
+
+</zk>

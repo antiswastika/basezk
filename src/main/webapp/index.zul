@@ -1,0 +1,27 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<?page id="mainPage" title="BaseZK" contentType="text/html;charset=UTF-8"?>
+
+<window id="mainWindow" border="normal" style="padding: 5px"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.index.IndexVM')">
+    <attribute name="onClientInfo">
+        <![CDATA[
+            ClientInfoEvent evt = (ClientInfoEvent) event;
+            int heightNya = evt.getDesktopHeight();
+            mainWindow.setHeight(heightNya + "px");
+
+            int widthNya = evt.getDesktopWidth();
+            Desktop desktopNya = Executions.getCurrent().getDesktop();
+            Window windowNya = (Window) desktopNya.getPage("mainPage").getFellow("mainWindow");
+            Include includeMenubarNya = (Include) windowNya.getFellow("mainFrame").getFellow("menubarFrameInclude");
+            includeMenubarNya.setWidth( (widthNya-(10*0.9)) + "px" );
+        ]]>
+    </attribute>
+    <include id="mainFrame" src="/frontend/core/index/vFrameMain.zul" />
+</window>
+
+</zk>

@@ -1,0 +1,91 @@
+
+BODY {
+    padding: 0 0;
+}
+
+.z-window-content {
+    padding: 0 0;
+    border: 0;
+    background: #FFFFFF;
+}
+.z-west-splitter {
+    background: #D9E5EF;
+}
+.z-tab-selected .z-tab-text {
+    color: #0000FF;
+}
+.z-tab-text {
+    color: #555;
+}
+.z-center {
+    border: 0;
+    background: #D9E5EF;
+}
+.z-menubar {
+    border: 1px solid #cfcfcf;
+    background: none;
+    border: none;
+    border-top: 1px solid #cfcfcf;
+}
+.z-paging {
+    border: 0px;
+}
+.z-row-content {
+  line-height: 15px;
+}
+
+.baseFrame {
+    padding: 0;
+    background: #D9E5EF;
+}
+.baseInclude {
+    padding: 10px;
+}
+.baseIncludeForTab {
+    padding: 0px;
+}
+.baseVeryLargeText {
+    font-size: 16px;
+    font-weight: bold;
+}
+.baseLargeText {
+
+}
+.baseMediumText {
+    font-size: 11px;
+    color: red;
+}
+.baseSmallText {
+
+}
+.baseVerySmallText {
+    font-size: 11px;
+}
+.baseTabPanelCenter {
+    background: #FFF;
+    padding: 0px;
+}
+.baseLayoutPanel {
+    border: 1px solid #CCC;
+}
+
+.baseFormVLayout {
+    padding: 10px;
+}
+.baseFormVBoxSingleCol {
+    border-right: 0px solid grey; margin-top: 4px;
+}
+.baseFormVBoxMultiCol1 {
+    border-right: 0px solid grey; width: 120px; margin-top: 4px;
+}
+.baseFormVBoxMultiCol2 {
+    border-right: 0px solid grey; width: 130px; margin-top: 4px;
+}
+.baseFormFieldLabel::after
+{
+    content:" : ";
+}
+.baseFormTabbox {
+    margin-top: 5px;
+}
+

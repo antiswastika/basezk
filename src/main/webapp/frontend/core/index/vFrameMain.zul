@@ -1,0 +1,33 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<borderlayout style="padding: 10px">
+
+    <center id="centerFrame">
+        <include src="/frontend/core/index/vFrameCenter.zul" id="centerFrameInclude"/>
+    </center>
+
+    <west id="westFrame" width="100px" splittable="true" collapsible="true" autoscroll="false" minsize="150" size="250px" maxsize="500">
+        <include src="/frontend/core/index/vFrameWest.zul" />
+    </west>
+
+    <south id="southFrame" height="30px" border="none" class="baseFrame">
+        <include src="/frontend/core/index/vFrameSouth.zul" class="baseInclude"/>
+    </south>
+
+    <north id="northFrame" vflex="min" border="none" class="baseFrame">
+        <div>
+        <hbox>
+            <include src="/frontend/core/index/vFrameNorth.zul" class="baseInclude" style="padding-bottom: 10px"/>
+        </hbox>
+        <hbox style="border: 1px">
+            <include id="menubarFrameInclude" src="/frontend/core/index/vMenubar.zul" style="padding-bottom: 2px" />
+        </hbox>
+        </div>
+    </north>
+
+</borderlayout>
+
+</zk>

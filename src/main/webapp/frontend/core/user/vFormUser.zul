@@ -1,0 +1,125 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<window id="dialogWindow" title="Insert User"
+    height="500px" width="680px" mode="modal" border="normal" closable="false" position="center,center"
+    onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.user.FormUserVM')">
+
+<panel height="100%" sclass="baseLayoutPanel"
+    form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
+    <panelchildren>
+        <vlayout style="padding: 10px;">
+
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="User Name" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 160px" value="@bind(frm.cuserUsername)" maxlength="@bind(vm.txtMaxLength['cuserUsername'])"/>
+                </vbox>
+                <space />
+                <vbox sclass="baseFormVBoxMultiCol2" align="end">
+                    <label sclass="baseFormFieldLabel" value="Password" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 160px" type="password" value="@bind(frm.cuserPassword)"/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="E-mail" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 160px" value="@bind(frm.cuserEmail)"/>
+                </vbox>
+                <space />
+                <vbox sclass="baseFormVBoxMultiCol2" align="end">
+                    <label sclass="baseFormFieldLabel" value="Confirm Password" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 160px" type="password" value="@bind(frm.cuserPassword)"/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="User Group" />
+                </vbox>
+                <vbox align="start">
+                    <combobox readonly="true" autodrop="true">
+                        <comboitem label="Simple and Rich"/>
+                        <comboitem label="Cool!"/>
+                        <comboitem label="Ajax and RIA"/>
+                    </combobox>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox>
+                <hbox>
+                    <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                        <label sclass="baseFormFieldLabel" value="Hint Question" />
+                    </vbox>
+                    <vbox align="start">
+                        <textbox style="width: 160px" value="@bind(frm.cuserHintQ)"/>
+                    </vbox>
+                </hbox>
+                <hbox>
+                    <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                        <label sclass="baseFormFieldLabel" value="Hint Answer" />
+                    </vbox>
+                    <vbox align="start">
+                        <textbox style="width: 160px" value="@bind(frm.cuserHintA)"/>
+                    </vbox>
+                </hbox>
+                <hbox>
+                    <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                        <label sclass="baseFormFieldLabel" value="Active" />
+                    </vbox>
+                    <vbox align="start" style="margin-top: 4px">
+                        <checkbox value="1" checked="@bind(frm.cuserActive ? frm.cuserActive : 'true')" disabled="true"/>
+                    </vbox>
+                </hbox>
+                </vbox>
+                <space />
+                <vbox sclass="baseFormVBoxMultiCol2" width="60px" align="end">
+                    <label sclass="baseFormFieldLabel" value="Note" />
+                </vbox>
+                <vbox align="start">
+                    <textbox rows="3" style="width: 240px" />
+                </vbox>
+            </hbox>
+            <tabbox sclass="baseFormTabbox" height="225px">
+            <tabs>
+                <tab>Personal</tab>
+                <tab>Family</tab>
+                <tab>Education</tab>
+                <tab>Others</tab>
+            </tabs>
+            <tabpanels>
+                <tabpanel>...</tabpanel>
+                <tabpanel>...</tabpanel>
+                <tabpanel>...</tabpanel>
+                <tabpanel>...</tabpanel>
+            </tabpanels>
+            </tabbox>
+
+        </vlayout>
+
+        <div style="float: left; padding-left: 10px">
+            <button id="btnReset" label="Reset" onClick="@command('doReload')" />
+        </div>
+        <div style="float: right; padding-right: 10px">
+            <button id="btnSave" label="Save" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" label="Delete" onClick="@command('doEdit')" />
+            <button id="btnClose" label="Close" onClick="@command('doClose')" />
+        </div>
+
+    </panelchildren>
+</panel>
+
+</window>
+
+</zk>
