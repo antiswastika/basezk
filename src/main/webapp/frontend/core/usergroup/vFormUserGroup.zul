@@ -6,7 +6,7 @@
 <window id="dialogWindow" title="Insert User Group"
     height="180px" width="400px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
-    apply="org.zkoss.bind.BindComposer"
+    apply="org.zkoss.bind.BindComposer" validationMessages="@id('vmsgs')"
     viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.FormUserGroupVM')">
 
 <panel height="100%" sclass="baseLayoutPanel"
