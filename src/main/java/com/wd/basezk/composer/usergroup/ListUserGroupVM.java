@@ -131,7 +131,7 @@ public class ListUserGroupVM {
     // Untuk Wiring Component yang ada di ZUL apabila diperlukan,
     // Persiapan Wiring Component via wComSel - (DEFAULT)
     private void wiringComponent() {
-
+        gridList.getPagingChild().setAutohide(false);
     }
 
 /*************************************************************************************
