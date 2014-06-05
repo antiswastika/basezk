@@ -38,7 +38,7 @@
         </div>
         <div style="float: right; padding-right: 10px">
             <button id="btnSave" label="Save" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" label="Delete" onClick="@command('doEdit')" />
+            <button id="btnDelete" label="Delete" onClick="@command('doDelete')" />
             <button id="btnClose" label="Close" onClick="@command('doClose')" />
         </div>
 

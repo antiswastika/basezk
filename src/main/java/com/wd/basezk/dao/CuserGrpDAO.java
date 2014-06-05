@@ -11,5 +11,4 @@ public interface CuserGrpDAO {
     public void deleteData(String idNya);
     public CuserGrp getById(String idNya);
     public List<CuserGrp> getByRequest(Map<String, String> requestMap, boolean useLikeKeyword, String[] whereArgs);
-    public int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit);
 }

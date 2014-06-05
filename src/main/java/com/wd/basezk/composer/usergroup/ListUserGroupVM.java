@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -90,7 +91,7 @@ public class ListUserGroupVM {
 
     @Command
     public void doRefresh() {
-
+        reLoadData();
     }
 
 /*************************************************************************************
@@ -102,8 +103,11 @@ public class ListUserGroupVM {
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
     public void executeDetail(CuserGrp cusergrpNya) throws InterruptedException {
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("objListCtrl", this);
+
         try {
-            Executions.createComponents("/frontend/core/usergroup/vFormUserGroup.zul", null, null);
+            Executions.createComponents("/frontend/core/usergroup/vFormUserGroup.zul", null, map);
         } catch (Exception e) {
             //LOGGING
         }
@@ -113,6 +117,12 @@ public class ListUserGroupVM {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
         allUserGrps = getCuserGrpService().getByRequest(requestMap, false, null);
+
+        BindUtils.postNotifyChange(null, null, this, "allUserGrps");
+    }
+
+    public void reLoadData() {
+        loadData();
     }
 
 /*************************************************************************************

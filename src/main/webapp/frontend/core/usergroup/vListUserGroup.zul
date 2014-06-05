@@ -15,7 +15,7 @@
             <toolbarbutton label="Delete" disabled="true" />
             <toolbarbutton label="Search" mode="toggle" />
             <toolbarbutton label="Print Preview" />
-            <toolbarbutton label="Refresh" />
+            <toolbarbutton label="Refresh" onClick="@command('doRefresh')" />
         </toolbar>
         <grid id="gridList"
             mold="paging" pageSize="20" pagingPosition="bottom"
@@ -36,7 +36,7 @@
             </columns>
             <template name="model">
                 <row>
-                  <label value="1." />
+                  <label value="@bind(forEachStatus.index+1)" />
                   <checkbox checked="false"/>
                   <label value="@bind(each.cuserGrpName)" />
                   <label value="@bind(each.cuserGrpDesc)" />

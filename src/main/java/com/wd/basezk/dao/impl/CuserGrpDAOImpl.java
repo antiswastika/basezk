@@ -1,5 +1,9 @@
 package com.wd.basezk.dao.impl;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +22,54 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
     private SessionFactory sessionFactory;
 
     public void insertData(CuserGrp objNya) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        if (objNya.getCuserGrpId() == null || objNya.getCuserGrpId().equals(null)) {
+            //Set default new ID
+            objNya.setCuserGrpId( createPrimaryKey() );
+        }
+
+        //Set defaut Deleteable
+        objNya.setCuserGrpDeleteable(true);
+        //Set defaut InputBy
+        objNya.setCuserGrpInputby("System");
+        //Set defaut InputOn
+        objNya.setCuserGrpInputon(nowTs);
+        //Finaly Save
         sessionFactory.getCurrentSession().save(objNya);
     }
 
     public void updateData(CuserGrp objNya) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        //Set defaut UpdateBy
+        objNya.setCuserGrpUpdateby("System");
+        //Set defaut UpdateOn
+        objNya.setCuserGrpUpdateon(nowTs);
+        //Finaly Save
         sessionFactory.getCurrentSession().update(objNya);
     }
 
     public void deleteData(String idNya) {
-        sessionFactory.getCurrentSession().delete(getById(idNya));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        CuserGrp objNya = getById(idNya);
+
+        //Set defaut DeleteBy
+        objNya.setCuserGrpDeleteby("System");
+        //Set defaut DeleteOn
+        objNya.setCuserGrpDeleteon(nowTs);
+        //Finaly Save
+        sessionFactory.getCurrentSession().delete(objNya);
     }
 
     public CuserGrp getById(String idNya) {
@@ -83,8 +126,7 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
         return result;
     }
 
-    @Override
-    public int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit) {
+    private int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit) {
         String finalQuery = "";
         int result = 1; // init
         String queryFrom = "SELECT MAX( CAST(SUBSTRING(cuser_grp_id, LENGTH(cuser_grp_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM CuserGrp ";
@@ -113,8 +155,37 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
                  query.setParameter( i, params[i] );
         }
 
-        result = (Integer) (query.list()).get(0);
+        if ((query.list()).get(0) != null) {
+            result = (Integer) (query.list()).get(0);
+        }
+
         return result;
+    }
+
+    private String createPrimaryKey() {
+        Date d1 = new Date();
+        SimpleDateFormat yf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat mf = new SimpleDateFormat("MM");
+        SimpleDateFormat df = new SimpleDateFormat("dd");
+
+        final String section1 = "GRP" + yf.format(d1) + mf.format(d1) + df.format(d1);
+        final String strDigits = "0000";
+        int queryRet = 0;
+        String retVal = "0000";
+        String tempRetVal = "";
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("section1", section1);
+        queryRet = getMaxPKByRequest(requestMap, strDigits.length());
+
+        if (queryRet > 0) {
+            tempRetVal = strDigits + Integer.toString(queryRet + 1);
+        } else {
+            tempRetVal = strDigits + "1";
+        }
+        retVal = section1 + (tempRetVal.substring(tempRetVal.length()-strDigits.length()));
+
+        return retVal;
     }
 
 }

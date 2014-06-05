@@ -7,11 +7,14 @@ import java.util.Map;
 import javax.persistence.Column;
 
 import org.springframework.stereotype.Controller;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.Selectors;
@@ -44,6 +47,7 @@ public class FormUserGroupVM {
 
     // Untuk WireComponentSelector
     private Component wComSel;
+    private ListUserGroupVM wObjList;
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
@@ -59,9 +63,10 @@ public class FormUserGroupVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserGroupVM arg) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
+        setwObjList(arg);
         wiringComponent();
         prepareAll();
     }
@@ -84,13 +89,20 @@ public class FormUserGroupVM {
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
     @Command
+    @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        getCuserGrpService().insertData(selected);
+        if (selected.getCuserGrpId() == null) {
+            getCuserGrpService().insertData(selected);
+            getwObjList().reLoadData();
+        } else {
+            doEdit();
+        }
     }
 
-    @Command
-    public void doEdit() {
-
+    private void doEdit() {
+        getCuserGrpService().updateData(selected);
+        getwObjList().reLoadData();
+        BindUtils.postNotifyChange(null, null, this, "selected");
     }
 
     @Command
@@ -99,9 +111,8 @@ public class FormUserGroupVM {
     }
 
     @Command
-    public void doReload() {
-
-    }
+    @NotifyChange("selected")
+    public void doReload() { }
 
     @Command
     public void doClose(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
@@ -142,6 +153,13 @@ public class FormUserGroupVM {
     }
     public void setwComSel(Component wComSel) {
         this.wComSel = wComSel;
+    }
+
+    public ListUserGroupVM getwObjList() {
+        return wObjList;
+    }
+    public void setwObjList(ListUserGroupVM wObjList) {
+        this.wObjList = wObjList;
     }
 
     public CuserGrp getSelected() {
