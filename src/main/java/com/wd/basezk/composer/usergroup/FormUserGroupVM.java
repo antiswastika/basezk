@@ -8,6 +8,8 @@ import javax.persistence.Column;
 
 import org.springframework.stereotype.Controller;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.ValidationContext;
+import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -15,13 +17,17 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.CuserGrp;
 import com.wd.basezk.service.CuserGrpService;
@@ -134,6 +140,22 @@ public class FormUserGroupVM {
                 txtMaxLength.put(fields[i].getName(), selected.getClass().getDeclaredField(fields[i].getName()).getAnnotation(Column.class).length());
             }
         }
+    }
+
+
+    public Validator getValidateTextboxNotNull() {
+        return new AbstractValidator() {
+            @Override
+            public void validate(ValidationContext ctx) {
+                InputElement componentNya = (InputElement)ctx.getBindContext().getValidatorArg("component");
+                String text = (String)ctx.getBindContext().getValidatorArg("text");
+                Clients.clearWrongValue(componentNya);
+                if(text.trim().equals("") || text == null) {
+                    componentNya.setFocus(true);
+                    throw new WrongValueException(componentNya, "Required Field!");
+                }
+            }
+        };
     }
 
 /*************************************************************************************

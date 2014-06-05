@@ -19,7 +19,7 @@
                     <label sclass="baseFormFieldLabel" value="Group Name" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.cuserGrpName)" maxlength="@bind(vm.txtMaxLength['cuserGrpName'])"/>
+                    <textbox style="width: 160px" value="@bind(frm.cuserGrpName) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserGrpName'])"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -27,7 +27,7 @@
                     <label sclass="baseFormFieldLabel" value="Note" />
                 </vbox>
                 <vbox align="start">
-                    <textbox rows="3" style="width: 240px" value="@bind(frm.cuserGrpDesc)" maxlength="@bind(vm.txtMaxLength['cuserGrpDesc'])"/>
+                    <textbox rows="3" style="width: 240px" value="@bind(frm.cuserGrpDesc) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserGrpDesc'])"/>
                 </vbox>
             </hbox>
 

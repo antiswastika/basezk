@@ -31,7 +31,16 @@ BODY {
     border: 0px;
 }
 .z-row-content {
-  line-height: 15px;
+    line-height: 15px;
+}
+.z-errorbox-content {
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #FFFFAB;
+}
+.z-errorbox-icon {
+    padding: 2px;
 }
 
 .baseFrame {
