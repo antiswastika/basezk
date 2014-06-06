@@ -16,7 +16,7 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import org.zkoss.zul.Grid;
+import org.zkoss.zul.Listbox;
 
 import com.wd.basezk.model.CuserGrp;
 import com.wd.basezk.service.CuserGrpService;
@@ -34,8 +34,8 @@ import com.wd.basezk.service.CuserGrpService;
 
 public class ListUserGroupVM {
     // Default Variables untuk VM-Component
-    @Wire("#gridList")
-    private Grid gridList;
+    @Wire("#listboxNya")
+    private Listbox listboxNya;
 
     // Default Variables untuk VM-Model
     //--------------------------> [TidakAda]
@@ -131,7 +131,7 @@ public class ListUserGroupVM {
     // Untuk Wiring Component yang ada di ZUL apabila diperlukan,
     // Persiapan Wiring Component via wComSel - (DEFAULT)
     private void wiringComponent() {
-        gridList.getPagingChild().setAutohide(false);
+        listboxNya.getPagingChild().setAutohide(false);
     }
 
 /*************************************************************************************

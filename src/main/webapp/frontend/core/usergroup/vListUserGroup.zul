@@ -3,6 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
+<zscript>
+    private void showOn() {
+        Messagebox.show("AAAAAAAAAAAA");
+    }
+</zscript>
+
 <panel height="100%"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
@@ -17,38 +23,38 @@
             <toolbarbutton label="Print Preview" />
             <toolbarbutton label="Refresh" onClick="@command('doRefresh')" />
         </toolbar>
-        <grid id="gridList"
-            mold="paging" pageSize="20" pagingPosition="bottom"
-            vflex="true"
-            model="@bind(vm.allUserGrps)">
+        <listbox
+            id="listboxNya" mold="paging" pagingPosition="bottom"
+            vflex="true" multiple="true" model="@bind(vm.allUserGrps)"
+            style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="3" />
-            <columns sizable="true" >
-                <column width="50px" align="right"  />
-                <column width="80px" align="center" />
-                <column width="150px" label="Group Name" align="left" />
-                <column width="200px" label="Desc" align="left" />
-                <column width="80px" label="Deleted" align="center" />
-                <column width="140px" label="Deleted On" align="center" />
-                <column width="100px" label="Input By" align="center" />
-                <column width="140px" label="Input On" align="center" />
-                <column width="100px" label="Update By" align="center" />
-                <column width="140px" label="Update On" align="center" />
-            </columns>
+            <listhead sizable="true">
+                <listheader width="50px" align="right"  />
+                <listheader width="80px" align="center" />
+                <listheader width="150px" label="Group Name" align="left" />
+                <listheader width="200px" label="Desc" align="left" />
+                <listheader width="80px" label="Deleted" align="center" />
+                <listheader width="140px" label="Deleted On" align="center" />
+                <listheader width="100px" label="Input By" align="center" />
+                <listheader width="140px" label="Input On" align="center" />
+                <listheader width="100px" label="Update By" align="center" />
+                <listheader width="140px" label="Update On" align="center" />
+            </listhead>
             <template name="model">
-                <row>
-                  <label value="@bind(forEachStatus.index+1)" />
-                  <checkbox checked="false"/>
-                  <label value="@bind(each.cuserGrpName)" />
-                  <label value="@bind(each.cuserGrpDesc)" />
-                  <label value="@bind(empty each.cuserGrpDeleteon ? 'No' : 'Yes')" />
-                  <label value="@bind(each.cuserGrpDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                  <label value="@bind(each.cuserGrpInputby)" />
-                  <label value="@bind(each.cuserGrpInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                  <label value="@bind(each.cuserGrpUpdateby)" />
-                  <label value="@bind(each.cuserGrpUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                </row>
+            <listitem>
+                <listcell label="@bind(forEachStatus.index+1)" />
+                <listcell label="-" />
+                <listcell label="@bind(each.cuserGrpName)" />
+                <listcell label="@bind(each.cuserGrpDesc)" />
+                <listcell label="@bind(empty each.cuserGrpDeleteon ? 'No' : 'Yes')" />
+                <listcell label="@bind(each.cuserGrpDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.cuserGrpInputby)" />
+                <listcell label="@bind(each.cuserGrpInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.cuserGrpUpdateby)" />
+                <listcell label="@bind(each.cuserGrpUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+            </listitem>
             </template>
-        </grid>
+        </listbox>
     </panelchildren>
 </panel>
 

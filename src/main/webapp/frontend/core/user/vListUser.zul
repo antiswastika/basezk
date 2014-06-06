@@ -17,321 +17,44 @@
             <toolbarbutton label="Print Preview" />
             <toolbarbutton label="Refresh" />
         </toolbar>
-        <grid
-            mold="paging" pageSize="20" pagingPosition="bottom"
-            vflex="true">
+        <listbox
+            id="listboxNya" mold="paging" pagingPosition="bottom"
+            vflex="true" multiple="true" model="@bind(vm.allUsers)"
+            style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="3" />
-            <columns>
-                <column width="50px" align="right"  />
-                <column width="80px" align="center" />
-                <column width="100px" label="User Name" align="left" />
-                <column width="150px" label="Email" align="left" />
-                <column width="150px" label="Desc" align="left" />
-                <column width="50px" label="Active" align="center" />
-                <column width="80px" label="Deleted" align="center" />
-                <column width="80px" label="Deleted On" align="center" />
-                <column width="100px" label="Input By" align="center" />
-                <column width="100px" label="Input On" align="center" />
-                <column width="100px" label="Update By" align="center" />
-                <column label="Update On" align="center" />
-            </columns>
-            <rows>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-                <row>
-                    <label value="1." />
-                    <checkbox checked="false"/>
-                    <label value="admin" />
-                    <label value="admin@localhost" />
-                    <label value="Administrator" />
-                    <label value="True" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="System" />
-                    <label value="-" />
-                    <label value="-" />
-                    <label value="-" />
-                </row>
-            </rows>
-        </grid>
+            <listhead sizable="true">
+                <listheader width="50px" align="right"  />
+                <listheader width="80px" align="center" />
+                <listheader width="100px" label="User Name" align="left" />
+                <listheader width="150px" label="Email" align="left" />
+                <listheader width="150px" label="Desc" align="left" />
+
+                <listheader width="50px" label="Active" align="center" />
+                <listheader width="80px" label="Deleted" align="center" />
+                <listheader width="140px" label="Deleted On" align="center" />
+                <listheader width="100px" label="Input By" align="center" />
+                <listheader width="140px" label="Input On" align="center" />
+                <listheader width="100px" label="Update By" align="center" />
+                <listheader width="140px" label="Update On" align="center" />
+            </listhead>
+            <template name="model">
+            <listitem>
+                <listcell label="@bind(forEachStatus.index+1)" />
+                <listcell label="-" />
+                <listcell label="@bind(each.cuserUsername)" />
+                <listcell label="@bind(each.cuserEmail)" />
+                <listcell label="@bind(each.cuserDesc)" />
+
+                <listcell label="@bind(each.cuserActive)" />
+                <listcell label="@bind(empty each.cuserDeleteon ? 'No' : 'Yes')" />
+                <listcell label="@bind(each.cuserDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.cuserInputby)" />
+                <listcell label="@bind(each.cuserInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.cuserUpdateby)" />
+                <listcell label="@bind(each.cuserUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+            </listitem>
+            </template>
+        </listbox>
     </panelchildren>
 </panel>
 

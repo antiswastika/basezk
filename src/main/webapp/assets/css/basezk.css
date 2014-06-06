@@ -30,8 +30,8 @@ BODY {
 .z-paging {
     border: 0px;
 }
-.z-row-content {
-    line-height: 15px;
+.z-listitem {
+    height: 15px;
 }
 .z-errorbox-content {
     padding-left: 30px;

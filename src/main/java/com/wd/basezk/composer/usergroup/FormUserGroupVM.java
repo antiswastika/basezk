@@ -142,7 +142,6 @@ public class FormUserGroupVM {
         }
     }
 
-
     public Validator getValidateTextboxNotNull() {
         return new AbstractValidator() {
             @Override
