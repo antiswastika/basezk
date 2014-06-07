@@ -49,7 +49,6 @@ public class ListUserGroupVM {
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private List<CuserGrp> allUserGrps;
-    private List<CuserGrp> selecteds;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -150,13 +149,6 @@ public class ListUserGroupVM {
     }
     public void setAllUserGrps(List<CuserGrp> allUserGrps) {
         this.allUserGrps = allUserGrps;
-    }
-
-    public List<CuserGrp> getSelecteds() {
-        return selecteds;
-    }
-    public void setSelecteds(List<CuserGrp> selecteds) {
-        this.selecteds = selecteds;
     }
 
     public CuserGrpService getCuserGrpService() {

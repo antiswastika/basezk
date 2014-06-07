@@ -25,7 +25,7 @@
         </toolbar>
         <listbox
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
-            vflex="true" multiple="true" model="@bind(vm.allUserGrps)" selectedItem="@bind(vm.selecteds)"
+            vflex="true" multiple="true" model="@bind(vm.allUserGrps)"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="4" />
             <listhead sizable="true">
