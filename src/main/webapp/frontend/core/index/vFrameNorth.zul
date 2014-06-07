@@ -4,6 +4,6 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
     <label class="baseVeryLargeText" value="BaseZK" />
-    <label class="baseVerySmallText" value="(Base Application For ZK)" />
+    <label class="baseVerySmallText" value="(Base Application For ZK Framework)" />
 
 </zk>
