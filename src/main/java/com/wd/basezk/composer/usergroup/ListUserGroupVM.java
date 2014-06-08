@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
@@ -70,8 +71,8 @@ public class ListUserGroupVM {
     }
 
     @Command
-    public void doEdit() {
-
+    public void doEdit(@BindingParam("record") CuserGrp objNya) throws InterruptedException {
+        this.executeDetail( objNya );
     }
 
     @Command
@@ -105,6 +106,7 @@ public class ListUserGroupVM {
     public void executeDetail(CuserGrp cusergrpNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
+        map.put("selected", cusergrpNya);
 
         try {
             Executions.createComponents("/frontend/core/usergroup/vFormUserGroup.zul", null, map);

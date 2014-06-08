@@ -3,12 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-<zscript>
-    private void showOn() {
-        Messagebox.show("AAAAAAAAAAAA");
-    }
-</zscript>
-
 <panel height="100%"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
@@ -17,11 +11,11 @@
             <auxheader colspan="4" label="User Group List" />
         </auxhead>
         <toolbar>
-            <toolbarbutton label="New" onClick="@command('doNew')" />
-            <toolbarbutton label="Delete" disabled="true" />
-            <toolbarbutton label="Search" mode="toggle" />
-            <toolbarbutton label="Print Preview" />
-            <toolbarbutton label="Refresh" onClick="@command('doRefresh')" />
+            <toolbarbutton label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />
+            <toolbarbutton label="${labels.toolbarW.Delete}" disabled="true" />
+            <toolbarbutton label="${labels.toolbarW.Search}" mode="toggle" />
+            <toolbarbutton label="${labels.toolbarW.PrintPreview}" />
+            <toolbarbutton label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <listbox
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
@@ -44,7 +38,7 @@
             <template name="model">
             <listitem>
                 <listcell/>
-                <listcell image="/assets/img/icon/Modify.png" onClick="@command('doEdit')" />
+                <listcell image="/assets/img/icon/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
                 <listcell label="@bind(forEachStatus.index+1)" />
                 <listcell label="@bind(each.cuserGrpName)" />
                 <listcell label="@bind(each.cuserGrpDesc)" />

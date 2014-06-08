@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <zk>
-    <!-- [Optional]
-    Uncomment if you want to defines the application's name
-
-    <preference>
-        <name>org.zkoss.zk.ui.WebApp.name</name>
-        <value>basezk</value>
-    </preference>
-    -->
-
+    <!-- ========================================================== -->
+    <!-- Used for default Session Timeout Page Redirect -->
+    <!-- ========================================================== -->
     <device-config>
         <device-type>ajax</device-type>
         <timeout-uri>/timeout.zul</timeout-uri><!-- An empty URL can cause the browser to reload the same URL -->
@@ -21,5 +15,14 @@
     <desktop-config>
         <theme-uri>/assets/css/basezk.css</theme-uri>
     </desktop-config>
+
+    <!-- ========================================================== -->
+    <!-- Used for default Language -->
+    <!-- ========================================================== -->
+    <system-config>
+        <!-- English -->
+        <label-location>/assets/lang/core/en_label_core.properties</label-location>
+        <label-location>/assets/lang/core/en_message_core.properties</label-location>
+    </system-config>
 
 </zk>

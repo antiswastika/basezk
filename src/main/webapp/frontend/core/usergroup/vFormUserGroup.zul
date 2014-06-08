@@ -12,6 +12,7 @@
 <panel height="100%" sclass="baseLayoutPanel"
     form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
     <panelchildren>
+
         <vlayout style="padding: 10px;">
 
             <hbox width="100%">
@@ -34,12 +35,12 @@
         </vlayout>
 
         <div style="float: left; padding-left: 10px">
-            <button id="btnReset" label="Reset" onClick="@command('doReload')" />
+            <button id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" label="Save" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" label="Delete" onClick="@command('doDelete')" />
-            <button id="btnClose" label="Close" onClick="@command('doClose')" />
+            <button id="btnSave" label="${labels.toolbarF.Save}" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" />
+            <button id="btnClose" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
     </panelchildren>
