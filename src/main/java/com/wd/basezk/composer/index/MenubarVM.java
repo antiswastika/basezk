@@ -177,7 +177,7 @@ public class MenubarVM {
 
 
 /*************************************************************************************
- * Custom Methods (Untuk method-method private)
+ * Custom Methods
  **************************************************************************************/
     private void createDashboard() {
         Map<String, String> requestMap = new HashMap<String, String>();

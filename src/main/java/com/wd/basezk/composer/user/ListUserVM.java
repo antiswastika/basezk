@@ -100,7 +100,7 @@ public class ListUserVM {
 
 
 /*************************************************************************************
- * Custom Methods (Untuk method-method private)
+ * Custom Methods
  **************************************************************************************/
     public void executeDetail(Cuser cuserNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();

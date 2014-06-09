@@ -114,7 +114,7 @@ public class FormUserVM {
 
 
 /*************************************************************************************
- * Custom Methods (Untuk method-method private)
+ * Custom Methods
  **************************************************************************************/
     private void setMaxLength4All() throws NoSuchFieldException, SecurityException {
         Field[] fields = selected.getClass().getDeclaredFields();

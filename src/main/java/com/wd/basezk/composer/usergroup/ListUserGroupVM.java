@@ -19,6 +19,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
 
 import com.wd.basezk.model.CuserGrp;
 import com.wd.basezk.service.CuserGrpService;
@@ -66,8 +67,11 @@ public class ListUserGroupVM {
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doNew() throws InterruptedException {
+        ListModelList<CuserGrp> lml = (ListModelList) listboxNya.getModel();
+        lml.clearSelection();
         this.executeDetail( new CuserGrp() );
     }
 
@@ -76,20 +80,38 @@ public class ListUserGroupVM {
     public void doEdit(@BindingParam("record") CuserGrp objNya) throws InterruptedException {
         ListModelList<CuserGrp> lml = (ListModelList) listboxNya.getModel();
         lml.clearSelection();
-
         for (int i=0; i<lml.size(); i++) {
             if (lml.get(i).equals(objNya)) {
                 lml.addToSelection(lml.get(i));
                 break;
             }
         }
-
         this.executeDetail( objNya );
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
+        ListModelList<CuserGrp> lml = (ListModelList) listboxNya.getModel();
+        Map<String, CuserGrp> objsToDel = new HashMap<String, CuserGrp>();
 
+        for (CuserGrp objs : lml) {
+            if (lml.isSelected(objs)) {
+                objsToDel.put(objs.getCuserGrpId(), objs);
+            }
+        }
+
+        if (objsToDel.size()>0) {
+            deletingData(objsToDel);
+        } else {
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+            return;
+            // ----------------------------------------------------------
+        }
     }
 
     @Command
@@ -113,9 +135,9 @@ public class ListUserGroupVM {
 
 
 /*************************************************************************************
- * Custom Methods (Untuk method-method private)
+ * Custom Methods
  **************************************************************************************/
-    public void executeDetail(CuserGrp cusergrpNya) throws InterruptedException {
+    private void executeDetail(CuserGrp cusergrpNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
         map.put("selected", cusergrpNya);
@@ -137,6 +159,10 @@ public class ListUserGroupVM {
 
     public void reLoadData() {
         loadData();
+    }
+
+    private void deletingData(final Map<String, CuserGrp> objsToDel) {
+
     }
 
 /*************************************************************************************
