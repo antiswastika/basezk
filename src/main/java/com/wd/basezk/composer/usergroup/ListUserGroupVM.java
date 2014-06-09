@@ -17,6 +17,7 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 
 import com.wd.basezk.model.CuserGrp;
@@ -70,8 +71,19 @@ public class ListUserGroupVM {
         this.executeDetail( new CuserGrp() );
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doEdit(@BindingParam("record") CuserGrp objNya) throws InterruptedException {
+        ListModelList<CuserGrp> lml = (ListModelList) listboxNya.getModel();
+        lml.clearSelection();
+
+        for (int i=0; i<lml.size(); i++) {
+            if (lml.get(i).equals(objNya)) {
+                lml.addToSelection(lml.get(i));
+                break;
+            }
+        }
+
         this.executeDetail( objNya );
     }
 

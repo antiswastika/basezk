@@ -72,7 +72,7 @@ public class FormUserGroupVM {
     public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserGroupVM arg, @ExecutionArgParam("selected") CuserGrp arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
-        setwObjList(arg);
+        if (arg != null) { setwObjList(arg); }
         if (arg2 != null) { setSelected(arg2); }
         wiringComponent();
         prepareAll();
