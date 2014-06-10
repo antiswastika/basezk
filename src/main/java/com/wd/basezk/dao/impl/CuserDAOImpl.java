@@ -1,5 +1,9 @@
 package com.wd.basezk.dao.impl;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +22,54 @@ public class CuserDAOImpl implements CuserDAO {
     private SessionFactory sessionFactory;
 
     public void insertData(Cuser objNya) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        if (objNya.getCuserId() == null || objNya.getCuserId().equals(null)) {
+            //Set default new ID
+            objNya.setCuserId( createPrimaryKey() );
+        }
+
+        //Set defaut Deleteable
+        objNya.setCuserDeleteable(true);
+        //Set defaut InputBy
+        objNya.setCuserInputby("System");
+        //Set defaut InputOn
+        objNya.setCuserInputon(nowTs);
+        //Finaly Save
         sessionFactory.getCurrentSession().save(objNya);
     }
 
     public void updateData(Cuser objNya) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        //Set defaut UpdateBy
+        objNya.setCuserUpdateby("System");
+        //Set defaut UpdateOn
+        objNya.setCuserUpdateon(nowTs);
+        //Finaly Save
         sessionFactory.getCurrentSession().update(objNya);
     }
 
     public void deleteData(String idNya) {
-        sessionFactory.getCurrentSession().delete(getById(idNya));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date d1 = new Date();
+        String formattedDate = df.format(d1);
+        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+
+        Cuser objNya = getById(idNya);
+
+        //Set defaut DeleteBy
+        objNya.setCuserDeleteby("System");
+        //Set defaut DeleteOn
+        objNya.setCuserDeleteon(nowTs);
+        //Finaly Save
+        sessionFactory.getCurrentSession().delete(objNya);
     }
 
     public Cuser getById(String idNya) {
@@ -83,11 +126,10 @@ public class CuserDAOImpl implements CuserDAO {
         return result;
     }
 
-    @Override
-    public int getMaxIdByRequest(Map<String, String> requestMap, int manyDigit) {
+    private int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit) {
         String finalQuery = "";
         int result = 1; // init
-        String queryFrom = "SELECT MAX( CAST(SUBSTRING(cuser_id, LENGTH(cuser_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM cuser ";
+        String queryFrom = "SELECT MAX( CAST(SUBSTRING(cuser_grp_id, LENGTH(cuser_grp_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM CuserGrp ";
         String queryWhere = " WHERE ";
 
         Object params[] = new Object[requestMap.size()];
@@ -97,8 +139,8 @@ public class CuserDAOImpl implements CuserDAO {
             String q = entry.getKey();
             String v = entry.getValue();
 
-            if (q=="cuser_id") {
-                queryWhere = queryWhere + " SUBSTRING(cuser_id, 1, " + v.length() + ") = ? AND ";
+            if (q=="section1") {
+                queryWhere = queryWhere + " SUBSTRING(cuser_grp_id, LENGTH(cuser_grp_id) - 16, 13) = ? AND ";
                 params[a] = v;
             }
 
@@ -113,8 +155,37 @@ public class CuserDAOImpl implements CuserDAO {
                  query.setParameter( i, params[i] );
         }
 
-        result = (Integer) (query.list()).get(0);
+        if ((query.list()).get(0) != null) {
+            result = (Integer) (query.list()).get(0);
+        }
+
         return result;
+    }
+
+    private String createPrimaryKey() {
+        Date d1 = new Date();
+        SimpleDateFormat yf = new SimpleDateFormat("yyyy");
+        SimpleDateFormat mf = new SimpleDateFormat("MM");
+        SimpleDateFormat df = new SimpleDateFormat("dd");
+
+        final String section1 = "USR" + yf.format(d1) + mf.format(d1) + df.format(d1);
+        final String strDigits = "0000";
+        int queryRet = 0;
+        String retVal = "0000";
+        String tempRetVal = "";
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("section1", section1);
+        queryRet = getMaxPKByRequest(requestMap, strDigits.length());
+
+        if (queryRet > 0) {
+            tempRetVal = strDigits + Integer.toString(queryRet + 1);
+        } else {
+            tempRetVal = strDigits + "1";
+        }
+        retVal = section1 + (tempRetVal.substring(tempRetVal.length()-strDigits.length()));
+
+        return retVal;
     }
 
 }

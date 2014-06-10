@@ -11,5 +11,4 @@ public interface CuserDAO {
     public void deleteData(String idNya);
     public Cuser getById(String idNya);
     public List<Cuser> getByRequest(Map<String, String> requestMap, boolean useLikeKeyword, String[] whereArgs);
-    public int getMaxIdByRequest(Map<String, String> requestMap, int manyDigit);
 }
