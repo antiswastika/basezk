@@ -100,7 +100,7 @@ public class FormUserGroupVM {
     public void doSave() throws InterruptedException {
         if (selected.getCuserGrpId() == null) {
             getCuserGrpService().insertData(selected);
-            getwObjList().reLoadData();
+            getwObjList().doRefresh();
         } else {
             doEdit();
         }
@@ -108,7 +108,7 @@ public class FormUserGroupVM {
 
     private void doEdit() {
         getCuserGrpService().updateData(selected);
-        getwObjList().reLoadData();
+        getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
     }
 
@@ -132,7 +132,7 @@ public class FormUserGroupVM {
 
 
 /*************************************************************************************
- * Custom Methods
+ * Custom Methods (Untuk method-method private)
  **************************************************************************************/
     private void setMaxLength4All() throws NoSuchFieldException, SecurityException {
         Field[] fields = selected.getClass().getDeclaredFields();
@@ -143,6 +143,9 @@ public class FormUserGroupVM {
         }
     }
 
+/*************************************************************************************
+ * Validator
+ **************************************************************************************/
     public Validator getValidateTextboxNotNull() {
         return new AbstractValidator() {
             @Override

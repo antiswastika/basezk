@@ -7,20 +7,29 @@ import java.util.Map;
 import javax.persistence.Column;
 
 import org.springframework.stereotype.Controller;
+import org.zkoss.bind.ValidationContext;
+import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
 
+import com.wd.basezk.composer.usergroup.ListUserGroupVM;
 import com.wd.basezk.model.Cuser;
+import com.wd.basezk.model.CuserGrp;
 import com.wd.basezk.service.CuserService;
 
 /**
@@ -40,10 +49,11 @@ public class FormUserVM {
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    Cuser selected = new Cuser();
+    private Cuser selected = new Cuser();
 
     // Untuk WireComponentSelector
     private Component wComSel;
+    private ListUserVM wObjList;
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
@@ -59,9 +69,11 @@ public class FormUserVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserVM arg, @ExecutionArgParam("selected") Cuser arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
+        if (arg != null) { setwObjList(arg); }
+        if (arg2 != null) { setSelected(arg2); }
         wiringComponent();
         prepareAll();
     }
@@ -114,7 +126,7 @@ public class FormUserVM {
 
 
 /*************************************************************************************
- * Custom Methods
+ * Custom Methods (Untuk method-method private)
  **************************************************************************************/
     private void setMaxLength4All() throws NoSuchFieldException, SecurityException {
         Field[] fields = selected.getClass().getDeclaredFields();
@@ -123,6 +135,24 @@ public class FormUserVM {
                 txtMaxLength.put(fields[i].getName(), selected.getClass().getDeclaredField(fields[i].getName()).getAnnotation(Column.class).length());
             }
         }
+    }
+
+/*************************************************************************************
+ * Validator
+ **************************************************************************************/
+    public Validator getValidateTextboxNotNull() {
+        return new AbstractValidator() {
+            @Override
+            public void validate(ValidationContext ctx) {
+                InputElement componentNya = (InputElement)ctx.getBindContext().getValidatorArg("component");
+                String text = (String)ctx.getBindContext().getValidatorArg("text");
+                Clients.clearWrongValue(componentNya);
+                if(text.trim().equals("") || text == null) {
+                    componentNya.setFocus(true);
+                    throw new WrongValueException(componentNya, "Required Field!");
+                }
+            }
+        };
     }
 
 /*************************************************************************************
@@ -142,6 +172,13 @@ public class FormUserVM {
     }
     public void setwComSel(Component wComSel) {
         this.wComSel = wComSel;
+    }
+
+    public ListUserVM getwObjList() {
+        return wObjList;
+    }
+    public void setwObjList(ListUserVM wObjList) {
+        this.wObjList = wObjList;
     }
 
     public Cuser getSelected() {

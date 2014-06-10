@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
@@ -16,6 +17,7 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 
 import com.wd.basezk.model.Cuser;
@@ -53,6 +55,9 @@ public class ListUserVM {
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
 
+/*************************************************************************************
+ * Initialize
+ **************************************************************************************/
     @AfterCompose
     public void onCreate(@ContextParam(ContextType.VIEW) Component view) {
         Selectors.wireComponents(view, this, false);
@@ -62,21 +67,42 @@ public class ListUserVM {
     }
 
 /*************************************************************************************
+ * Preparation (Load Variables Value)
+ **************************************************************************************/
+
+
+/*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doNew() throws InterruptedException {
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+        lml.clearSelection();
         this.executeDetail( new Cuser() );
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
-    public void doEdit() {
-
+    public void doEdit(@BindingParam("record") Cuser objNya) throws InterruptedException {
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+        lml.clearSelection();
+        for (int i=0; i<lml.size(); i++) {
+            if (lml.get(i).equals(objNya)) {
+                lml.addToSelection(lml.get(i));
+                break;
+            }
+        }
+        this.executeDetail( objNya );
     }
 
+    @SuppressWarnings({ "unused", "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+        Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
 
+        deletingData(objsToDel);
     }
 
     @Command
@@ -91,7 +117,7 @@ public class ListUserVM {
 
     @Command
     public void doRefresh() {
-        reLoadData();
+        loadData();
     }
 
 /*************************************************************************************
@@ -100,11 +126,12 @@ public class ListUserVM {
 
 
 /*************************************************************************************
- * Custom Methods
+ * Custom Methods (Untuk method-method private)
  **************************************************************************************/
-    public void executeDetail(Cuser cuserNya) throws InterruptedException {
+    private void executeDetail(Cuser cuserNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
+        map.put("selected", cuserNya);
 
         try {
             Executions.createComponents("/frontend/core/user/vFormUser.zul", null, map);
@@ -121,9 +148,14 @@ public class ListUserVM {
         BindUtils.postNotifyChange(null, null, this, "allUsers");
     }
 
-    public void reLoadData() {
-        loadData();
+    private void deletingData(final Map<String, Cuser> objsToDel) {
+
     }
+
+/*************************************************************************************
+ * Validator
+ **************************************************************************************/
+
 
 /*************************************************************************************
  * Renderer

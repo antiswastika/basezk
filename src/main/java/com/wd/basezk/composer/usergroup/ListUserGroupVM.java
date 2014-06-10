@@ -56,6 +56,9 @@ public class ListUserGroupVM {
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
 
+/*************************************************************************************
+ * Initialize
+ **************************************************************************************/
     @AfterCompose
     public void onCreate(@ContextParam(ContextType.VIEW) Component view) {
         Selectors.wireComponents(view, this, false);
@@ -63,6 +66,11 @@ public class ListUserGroupVM {
         wiringComponent();
         loadData();
     }
+
+/*************************************************************************************
+ * Preparation (Load Variables Value)
+ **************************************************************************************/
+
 
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
@@ -126,7 +134,7 @@ public class ListUserGroupVM {
 
     @Command
     public void doRefresh() {
-        reLoadData();
+        loadData();
     }
 
 /*************************************************************************************
@@ -135,7 +143,7 @@ public class ListUserGroupVM {
 
 
 /*************************************************************************************
- * Custom Methods
+ * Custom Methods (Untuk method-method private)
  **************************************************************************************/
     private void executeDetail(CuserGrp cusergrpNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -157,13 +165,14 @@ public class ListUserGroupVM {
         BindUtils.postNotifyChange(null, null, this, "allUserGrps");
     }
 
-    public void reLoadData() {
-        loadData();
-    }
-
     private void deletingData(final Map<String, CuserGrp> objsToDel) {
 
     }
+
+/*************************************************************************************
+ * Validator
+ **************************************************************************************/
+
 
 /*************************************************************************************
  * Renderer
