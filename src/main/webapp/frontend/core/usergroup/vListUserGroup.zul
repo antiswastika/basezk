@@ -3,6 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
+<zscript>
+    private void onDataSelected() {
+        this.btnDelete.setDisabled( this.listboxNya.getSelectedCount() > 0 ? false : true );
+    }
+</zscript>
+
 <panel height="100%"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
@@ -12,14 +18,14 @@
         </auxhead>
         <toolbar>
             <toolbarbutton label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />
-            <toolbarbutton label="${labels.toolbarW.Delete}" disabled="true" />
+            <toolbarbutton id="btnDelete" label="${labels.toolbarW.Delete}" disabled="true" onClick="@command('doDelete')" />
             <toolbarbutton label="${labels.toolbarW.Search}" mode="toggle" />
             <toolbarbutton label="${labels.toolbarW.PrintPreview}" />
             <toolbarbutton label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <listbox
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
-            vflex="true" multiple="true" model="@bind(vm.allUserGrps)"
+            vflex="true" multiple="true" model="@bind(vm.allUserGrps)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="4" />
             <listhead sizable="true">

@@ -13,6 +13,9 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -116,7 +119,7 @@ public class ListUserGroupVM {
             // Show a confirm box
             // ----------------------------------------------------------
             //TODO: Labeling!
-            Messagebox.show("", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+            Messagebox.show("XXXXXXXXXXXX", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
             return;
             // ----------------------------------------------------------
         }
@@ -135,6 +138,7 @@ public class ListUserGroupVM {
     @Command
     public void doRefresh() {
         loadData();
+        Events.postEvent(Events.ON_SELECT, listboxNya, null);
     }
 
 /*************************************************************************************
@@ -165,8 +169,31 @@ public class ListUserGroupVM {
         BindUtils.postNotifyChange(null, null, this, "allUserGrps");
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void deletingData(final Map<String, CuserGrp> objsToDel) {
+        // ----------------------------------------------------------
+        // Show a confirm box
+        // ----------------------------------------------------------
+        //TODO: Labeling!
+        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+            @Override
+            public void onEvent(Event event) throws Exception {
 
+                if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                    for (Map.Entry<String, CuserGrp> mapNya : objsToDel.entrySet()) {
+                        try {
+                            CuserGrp v = mapNya.getValue();
+                            getCuserGrpService().deleteData(v.getCuserGrpId());
+                        } catch (Exception e) {
+                            //
+                        }
+                    }
+                    doRefresh();
+                }
+
+            }
+        });
+        // ----------------------------------------------------------
     }
 
 /*************************************************************************************
