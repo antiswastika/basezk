@@ -21,7 +21,7 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
     @Autowired
     private SessionFactory sessionFactory;
 
-    public void insertData(CuserGrp objNya) {
+    public Boolean insertData(CuserGrp objNya) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date d1 = new Date();
         String formattedDate = df.format(d1);
@@ -39,10 +39,17 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
         //Set defaut InputOn
         objNya.setCuserGrpInputon(nowTs);
         //Finaly Save
-        sessionFactory.getCurrentSession().save(objNya);
+
+        try {
+            sessionFactory.getCurrentSession().save(objNya);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 
-    public void updateData(CuserGrp objNya) {
+    public Boolean updateData(CuserGrp objNya) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date d1 = new Date();
         String formattedDate = df.format(d1);
@@ -53,23 +60,46 @@ public class CuserGrpDAOImpl implements CuserGrpDAO {
         //Set defaut UpdateOn
         objNya.setCuserGrpUpdateon(nowTs);
         //Finaly Save
-        sessionFactory.getCurrentSession().update(objNya);
+
+        try {
+            sessionFactory.getCurrentSession().update(objNya);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void deleteData(String idNya) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date d1 = new Date();
-        String formattedDate = df.format(d1);
-        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
-
+    public Boolean deleteData(String idNya) {
         CuserGrp objNya = getById(idNya);
 
-        //Set defaut DeleteBy
-        objNya.setCuserGrpDeleteby("System");
-        //Set defaut DeleteOn
-        objNya.setCuserGrpDeleteon(nowTs);
-        //Finaly Save
-        sessionFactory.getCurrentSession().delete(objNya);
+        try {
+            //Cek apakah data BOLEH di-delete
+            if (objNya.getCuserGrpDeleteable() == true) {
+
+                //Untuk Delete Hanya Status, uncomment statement dibawah ini.
+                //===========================================================
+                /*SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Date d1 = new Date();
+                String formattedDate = df.format(d1);
+                final Timestamp nowTs = Timestamp.valueOf(formattedDate);
+                //Set defaut DeleteBy
+                objNya.setCuserGrpDeleteby("System");
+                //Set defaut DeleteOn
+                objNya.setCuserGrpDeleteon(nowTs);
+                //Finaly Save
+                sessionFactory.getCurrentSession().update(objNya);*/
+
+                //Untuk Delete Permanent, uncomment statement dibawah ini.
+                //===========================================================
+                sessionFactory.getCurrentSession().delete(objNya);
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public CuserGrp getById(String idNya) {

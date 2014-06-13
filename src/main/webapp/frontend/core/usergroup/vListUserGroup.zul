@@ -14,14 +14,18 @@
     viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
     <panelchildren>
         <auxhead>
-            <auxheader colspan="4" label="User Group List" />
+            <auxheader colspan="11" label="User Group List" />
         </auxhead>
         <toolbar>
-            <toolbarbutton label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />
-            <toolbarbutton id="btnDelete" label="${labels.toolbarW.Delete}" disabled="true" onClick="@command('doDelete')" />
-            <toolbarbutton label="${labels.toolbarW.Search}" mode="toggle" />
-            <toolbarbutton label="${labels.toolbarW.PrintPreview}" />
-            <toolbarbutton label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
+            <toolbarbutton image="/assets/img/icon16x16/Insert.png" label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Delete.png" id="btnDelete" label="${labels.toolbarW.Delete}" disabled="true" onClick="@command('doDelete')" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Search.png" label="${labels.toolbarW.Search}" mode="toggle" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Preview.png" label="${labels.toolbarW.PrintPreview}" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <listbox
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
@@ -44,7 +48,7 @@
             <template name="model">
             <listitem>
                 <listcell/>
-                <listcell image="/assets/img/icon/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
+                <listcell image="/assets/img/icon16x16/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
                 <listcell label="@bind(forEachStatus.index+1)" />
                 <listcell label="@bind(each.cuserGrpName)" />
                 <listcell label="@bind(each.cuserGrpDesc)" />

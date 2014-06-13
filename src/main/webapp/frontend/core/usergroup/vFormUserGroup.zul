@@ -39,12 +39,12 @@
         </vlayout>
 
         <div style="float: left; padding-left: 10px">
-            <button id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
+            <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" label="@bind(empty vm.selected.cuserGrpId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" />
-            <button id="btnClose" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cuserGrpId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cuserGrpId ? true : false)" />
+            <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
     </panelchildren>

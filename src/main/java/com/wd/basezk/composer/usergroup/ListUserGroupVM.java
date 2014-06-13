@@ -104,7 +104,7 @@ public class ListUserGroupVM {
     @Command
     public void doDelete() {
         ListModelList<CuserGrp> lml = (ListModelList) listboxNya.getModel();
-        Map<String, CuserGrp> objsToDel = new HashMap<String, CuserGrp>();
+        final Map<String, CuserGrp> objsToDel = new HashMap<String, CuserGrp>();
 
         for (CuserGrp objs : lml) {
             if (lml.isSelected(objs)) {
@@ -113,7 +113,20 @@ public class ListUserGroupVM {
         }
 
         if (objsToDel.size()>0) {
-            deletingData(objsToDel);
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+                @Override
+                public void onEvent(Event event) throws Exception {
+                    if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                        deletingData(objsToDel);
+                    }
+                }
+            });
+            // ----------------------------------------------------------
+
         } else {
             // ----------------------------------------------------------
             // Show a confirm box
@@ -169,31 +182,16 @@ public class ListUserGroupVM {
         BindUtils.postNotifyChange(null, null, this, "allUserGrps");
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void deletingData(final Map<String, CuserGrp> objsToDel) {
-        // ----------------------------------------------------------
-        // Show a confirm box
-        // ----------------------------------------------------------
-        //TODO: Labeling!
-        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
-            @Override
-            public void onEvent(Event event) throws Exception {
-
-                if(((Integer)event.getData()).intValue()==Messagebox.YES){
-                    for (Map.Entry<String, CuserGrp> mapNya : objsToDel.entrySet()) {
-                        try {
-                            CuserGrp v = mapNya.getValue();
-                            getCuserGrpService().deleteData(v.getCuserGrpId());
-                        } catch (Exception e) {
-                            //
-                        }
-                    }
-                    doRefresh();
-                }
-
+        for (Map.Entry<String, CuserGrp> mapNya : objsToDel.entrySet()) {
+            try {
+                CuserGrp v = mapNya.getValue();
+                getCuserGrpService().deleteData(v.getCuserGrpId());
+            } catch (Exception e) {
+                //
             }
-        });
-        // ----------------------------------------------------------
+        }
+        doRefresh();
     }
 
 /*************************************************************************************
@@ -232,6 +230,10 @@ public class ListUserGroupVM {
     }
     public void setCuserGrpService(CuserGrpService cuserGrpService) {
         this.cuserGrpService = cuserGrpService;
+    }
+
+    public void getDeletingData(final Map<String, CuserGrp> objsToDel) {
+        this.deletingData(objsToDel);
     }
 
 }

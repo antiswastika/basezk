@@ -21,11 +21,14 @@ import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
@@ -112,9 +115,27 @@ public class FormUserGroupVM {
         BindUtils.postNotifyChange(null, null, this, "selected");
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
-    public void doRemove() {
+    public void doDelete() {
+        final Map<String, CuserGrp> objsToDel = new HashMap<String, CuserGrp>();
+        final Window windowNya = dialogWindow;
+        objsToDel.put(selected.getCuserGrpId(), selected);
 
+        // ----------------------------------------------------------
+        // Show a confirm box
+        // ----------------------------------------------------------
+        //TODO: Labeling!
+        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+            @Override
+            public void onEvent(Event event) throws Exception {
+                if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                    getwObjList().getDeletingData(objsToDel);
+                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
+                }
+            }
+        });
+        // ----------------------------------------------------------
     }
 
     @Command

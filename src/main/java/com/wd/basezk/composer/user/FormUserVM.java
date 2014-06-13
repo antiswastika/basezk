@@ -27,9 +27,7 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
-import com.wd.basezk.composer.usergroup.ListUserGroupVM;
 import com.wd.basezk.model.Cuser;
-import com.wd.basezk.model.CuserGrp;
 import com.wd.basezk.service.CuserService;
 
 /**
@@ -106,7 +104,7 @@ public class FormUserVM {
     }
 
     @Command
-    public void doRemove() {
+    public void doDelete() {
 
     }
 

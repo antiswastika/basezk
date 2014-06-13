@@ -42,6 +42,10 @@ BODY {
 .z-errorbox-icon {
     padding: 2px;
 }
+.z-separator-vertical-bar-plus {
+    overflow: visible;
+    height: 18px;
+}
 
 .baseFrame {
     padding: 0;

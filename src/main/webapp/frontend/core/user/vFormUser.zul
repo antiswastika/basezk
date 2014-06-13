@@ -3,7 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-<window id="dialogWindow" title="Insert User"
+<zscript>
+    String FormName = " User";
+</zscript>
+
+<window id="dialogWindow" title="@bind(empty vm.selected.cuserId ? (labels.toolbarW.Insert).concat(FormName) : (labels.toolbarW.Edit).concat(FormName))"
     height="500px" width="680px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
@@ -12,6 +16,7 @@
 <panel height="100%" sclass="baseLayoutPanel"
     form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
     <panelchildren>
+
         <vlayout style="padding: 10px;">
 
             <hbox width="100%">
@@ -109,12 +114,12 @@
         </vlayout>
 
         <div style="float: left; padding-left: 10px">
-            <button id="btnReset" label="Reset" onClick="@command('doReload')" />
+            <button id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" label="Save" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" label="Delete" onClick="@command('doEdit')" />
-            <button id="btnClose" label="Close" onClick="@command('doClose')" />
+            <button id="btnSave" label="@bind(empty vm.selected.cuserId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" />
+            <button id="btnClose" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
     </panelchildren>

@@ -6,9 +6,9 @@ import java.util.Map;
 import com.wd.basezk.model.CuserGrp;
 
 public interface CuserGrpDAO {
-    public void insertData(CuserGrp objNya);
-    public void updateData(CuserGrp objNya);
-    public void deleteData(String idNya);
+    public Boolean insertData(CuserGrp objNya);
+    public Boolean updateData(CuserGrp objNya);
+    public Boolean deleteData(String idNya);
     public CuserGrp getById(String idNya);
     public List<CuserGrp> getByRequest(Map<String, String> requestMap, boolean useLikeKeyword, String[] whereArgs);
 }
