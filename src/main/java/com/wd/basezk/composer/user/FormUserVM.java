@@ -1,12 +1,15 @@
 package com.wd.basezk.composer.user;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
 
 import org.springframework.stereotype.Controller;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.AfterCompose;
@@ -15,19 +18,25 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.Cuser;
+import com.wd.basezk.model.CuserGrp;
+import com.wd.basezk.service.CuserGrpService;
 import com.wd.basezk.service.CuserService;
 
 /**
@@ -47,7 +56,7 @@ public class FormUserVM {
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    private Cuser selected = new Cuser();
+    //--------------------------> [TidakAda]
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -56,9 +65,13 @@ public class FormUserVM {
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
     private CuserService cuserService;
+    @WireVariable
+    private CuserGrpService cuserGrpService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
+    private Cuser selected = new Cuser();
     private Map<String, Integer> txtMaxLength;
+    private List<CuserGrp> allUserGrps = new ArrayList<CuserGrp>();
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -88,30 +101,58 @@ public class FormUserVM {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("null", "null");
+        setAllUserGrps( getCuserGrpService().getByRequest(requestMap, false, null) );
     }
 
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
     @Command
+    @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        getCuserService().insertData(selected);
+        if (selected.getCuserId() == null) {
+            getCuserService().insertData(selected);
+            getwObjList().doRefresh();
+        } else {
+            doEdit();
+        }
     }
 
-    @Command
-    public void doEdit() {
-
+    private void doEdit() {
+        getCuserService().updateData(selected);
+        getwObjList().doRefresh();
+        BindUtils.postNotifyChange(null, null, this, "selected");
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
+        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
+        final Window windowNya = dialogWindow;
+        objsToDel.put(selected.getCuserId(), selected);
 
+        // ----------------------------------------------------------
+        // Show a confirm box
+        // ----------------------------------------------------------
+        //TODO: Labeling!
+        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+            @Override
+            public void onEvent(Event event) throws Exception {
+                if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                    getwObjList().getDeletingData(objsToDel);
+                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
+                }
+            }
+        });
+        // ----------------------------------------------------------
     }
 
     @Command
-    public void doReload() {
-
-    }
+    @NotifyChange("selected")
+    public void doReload() { }
 
     @Command
     public void doClose(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
@@ -149,6 +190,29 @@ public class FormUserVM {
                     componentNya.setFocus(true);
                     throw new WrongValueException(componentNya, "Required Field!");
                 }
+            }
+        };
+    }
+
+    public Validator getValidateConfirmPassword() {
+        return new AbstractValidator() {
+            @Override
+            public void validate(ValidationContext ctx) {
+                InputElement componentNya = (InputElement)ctx.getBindContext().getValidatorArg("component");
+                String text1 = (String)ctx.getBindContext().getValidatorArg("text1");
+                String text2 = (String)ctx.getBindContext().getValidatorArg("text2");
+                Clients.clearWrongValue(componentNya);
+                if(text2.trim().equals("") || text2 == null) {
+                    componentNya.setFocus(true);
+                    throw new WrongValueException(componentNya, "Required Field!");
+                }
+                if(text2.equals(text1) == false) {
+                    componentNya.setFocus(true);
+                    throw new WrongValueException(componentNya, "Doesn't Match!");
+                }
+
+                System.out.println("Text1 = " + text1);
+                System.out.println("Text2 = " + text2);
             }
         };
     }
@@ -198,6 +262,20 @@ public class FormUserVM {
     }
     public void setCuserService(CuserService cuserService) {
         this.cuserService = cuserService;
+    }
+
+    public CuserGrpService getCuserGrpService() {
+        return cuserGrpService;
+    }
+    public void setCuserGrpService(CuserGrpService cuserGrpService) {
+        this.cuserGrpService = cuserGrpService;
+    }
+
+    public List<CuserGrp> getAllUserGrps() {
+        return allUserGrps;
+    }
+    public void setAllUserGrps(List<CuserGrp> allUserGrps) {
+        this.allUserGrps = allUserGrps;
     }
 
 }

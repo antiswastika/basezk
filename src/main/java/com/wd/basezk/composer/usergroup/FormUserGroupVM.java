@@ -52,7 +52,7 @@ public class FormUserGroupVM {
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    private CuserGrp selected = new CuserGrp();
+    //--------------------------> [TidakAda]
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -63,6 +63,7 @@ public class FormUserGroupVM {
     private CuserGrpService cuserGrpService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
+    private CuserGrp selected = new CuserGrp();
     private Map<String, Integer> txtMaxLength;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)

@@ -52,7 +52,7 @@ public class FormRoleVM {
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    private Crole selected = new Crole();
+    //--------------------------> [TidakAda]
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -63,6 +63,7 @@ public class FormRoleVM {
     private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
+    private Crole selected = new Crole();
     private Map<String, Integer> txtMaxLength;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)

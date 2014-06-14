@@ -24,14 +24,14 @@
                     <label sclass="baseFormFieldLabel" value="User Name" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.cuserUsername)" maxlength="@bind(vm.txtMaxLength['cuserUsername'])"/>
+                    <textbox style="width: 160px" value="@bind(frm.cuserUsername) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserUsername'])"/>
                 </vbox>
                 <space />
                 <vbox sclass="baseFormVBoxMultiCol2" align="end">
                     <label sclass="baseFormFieldLabel" value="Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@bind(frm.cuserPassword)"/>
+                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load('**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -39,14 +39,14 @@
                     <label sclass="baseFormFieldLabel" value="E-mail" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.cuserEmail)"/>
+                    <textbox style="width: 160px" value="@bind(frm.cuserEmail) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserEmail'])"/>
                 </vbox>
                 <space />
                 <vbox sclass="baseFormVBoxMultiCol2" align="end">
                     <label sclass="baseFormFieldLabel" value="Confirm Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@bind(frm.cuserPassword)"/>
+                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load('**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -54,10 +54,12 @@
                     <label sclass="baseFormFieldLabel" value="User Group" />
                 </vbox>
                 <vbox align="start">
-                    <combobox readonly="true" autodrop="true">
-                        <comboitem label="Simple and Rich"/>
-                        <comboitem label="Cool!"/>
-                        <comboitem label="Ajax and RIA"/>
+                    <combobox readonly="true" autodrop="true" model="@bind(vm.allUserGrps)"
+                        selectedItem="@bind(vm.selected.cuserGrp)"
+                        value="@bind(vm.selected.cuserGrp.cuserGrpName)">
+                    <template name="model">
+                        <comboitem label="@bind(each.cuserGrpName)" value="@bind(each.cuserGrpId)"/>
+                    </template>
                     </combobox>
                 </vbox>
             </hbox>
@@ -68,7 +70,7 @@
                         <label sclass="baseFormFieldLabel" value="Hint Question" />
                     </vbox>
                     <vbox align="start">
-                        <textbox style="width: 160px" value="@bind(frm.cuserHintQ)"/>
+                        <textbox style="width: 160px" value="@bind(frm.cuserHintQ) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                     </vbox>
                 </hbox>
                 <hbox>
@@ -76,7 +78,7 @@
                         <label sclass="baseFormFieldLabel" value="Hint Answer" />
                     </vbox>
                     <vbox align="start">
-                        <textbox style="width: 160px" value="@bind(frm.cuserHintA)"/>
+                        <textbox style="width: 160px" value="@bind(frm.cuserHintA) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                     </vbox>
                 </hbox>
                 <hbox>
@@ -84,7 +86,7 @@
                         <label sclass="baseFormFieldLabel" value="Active" />
                     </vbox>
                     <vbox align="start" style="margin-top: 4px">
-                        <checkbox value="1" checked="@bind(frm.cuserActive ? frm.cuserActive : 'true')" disabled="true"/>
+                        <checkbox value="1" checked="@bind(frm.cuserActive)"/>
                     </vbox>
                 </hbox>
                 </vbox>
@@ -114,12 +116,12 @@
         </vlayout>
 
         <div style="float: left; padding-left: 10px">
-            <button id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
+            <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" label="@bind(empty vm.selected.cuserId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" />
-            <button id="btnClose" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cuserId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cuserId ? true : false)" />
+            <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
     </panelchildren>

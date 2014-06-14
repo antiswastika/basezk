@@ -63,7 +63,7 @@ public class MenubarVM {
     private Menubar menubarNorthNya;
 
     // Default Variables untuk VM-Model
-    private Cmenu cmenuNya;
+    //--------------------------> [TidakAda]
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -73,7 +73,7 @@ public class MenubarVM {
     private CmenuService cmenuService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    //--------------------------> [TidakAda]
+    private Cmenu cmenuNya;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]

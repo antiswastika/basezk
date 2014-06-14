@@ -190,4 +190,8 @@ public class ListUserVM {
         this.allUsers = allUsers;
     }
 
+    public void getDeletingData(final Map<String, Cuser> objsToDel) {
+        this.deletingData(objsToDel);
+    }
+
 }
