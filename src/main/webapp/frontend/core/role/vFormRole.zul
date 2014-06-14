@@ -4,14 +4,14 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 <zscript>
-    String ModuleName = " User Group ";
+    String ModuleName = " Role ";
 </zscript>
 
-<window id="dialogWindow" title="@bind(empty vm.selected.cuserGrpId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
+<window id="dialogWindow" title="@bind(empty vm.selected.croleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
     height="180px" width="400px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
-    viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.FormUserGroupVM')">
+    viewModel="@id('vm') @init('com.wd.basezk.composer.role.FormRoleVM')">
 
 <panel height="100%" sclass="baseLayoutPanel"
     form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
@@ -21,10 +21,10 @@
 
             <hbox width="100%">
                 <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="Group Name" />
+                    <label sclass="baseFormFieldLabel" value="Role Name" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.cuserGrpName) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserGrpName'])"/>
+                    <textbox style="width: 160px" value="@bind(frm.croleRolename) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['croleRolename'])"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -32,7 +32,7 @@
                     <label sclass="baseFormFieldLabel" value="Note" />
                 </vbox>
                 <vbox align="start">
-                    <textbox rows="3" style="width: 240px" value="@bind(frm.cuserGrpDesc)" maxlength="@bind(vm.txtMaxLength['cuserGrpDesc'])"/>
+                    <textbox rows="3" style="width: 240px" value="@bind(frm.croleDesc)" maxlength="@bind(vm.txtMaxLength['croleDesc'])"/>
                 </vbox>
             </hbox>
 
@@ -42,8 +42,8 @@
             <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cuserGrpId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cuserGrpId ? true : false)" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.croleId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.croleId ? true : false)" />
             <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 

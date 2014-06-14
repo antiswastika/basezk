@@ -13,7 +13,7 @@
 
 <panel height="100%"
     apply="org.zkoss.bind.BindComposer"
-    viewModel="@id('vm') @init('com.wd.basezk.composer.usergroup.ListUserGroupVM')">
+    viewModel="@id('vm') @init('com.wd.basezk.composer.role.ListRoleVM')">
     <panelchildren>
         <auxhead>
             <auxheader colspan="11" label="@bind(ModuleName.concat((labels.labelG.List)))" />
@@ -31,14 +31,14 @@
         </toolbar>
         <listbox
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
-            vflex="true" multiple="true" model="@bind(vm.allUserGrps)" onSelect="onDataSelected()"
+            vflex="true" multiple="true" model="@bind(vm.allRoles)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="4" />
             <listhead sizable="true">
                 <listheader width="30px" align="center" />
                 <listheader width="40px" align="center" />
                 <listheader width="50px" align="right"  />
-                <listheader width="150px" label="Group Name" align="left" />
+                <listheader width="150px" label="Role Name" align="left" />
                 <listheader width="200px" label="Desc" align="left" />
                 <listheader visible="false" width="80px" label="Deleted" align="center" />
                 <listheader visible="false" width="140px" label="Deleted On" align="center" />
@@ -52,14 +52,14 @@
                 <listcell/>
                 <listcell image="/assets/img/icon16x16/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
                 <listcell label="@bind(forEachStatus.index+1)" />
-                <listcell label="@bind(each.cuserGrpName)" />
-                <listcell label="@bind(each.cuserGrpDesc)" />
-                <listcell visible="false" label="@bind(empty each.cuserGrpDeleteon ? 'No' : 'Yes')" />
-                <listcell visible="false" label="@bind(each.cuserGrpDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                <listcell label="@bind(each.cuserGrpInputby)" />
-                <listcell label="@bind(each.cuserGrpInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                <listcell label="@bind(each.cuserGrpUpdateby)" />
-                <listcell label="@bind(each.cuserGrpUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.croleRolename)" />
+                <listcell label="@bind(each.croleDesc)" />
+                <listcell visible="false" label="@bind(empty each.croleDeleteon ? 'No' : 'Yes')" />
+                <listcell visible="false" label="@bind(each.croleDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.croleInputby)" />
+                <listcell label="@bind(each.croleInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.croleUpdateby)" />
+                <listcell label="@bind(each.croleUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
             </listitem>
             </template>
         </listbox>

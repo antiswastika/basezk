@@ -1,4 +1,4 @@
-package com.wd.basezk.composer.usergroup;
+package com.wd.basezk.composer.role;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -32,8 +32,8 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
-import com.wd.basezk.model.CuserGrp;
-import com.wd.basezk.service.CuserGrpService;
+import com.wd.basezk.model.Crole;
+import com.wd.basezk.service.CroleService;
 
 /**
  * @author (ariv.wd@gmail.com)
@@ -46,21 +46,21 @@ import com.wd.basezk.service.CuserGrpService;
 /*Anotasi supaya semua Spring-Bean bisa dideteksi oleh ZK*/
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 
-public class FormUserGroupVM {
+public class FormRoleVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    private CuserGrp selected = new CuserGrp();
+    private Crole selected = new Crole();
 
     // Untuk WireComponentSelector
     private Component wComSel;
-    private ListUserGroupVM wObjList;
+    private ListRoleVM wObjList;
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
-    private CuserGrpService cuserGrpService;
+    private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private Map<String, Integer> txtMaxLength;
@@ -72,7 +72,7 @@ public class FormUserGroupVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserGroupVM arg, @ExecutionArgParam("selected") CuserGrp arg2) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListRoleVM arg, @ExecutionArgParam("selected") Crole arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
@@ -101,8 +101,8 @@ public class FormUserGroupVM {
     @Command
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        if (selected.getCuserGrpId() == null) {
-            getCuserGrpService().insertData(selected);
+        if (selected.getCroleId() == null) {
+            getCroleService().insertData(selected);
             getwObjList().doRefresh();
         } else {
             doEdit();
@@ -110,7 +110,7 @@ public class FormUserGroupVM {
     }
 
     private void doEdit() {
-        getCuserGrpService().updateData(selected);
+        getCroleService().updateData(selected);
         getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
     }
@@ -118,9 +118,9 @@ public class FormUserGroupVM {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
-        final Map<String, CuserGrp> objsToDel = new HashMap<String, CuserGrp>();
+        final Map<String, Crole> objsToDel = new HashMap<String, Crole>();
         final Window windowNya = dialogWindow;
-        objsToDel.put(selected.getCuserGrpId(), selected);
+        objsToDel.put(selected.getCroleId(), selected);
 
         // ----------------------------------------------------------
         // Show a confirm box
@@ -201,17 +201,17 @@ public class FormUserGroupVM {
         this.wComSel = wComSel;
     }
 
-    public ListUserGroupVM getwObjList() {
+    public ListRoleVM getwObjList() {
         return wObjList;
     }
-    public void setwObjList(ListUserGroupVM wObjList) {
+    public void setwObjList(ListRoleVM wObjList) {
         this.wObjList = wObjList;
     }
 
-    public CuserGrp getSelected() {
+    public Crole getSelected() {
         return selected;
     }
-    public void setSelected(CuserGrp selected) {
+    public void setSelected(Crole selected) {
         this.selected = selected;
     }
 
@@ -222,11 +222,11 @@ public class FormUserGroupVM {
         this.txtMaxLength = txtMaxLength;
     }
 
-    public CuserGrpService getCuserGrpService() {
-        return cuserGrpService;
+    public CroleService getCroleService() {
+        return croleService;
     }
-    public void setCuserGrpService(CuserGrpService cuserGrpService) {
-        this.cuserGrpService = cuserGrpService;
+    public void setCroleService(CroleService croleService) {
+        this.croleService = croleService;
     }
 
 }
