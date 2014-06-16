@@ -16,7 +16,7 @@
     viewModel="@id('vm') @init('com.wd.basezk.composer.role.ListRoleVM')">
     <panelchildren>
         <auxhead>
-            <auxheader colspan="11" label="@bind(ModuleName.concat((labels.labelG.List)))" />
+            <auxheader label="@bind(ModuleName.concat((labels.labelG.List)))" />
         </auxhead>
         <toolbar>
             <toolbarbutton image="/assets/img/icon16x16/Insert.png" label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />

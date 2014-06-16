@@ -98,6 +98,7 @@ public class ListUserGroupVM {
             }
         }
         this.executeDetail( objNya );
+        listboxNya.invalidate();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -31,7 +31,7 @@
                     <label sclass="baseFormFieldLabel" value="Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load('**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
+                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load(empty vm.selected.cuserPassword ? '' : '**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -46,7 +46,7 @@
                     <label sclass="baseFormFieldLabel" value="Confirm Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load('**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
+                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load(empty vm.selected.cuserPassword ? '' : '**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -55,8 +55,8 @@
                 </vbox>
                 <vbox align="start">
                     <combobox readonly="true" autodrop="true" model="@bind(vm.allUserGrps)"
-                        selectedItem="@bind(vm.selected.cuserGrp)"
-                        value="@bind(vm.selected.cuserGrp.cuserGrpName)">
+                        selectedItem="@bind(frm.cuserGrp)"
+                        value="@bind(frm.cuserGrp.cuserGrpName)">
                     <template name="model">
                         <comboitem label="@bind(each.cuserGrpName)" value="@bind(each.cuserGrpId)"/>
                     </template>

@@ -98,6 +98,7 @@ public class ListRoleVM {
             }
         }
         this.executeDetail( objNya );
+        listboxNya.invalidate();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

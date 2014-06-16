@@ -94,6 +94,7 @@ public class ListUserVM {
             }
         }
         this.executeDetail( objNya );
+        listboxNya.invalidate();
     }
 
     @SuppressWarnings({ "unused", "unchecked", "rawtypes" })
