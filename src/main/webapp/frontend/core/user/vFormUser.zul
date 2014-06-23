@@ -31,7 +31,7 @@
                     <label sclass="baseFormFieldLabel" value="Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load(empty vm.selected.cuserPassword ? '' : '**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
+                    <textbox id="txtpass" style="width: 160px" type="password" value="@bind(frm.cuserPassword) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -46,7 +46,7 @@
                     <label sclass="baseFormFieldLabel" value="Confirm Password" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" type="password" value="@save(frm.cuserPassword) @load(empty vm.selected.cuserPassword ? '' : '**********') @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
+                    <textbox id="txtCpass" style="width: 160px" type="password" value="@bind(vm.confirmPassword) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -54,9 +54,10 @@
                     <label sclass="baseFormFieldLabel" value="User Group" />
                 </vbox>
                 <vbox align="start">
-                    <combobox readonly="true" autodrop="true" model="@bind(vm.allUserGrps)"
-                        selectedItem="@bind(frm.cuserGrp)"
-                        value="@bind(frm.cuserGrp.cuserGrpName)">
+                    <combobox id="cmbUserGrp"
+                        readonly="true" autodrop="true"
+                        model="@bind(vm.allUserGrps)" selectedItem="@bind(frm.cuserGrp)"
+                        value="@load(frm.cuserGrp.cuserGrpName)">
                     <template name="model">
                         <comboitem label="@bind(each.cuserGrpName)" value="@bind(each.cuserGrpId)"/>
                     </template>
@@ -86,7 +87,7 @@
                         <label sclass="baseFormFieldLabel" value="Active" />
                     </vbox>
                     <vbox align="start" style="margin-top: 4px">
-                        <checkbox value="1" checked="@bind(frm.cuserActive)"/>
+                        <checkbox value="true" checked="@load(frm.cuserActive)"/>
                     </vbox>
                 </hbox>
                 </vbox>

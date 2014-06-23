@@ -18,6 +18,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
@@ -30,7 +31,9 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
@@ -54,6 +57,10 @@ public class FormUserVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
+    @Wire("#cmbUserGrp")
+    private Combobox cmbUserGrp;
+    @Wire("#txtCpass")
+    private Textbox txtCpass;
 
     // Default Variables untuk VM-Model
     //--------------------------> [TidakAda]
@@ -69,6 +76,8 @@ public class FormUserVM {
     private CuserGrpService cuserGrpService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
+    private String starPassword = "***";
+    private String confirmPassword = "";
     private Cuser selected = new Cuser();
     private Map<String, Integer> txtMaxLength;
     private List<CuserGrp> allUserGrps = new ArrayList<CuserGrp>();
@@ -80,12 +89,13 @@ public class FormUserVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
+    @Init
     public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserVM arg, @ExecutionArgParam("selected") Cuser arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
         if (arg2 != null) { setSelected(arg2); }
-        wiringComponent();
+        initComponent();
         prepareAll();
     }
 
@@ -114,9 +124,11 @@ public class FormUserVM {
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
         if (selected.getCuserId() == null) {
+            manualValidateForm();
             getCuserService().insertData(selected);
             getwObjList().doRefresh();
         } else {
+            manualValidateForm();
             doEdit();
         }
     }
@@ -194,35 +206,33 @@ public class FormUserVM {
         };
     }
 
-    public Validator getValidateConfirmPassword() {
-        return new AbstractValidator() {
-            @Override
-            public void validate(ValidationContext ctx) {
-                InputElement componentNya = (InputElement)ctx.getBindContext().getValidatorArg("component");
-                String text1 = (String)ctx.getBindContext().getValidatorArg("text1");
-                String text2 = (String)ctx.getBindContext().getValidatorArg("text2");
-                Clients.clearWrongValue(componentNya);
-                if(text2.trim().equals("") || text2 == null) {
-                    componentNya.setFocus(true);
-                    throw new WrongValueException(componentNya, "Required Field!");
-                }
-                if(text2.equals(text1) == false) {
-                    componentNya.setFocus(true);
-                    throw new WrongValueException(componentNya, "Doesn't Match!");
-                }
-
-                System.out.println("Text1 = " + text1);
-                System.out.println("Text2 = " + text2);
+    private void manualValidateForm() {
+        //Cek Password
+        if (selected.getCuserPassword() != null && selected.getCuserPassword().equals(starPassword) == false) {
+            if (selected.getCuserPassword().equals(confirmPassword) == false) {
+                txtCpass.setFocus(true);
+                throw new WrongValueException(txtCpass, "Doesnt match!");
+            } else {
+                selected.setCuserPassword(confirmPassword);
             }
-        };
+        }
+
+        //Cek combobox.
+        if (selected.getCuserGrp() == null) {
+            cmbUserGrp.setFocus(true);
+            throw new WrongValueException(cmbUserGrp, "Required Field!");
+        }
+
+        //Set boolean status aktif.
+        if (selected.getCuserActive() == null) {
+            selected.setCuserActive(false);
+        }
     }
 
 /*************************************************************************************
  * Renderer
  **************************************************************************************/
-    // Untuk Wiring Component yang ada di ZUL apabila diperlukan,
-    // Persiapan Wiring Component via wComSel - (DEFAULT)
-    private void wiringComponent() {
+    private void initComponent() {
 
     }
 
@@ -269,6 +279,20 @@ public class FormUserVM {
     }
     public void setCuserGrpService(CuserGrpService cuserGrpService) {
         this.cuserGrpService = cuserGrpService;
+    }
+
+    public String getStarPassword() {
+        return starPassword;
+    }
+    public void setStarPassword(String starPassword) {
+        this.starPassword = starPassword;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     public List<CuserGrp> getAllUserGrps() {

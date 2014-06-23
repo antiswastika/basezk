@@ -66,7 +66,7 @@ public class ListUserGroupVM {
     public void onCreate(@ContextParam(ContextType.VIEW) Component view) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
-        wiringComponent();
+        initComponent();
         loadData();
     }
 
@@ -203,9 +203,7 @@ public class ListUserGroupVM {
 /*************************************************************************************
  * Renderer
  **************************************************************************************/
-    // Untuk Wiring Component yang ada di ZUL apabila diperlukan,
-    // Persiapan Wiring Component via wComSel - (DEFAULT)
-    private void wiringComponent() {
+    private void initComponent() {
         listboxNya.getPagingChild().setAutohide(false);
     }
 

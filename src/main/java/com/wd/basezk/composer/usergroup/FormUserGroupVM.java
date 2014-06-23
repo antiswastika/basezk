@@ -78,7 +78,7 @@ public class FormUserGroupVM {
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
         if (arg2 != null) { setSelected(arg2); }
-        wiringComponent();
+        initComponent();
         prepareAll();
     }
 
@@ -186,9 +186,7 @@ public class FormUserGroupVM {
 /*************************************************************************************
  * Renderer
  **************************************************************************************/
-    // Untuk Wiring Component yang ada di ZUL apabila diperlukan,
-    // Persiapan Wiring Component via wComSel - (DEFAULT)
-    private void wiringComponent() {
+    private void initComponent() {
 
     }
 
