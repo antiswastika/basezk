@@ -13,12 +13,16 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Messagebox;
 
 import com.wd.basezk.model.Cuser;
 import com.wd.basezk.service.CuserService;
@@ -97,13 +101,42 @@ public class ListUserVM {
         listboxNya.invalidate();
     }
 
-    @SuppressWarnings({ "unused", "unchecked", "rawtypes" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
         ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
-        Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
+        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
 
-        deletingData(objsToDel);
+        for (Cuser objs : lml) {
+            if (lml.isSelected(objs)) {
+                objsToDel.put(objs.getCuserId(), objs);
+            }
+        }
+
+        if (objsToDel.size()>0) {
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+                @Override
+                public void onEvent(Event event) throws Exception {
+                    if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                        deletingData(objsToDel);
+                    }
+                }
+            });
+            // ----------------------------------------------------------
+
+        } else {
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("XXXXXXXXXXXX", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+            return;
+            // ----------------------------------------------------------
+        }
     }
 
     @Command
@@ -119,6 +152,7 @@ public class ListUserVM {
     @Command
     public void doRefresh() {
         loadData();
+        Events.postEvent(Events.ON_SELECT, listboxNya, null);
     }
 
 /*************************************************************************************
@@ -150,7 +184,15 @@ public class ListUserVM {
     }
 
     private void deletingData(final Map<String, Cuser> objsToDel) {
-
+        for (Map.Entry<String, Cuser> mapNya : objsToDel.entrySet()) {
+            try {
+                Cuser v = mapNya.getValue();
+                getCuserService().deleteData(v.getCuserId());
+            } catch (Exception e) {
+                //
+            }
+        }
+        doRefresh();
     }
 
 /*************************************************************************************

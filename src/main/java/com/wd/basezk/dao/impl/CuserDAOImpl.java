@@ -77,7 +77,7 @@ public class CuserDAOImpl implements CuserDAO {
 
                 //Untuk Delete Hanya Status, uncomment statement dibawah ini.
                 //===========================================================
-                /*SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 Date d1 = new Date();
                 String formattedDate = df.format(d1);
                 final Timestamp nowTs = Timestamp.valueOf(formattedDate);
@@ -86,11 +86,11 @@ public class CuserDAOImpl implements CuserDAO {
                 //Set defaut DeleteOn
                 objNya.setCuserDeleteon(nowTs);
                 //Finaly Save
-                sessionFactory.getCurrentSession().update(objNya);*/
+                sessionFactory.getCurrentSession().update(objNya);
 
                 //Untuk Delete Permanent, uncomment statement dibawah ini.
                 //===========================================================
-                sessionFactory.getCurrentSession().delete(objNya);
+                //sessionFactory.getCurrentSession().delete(objNya);
 
                 return true;
             } else {
@@ -158,7 +158,7 @@ public class CuserDAOImpl implements CuserDAO {
     private int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit) {
         String finalQuery = "";
         int result = 1; // init
-        String queryFrom = "SELECT MAX( CAST(SUBSTRING(cuser_grp_id, LENGTH(cuser_grp_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM CuserGrp ";
+        String queryFrom = "SELECT MAX( CAST(SUBSTRING(cuser_id, LENGTH(cuser_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM Cuser ";
         String queryWhere = " WHERE ";
 
         Object params[] = new Object[requestMap.size()];
@@ -169,7 +169,7 @@ public class CuserDAOImpl implements CuserDAO {
             String v = entry.getValue();
 
             if (q=="section1") {
-                queryWhere = queryWhere + " SUBSTRING(cuser_grp_id, LENGTH(cuser_grp_id) - 16, 13) = ? AND ";
+                queryWhere = queryWhere + " SUBSTRING(cuser_id, LENGTH(cuser_id) - 16, 13) = ? AND ";
                 params[a] = v;
             }
 

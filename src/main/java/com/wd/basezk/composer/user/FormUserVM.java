@@ -18,7 +18,6 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
@@ -76,7 +75,6 @@ public class FormUserVM {
     private CuserGrpService cuserGrpService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private String starPassword = "***";
     private String confirmPassword = "";
     private Cuser selected = new Cuser();
     private Map<String, Integer> txtMaxLength;
@@ -89,7 +87,6 @@ public class FormUserVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    @Init
     public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserVM arg, @ExecutionArgParam("selected") Cuser arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
@@ -110,6 +107,10 @@ public class FormUserVM {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
+        }
+
+        if (selected.getCuserId() != null) {
+            confirmPassword = selected.getCuserPassword();
         }
 
         Map<String, String> requestMap = new HashMap<String, String>();
@@ -208,7 +209,7 @@ public class FormUserVM {
 
     private void manualValidateForm() {
         //Cek Password
-        if (selected.getCuserPassword() != null && selected.getCuserPassword().equals(starPassword) == false) {
+        if (selected.getCuserPassword() != null) {
             if (selected.getCuserPassword().equals(confirmPassword) == false) {
                 txtCpass.setFocus(true);
                 throw new WrongValueException(txtCpass, "Doesnt match!");
@@ -279,13 +280,6 @@ public class FormUserVM {
     }
     public void setCuserGrpService(CuserGrpService cuserGrpService) {
         this.cuserGrpService = cuserGrpService;
-    }
-
-    public String getStarPassword() {
-        return starPassword;
-    }
-    public void setStarPassword(String starPassword) {
-        this.starPassword = starPassword;
     }
 
     public String getConfirmPassword() {
