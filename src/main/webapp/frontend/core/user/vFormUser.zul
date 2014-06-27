@@ -24,7 +24,7 @@
                     <label sclass="baseFormFieldLabel" value="User Name" />
                 </vbox>
                 <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.cuserUsername) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserUsername'])"/>
+                    <textbox style="width: 160px" value="@bind(frm.cuserUsername) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cuserUsername'])" readonly="@bind(empty frm.cuserId ? false : true)"/>
                 </vbox>
                 <space />
                 <vbox sclass="baseFormVBoxMultiCol2" align="end">
@@ -87,7 +87,7 @@
                         <label sclass="baseFormFieldLabel" value="Active" />
                     </vbox>
                     <vbox align="start" style="margin-top: 4px">
-                        <checkbox value="true" checked="@load(frm.cuserActive)"/>
+                        <checkbox value="true" checked="@bind(frm.cuserActive)"/>
                     </vbox>
                 </hbox>
                 </vbox>
@@ -96,7 +96,7 @@
                     <label sclass="baseFormFieldLabel" value="Note" />
                 </vbox>
                 <vbox align="start">
-                    <textbox rows="3" style="width: 240px" />
+                    <textbox rows="3" style="width: 240px" value="@bind(frm.cuserDesc)" />
                 </vbox>
             </hbox>
             <tabbox sclass="baseFormTabbox" height="225px">
