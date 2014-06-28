@@ -2,6 +2,7 @@ package com.wd.basezk.composer.userrole;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -32,8 +33,12 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
+import com.wd.basezk.model.Crole;
+import com.wd.basezk.model.Cuser;
 import com.wd.basezk.model.CuserRole;
+import com.wd.basezk.service.CroleService;
 import com.wd.basezk.service.CuserRoleService;
+import com.wd.basezk.service.CuserService;
 
 /**
  * @author (ariv.wd@gmail.com)
@@ -61,10 +66,16 @@ public class FormUserRoleVM {
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
     private CuserRoleService cuserRoleService;
+    @WireVariable
+    private CuserService cuserService;
+    @WireVariable
+    private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private CuserRole selected = new CuserRole();
     private Map<String, Integer> txtMaxLength;
+    private List<Cuser> allUsers;
+    private List<Crole> allRoles;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -94,6 +105,15 @@ public class FormUserRoleVM {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+
+
+        Map<String, String> requestMapUser = new HashMap<String, String>();
+        requestMapUser.put("null", "null");
+        setAllUsers(getCuserService().getByRequest(requestMapUser, false, null));
+
+        Map<String, String> requestMapRole = new HashMap<String, String>();
+        requestMapRole.put("null",null);
+        setAllRoles(getCroleService().getByRequest(requestMapRole, false, null));
     }
 
 /*************************************************************************************
@@ -221,11 +241,39 @@ public class FormUserRoleVM {
         this.txtMaxLength = txtMaxLength;
     }
 
+    public List<Cuser> getAllUsers() {
+        return allUsers;
+    }
+    public void setAllUsers(List<Cuser> allUsers) {
+        this.allUsers = allUsers;
+    }
+
+    public List<Crole> getAllRoles() {
+        return allRoles;
+    }
+    public void setAllRoles(List<Crole> allRoles) {
+        this.allRoles = allRoles;
+    }
+
     public CuserRoleService getCuserRoleService() {
         return cuserRoleService;
     }
     public void setCuserRoleService(CuserRoleService cuserRoleService) {
         this.cuserRoleService = cuserRoleService;
+    }
+
+    public CuserService getCuserService() {
+        return cuserService;
+    }
+    public void setCuserService(CuserService cuserService) {
+        this.cuserService = cuserService;
+    }
+
+    public CroleService getCroleService() {
+        return croleService;
+    }
+    public void setCroleService(CroleService croleService) {
+        this.croleService = croleService;
     }
 
 }

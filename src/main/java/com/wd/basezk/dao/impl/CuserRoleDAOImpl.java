@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.wd.basezk.dao.CuserRoleDAO;
 import com.wd.basezk.model.CuserRole;
 
-@Repository("cuserGrpDAO")
+@Repository("cuserRoleDAO")
 public class CuserRoleDAOImpl implements CuserRoleDAO {
 
     @Autowired

@@ -20,21 +20,49 @@
         <vlayout style="padding: 10px;">
 
             <hbox width="100%">
-                <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="User Name" />
-                </vbox>
-                <vbox sclass="baseFormVBoxMultiCol2" align="end">
-                    <label sclass="baseFormFieldLabel" value="Role List" />
-                </vbox>
-            </hbox>
-            <hbox width="100%">
-                <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <listbox id="listRole" model="@bind(vm.allRoles)">
-
+                <vbox sclass="baseFormVBoxMultiCol1" align="start">
+                    <hbox>
+                        <label sclass="baseFormFieldLabel" value="User Name" />
+                        <textbox value="" width="140px" readonly="true"/>
+                    </hbox>
+                    <listbox
+                        id="listboxNyaUser" rows="10" width="215px"
+                        multiple="false" model="@bind(vm.allUsers)"
+                        style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
+                        <listhead sizable="true" visible="false">
+                            <listheader width="20px" align="right"  />
+                            <listheader label="User Name" align="left" />
+                        </listhead>
+                        <template name="model">
+                        <listitem>
+                            <listcell label="@bind(forEachStatus.index+1)" />
+                            <listcell label="@bind(each.cuserUsername)" />
+                        </listitem>
+                        </template>
                     </listbox>
                 </vbox>
-                <vbox sclass="baseFormVBoxMultiCol2" align="end">
-
+                <vbox sclass="baseFormVBoxMultiCol2" align="start">
+                    <hbox>
+                        <label sclass="baseFormFieldLabel" value="Role List" />
+                        <textbox value="" width="340px" readonly="true"/>
+                    </hbox>
+                    <listbox
+                        id="listboxNya" checkmark="true" rows="10" width="400px"
+                        multiple="true" model="@bind(vm.allRoles)"
+                        style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
+                        <listhead sizable="true" visible="false">
+                            <listheader width="40px" align="center" />
+                            <listheader width="20px" align="right"  />
+                            <listheader label="Role Name" align="left" />
+                        </listhead>
+                        <template name="model">
+                        <listitem>
+                            <listcell/>
+                            <listcell label="@bind(forEachStatus.index+1)" />
+                            <listcell label="@bind(each.croleRolename)" />
+                        </listitem>
+                        </template>
+                    </listbox>
                 </vbox>
             </hbox>
 
