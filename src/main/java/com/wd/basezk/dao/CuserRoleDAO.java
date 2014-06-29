@@ -11,4 +11,5 @@ public interface CuserRoleDAO {
     public Boolean deleteData(String idNya);
     public CuserRole getById(String idNya);
     public List<CuserRole> getByRequest(Map<String, String> requestMap, boolean useLikeKeyword, String[] whereArgs);
+    public String generateIdForModel();
 }

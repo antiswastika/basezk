@@ -1,17 +1,14 @@
 package com.wd.basezk.composer.userrole;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Column;
-
 import org.springframework.stereotype.Controller;
-import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.AfterCompose;
@@ -25,21 +22,17 @@ import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Listitem;
-import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.Crole;
 import com.wd.basezk.model.Cuser;
-import com.wd.basezk.model.CuserRole;
 import com.wd.basezk.service.CroleService;
 import com.wd.basezk.service.CuserRoleService;
 import com.wd.basezk.service.CuserService;
@@ -76,11 +69,11 @@ public class FormUserRoleVM {
     private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private CuserRole selected = new CuserRole();
+    private Cuser selectedUser = new Cuser();
+    private List<Crole> selectedRoles = new ArrayList<Crole>();
     private Map<String, Integer> txtMaxLength;
     private List<Cuser> allUsers;
     private List<Crole> allRoles;
-    private String strSelectedUser;
     private String strSelectedRoles;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
@@ -90,7 +83,7 @@ public class FormUserRoleVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserRoleVM arg, @ExecutionArgParam("selected") CuserRole arg2) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserRoleVM arg, @ExecutionArgParam("selected") Cuser arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
@@ -103,15 +96,6 @@ public class FormUserRoleVM {
  * Preparation (Load Variables Value)
  **************************************************************************************/
     private void prepareAll() {
-        txtMaxLength = new HashMap<String, Integer>();
-        try {
-            setMaxLength4All();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
         Map<String, String> requestMapUser = new HashMap<String, String>();
         requestMapUser.put("null", "null");
         setAllUsers(getCuserService().getByRequest(requestMapUser, false, null));
@@ -127,43 +111,22 @@ public class FormUserRoleVM {
     @Command
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        /*if (selected.getCuserRoleId() == null) {
-            getCuserRoleService().insertData(selected);
+        if (selectedRoles.size() > 0) {
+            Set<Crole> selectedRoles2 = new HashSet<Crole>(selectedRoles);
+            getCuserRoleService().insertData(selectedUser, selectedRoles2);
             getwObjList().doRefresh();
         } else {
             doEdit();
-        }*/
-
-
+        }
     }
 
-    @SuppressWarnings("unused")
     private void doEdit() {
-        /*getCuserRoleService().updateData(selected);
-        getwObjList().doRefresh();
-        BindUtils.postNotifyChange(null, null, this, "selected");*/
+
     }
 
     @Command
     public void doDelete() {
-//        final Map<String, CuserRole> objsToDel = new HashMap<String, CuserRole>();
-//        final Window windowNya = dialogWindow;
-//        objsToDel.put(selected.getCuserRoleId(), selected);
-//
-//        // ----------------------------------------------------------
-//        // Show a confirm box
-//        // ----------------------------------------------------------
-//        //TODO: Labeling!
-//        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
-//            @Override
-//            public void onEvent(Event event) throws Exception {
-//                if(((Integer)event.getData()).intValue()==Messagebox.YES){
-//                    getwObjList().getDeletingData(objsToDel);
-//                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
-//                }
-//            }
-//        });
-//        // ----------------------------------------------------------
+
     }
 
     @Command
@@ -179,29 +142,18 @@ public class FormUserRoleVM {
  * Event dan Listener (Diawali dengan "on" / Fungsinya sama dengan Do's, yaitu Command)
  **************************************************************************************/
     @SuppressWarnings("rawtypes")
-    @NotifyChange("strSelectedUser")
+    @NotifyChange({"strSelectedRoles","selectedRoles"})
     @Command
-    public void onSelectUser(@BindingParam("data") Set<Cuser> dataNya) throws InterruptedException {
-        setStrSelectedUser("");
-        Iterator iterator = dataNya.iterator();
-        while (iterator.hasNext()){
-            Listitem li = (Listitem) iterator.next();
-            Cuser liVal = li.getValue();
-            setStrSelectedUser( liVal.getCuserUsername() );
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @NotifyChange("strSelectedRoles")
-    @Command
-    public void onSelectRole(@BindingParam("data") Set<Crole> dataNya) throws InterruptedException {
+    public void onSelectRole(@BindingParam("event") Event eventNya, @BindingParam("data") Set<Crole> dataNya) throws InterruptedException {
         setStrSelectedRoles("");
+        if (selectedRoles != null) { selectedRoles.clear(); }
         Iterator iterator = dataNya.iterator();
         List<String> listStrCrole = new ArrayList<String>();
         while (iterator.hasNext()){
             Listitem li = (Listitem) iterator.next();
             Crole liVal = li.getValue();
             listStrCrole.add(liVal.getCroleRolename());
+            selectedRoles.add(liVal);
         }
         String strRoles = "";
         for (int i=0; i<listStrCrole.size(); i++) {
@@ -213,14 +165,7 @@ public class FormUserRoleVM {
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
-    private void setMaxLength4All() throws NoSuchFieldException, SecurityException {
-        Field[] fields = selected.getClass().getDeclaredFields();
-        for (int i=0; i<fields.length; i++) {
-            if (fields[i].getType().toString().toLowerCase().contains("string")) {
-                txtMaxLength.put(fields[i].getName(), selected.getClass().getDeclaredField(fields[i].getName()).getAnnotation(Column.class).length());
-            }
-        }
-    }
+
 
 /*************************************************************************************
  * Validator
@@ -264,11 +209,18 @@ public class FormUserRoleVM {
         this.wObjList = wObjList;
     }
 
-    public CuserRole getSelected() {
-        return selected;
+    public Cuser getSelected() {
+        return selectedUser;
     }
-    public void setSelected(CuserRole selected) {
-        this.selected = selected;
+    public void setSelected(Cuser selectedUser) {
+        this.selectedUser = selectedUser;
+    }
+
+    public List<Crole> getSelectedRoles() {
+        return selectedRoles;
+    }
+    public void setSelectedRoles(List<Crole> selectedRoles) {
+        this.selectedRoles = selectedRoles;
     }
 
     public Map<String, Integer> getTxtMaxLength() {
@@ -290,13 +242,6 @@ public class FormUserRoleVM {
     }
     public void setAllRoles(List<Crole> allRoles) {
         this.allRoles = allRoles;
-    }
-
-    public String getStrSelectedUser() {
-        return strSelectedUser;
-    }
-    public void setStrSelectedUser(String strSelectedUser) {
-        this.strSelectedUser = strSelectedUser;
     }
 
     public String getStrSelectedRoles() {

@@ -27,11 +27,6 @@ public class CuserRoleDAOImpl implements CuserRoleDAO {
         String formattedDate = df.format(d1);
         final Timestamp nowTs = Timestamp.valueOf(formattedDate);
 
-        if (objNya.getCuserRoleId() == null || objNya.getCuserRoleId().equals(null)) {
-            //Set default new ID
-            objNya.setCuserRoleId( createPrimaryKey() );
-        }
-
         //Set defaut Deleteable
         objNya.setCuserRoleDeleteable(true);
         //Set defaut InputBy
@@ -216,6 +211,10 @@ public class CuserRoleDAOImpl implements CuserRoleDAO {
         retVal = section1 + (tempRetVal.substring(tempRetVal.length()-strDigits.length()));
 
         return retVal;
+    }
+
+    public String generateIdForModel() {
+        return createPrimaryKey();
     }
 
 }

@@ -22,10 +22,13 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 
-import com.wd.basezk.model.CuserRole;
-import com.wd.basezk.service.CuserRoleService;
+import com.wd.basezk.model.Cuser;
+import com.wd.basezk.service.CuserService;
 
 /**
  * @author (ariv.wd@gmail.com)
@@ -51,13 +54,13 @@ public class ListUserRoleVM {
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
-    private CuserRoleService cuserRoleService;
+    private CuserService cuserService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private List<CuserRole> allUserRoles;
+    private List<Cuser> allUsers;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
-    //--------------------------> [TidakAda]
+    private ListitemRenderer<Cuser> allCusersItemRenderer;
 
 /*************************************************************************************
  * Initialize
@@ -81,15 +84,15 @@ public class ListUserRoleVM {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doNew() throws InterruptedException {
-        ListModelList<CuserRole> lml = (ListModelList) listboxNya.getModel();
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
         lml.clearSelection();
-        this.executeDetail( new CuserRole() );
+        this.executeDetail( new Cuser() );
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
-    public void doEdit(@BindingParam("record") CuserRole objNya) throws InterruptedException {
-        ListModelList<CuserRole> lml = (ListModelList) listboxNya.getModel();
+    public void doEdit(@BindingParam("record") Cuser objNya) throws InterruptedException {
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
         lml.clearSelection();
         for (int i=0; i<lml.size(); i++) {
             if (lml.get(i).equals(objNya)) {
@@ -104,12 +107,12 @@ public class ListUserRoleVM {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
-        ListModelList<CuserRole> lml = (ListModelList) listboxNya.getModel();
-        final Map<String, CuserRole> objsToDel = new HashMap<String, CuserRole>();
+        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
 
-        for (CuserRole objs : lml) {
+        for (Cuser objs : lml) {
             if (lml.isSelected(objs)) {
-                objsToDel.put(objs.getCuserRoleId(), objs);
+                objsToDel.put(objs.getCuserId(), objs);
             }
         }
 
@@ -163,10 +166,10 @@ public class ListUserRoleVM {
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
-    private void executeDetail(CuserRole cuserroleNya) throws InterruptedException {
+    private void executeDetail(Cuser cuserNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
-        map.put("selected", cuserroleNya);
+        map.put("selected", cuserNya);
 
         try {
             Executions.createComponents("/frontend/core/userrole/vFormUserRole.zul", null, map);
@@ -178,16 +181,16 @@ public class ListUserRoleVM {
     private void loadData() {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
-        allUserRoles = getCuserRoleService().getByRequest(requestMap, false, null);
+        allUsers = getCuserService().getByRequest(requestMap, false, null);
 
-        BindUtils.postNotifyChange(null, null, this, "allUserRoles");
+        BindUtils.postNotifyChange(null, null, this, "allUsers");
     }
 
-    private void deletingData(final Map<String, CuserRole> objsToDel) {
-        for (Map.Entry<String, CuserRole> mapNya : objsToDel.entrySet()) {
+    private void deletingData(final Map<String, Cuser> objsToDel) {
+        for (Map.Entry<String, Cuser> mapNya : objsToDel.entrySet()) {
             try {
-                CuserRole v = mapNya.getValue();
-                getCuserRoleService().deleteData(v.getCuserRoleId());
+                Cuser v = mapNya.getValue();
+                getCuserService().deleteData(v.getCuserId());
             } catch (Exception e) {
                 //
             }
@@ -203,8 +206,46 @@ public class ListUserRoleVM {
 /*************************************************************************************
  * Renderer
  **************************************************************************************/
+    @SuppressWarnings("unchecked")
     private void initComponent() {
         listboxNya.getPagingChild().setAutohide(false);
+        setAllCusersItemRenderer(rendering_listbox_allUsers());
+    }
+
+    @SuppressWarnings("rawtypes")
+    private ListitemRenderer rendering_listbox_allUsers() {
+        return new ListitemRenderer() {
+            @SuppressWarnings("unchecked")
+            public void render(Listitem li, Object data, int arg) throws Exception {
+                final Cuser objNya = (Cuser) data;
+
+                Listcell lc;
+                //----------------------//
+                lc = new Listcell();
+                lc.setParent(li);
+                //----------------------//
+                lc = new Listcell();
+                lc.setImage("/assets/img/icon16x16/Modify.png");
+                lc.addEventListener("onClick", new EventListener() {
+                    @Override
+                    public void onEvent(Event event) throws Exception {
+                        doEdit(objNya);
+                    }
+                });
+                lc.setParent(li);
+                //----------------------//
+                lc = new Listcell(Integer.toString(arg+1));
+                lc.setParent(li);
+                //----------------------//
+                lc = new Listcell(objNya.getCuserUsername());
+                lc.setParent(li);
+                //----------------------//
+                lc = new Listcell(objNya.getCuserRoles().toString());
+                lc.setParent(li);
+                //----------------------//
+                li.setAttribute("data", data);
+            }
+        };
     }
 
 /*************************************************************************************
@@ -217,21 +258,28 @@ public class ListUserRoleVM {
         this.wComSel = wComSel;
     }
 
-    public List<CuserRole> getAllUserRoles() {
-        return allUserRoles;
+    public List<Cuser> getAllUsers() {
+        return allUsers;
     }
-    public void setAllUserRoles(List<CuserRole> allUserRoles) {
-        this.allUserRoles = allUserRoles;
-    }
-
-    public CuserRoleService getCuserRoleService() {
-        return cuserRoleService;
-    }
-    public void setCuserRoleService(CuserRoleService cuserRoleService) {
-        this.cuserRoleService = cuserRoleService;
+    public void setAllUsers(List<Cuser> allUsers) {
+        this.allUsers = allUsers;
     }
 
-    public void getDeletingData(final Map<String, CuserRole> objsToDel) {
+    public ListitemRenderer<Cuser> getAllCusersItemRenderer() {
+        return allCusersItemRenderer;
+    }
+    public void setAllCusersItemRenderer(ListitemRenderer<Cuser> allCusersItemRenderer) {
+        this.allCusersItemRenderer = allCusersItemRenderer;
+    }
+
+    public CuserService getCuserService() {
+        return cuserService;
+    }
+    public void setCuserService(CuserService cuserService) {
+        this.cuserService = cuserService;
+    }
+
+    public void getDeletingData(final Map<String, Cuser> objsToDel) {
         this.deletingData(objsToDel);
     }
 

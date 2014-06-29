@@ -30,8 +30,8 @@
             <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <listbox
-            id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true"
-            vflex="true" multiple="true" model="@bind(vm.allUserRoles)" onSelect="onDataSelected()"
+            id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true" itemRenderer="@bind(vm.allCusersItemRenderer)"
+            vflex="true" multiple="true" model="@bind(vm.allUsers)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="4" />
             <listhead sizable="true">
@@ -52,14 +52,14 @@
                 <listcell/>
                 <listcell image="/assets/img/icon16x16/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
                 <listcell label="@bind(forEachStatus.index+1)" />
-                <listcell label="@bind(each.cuserGrpName)" />
-                <listcell label="@bind(each.cuserGrpDesc)" />
-                <listcell visible="false" label="@bind(empty each.cuserGrpDeleteon ? 'No' : 'Yes')" />
-                <listcell visible="false" label="@bind(each.cuserGrpDeleteon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                <listcell label="@bind(each.cuserGrpInputby)" />
-                <listcell label="@bind(each.cuserGrpInputon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
-                <listcell label="@bind(each.cuserGrpUpdateby)" />
-                <listcell label="@bind(each.cuserGrpUpdateon) @converter('formatedDate',format='yyyy-MM-dd hh:mm:ss')" />
+                <listcell label="@bind(each.cuserUsername)" />
+                <listcell label="@bind(each.cuserUsername)" />
+                <listcell visible="false" label="" />
+                <listcell visible="false" label="" />
+                <listcell label="" />
+                <listcell label="" />
+                <listcell label="" />
+                <listcell label="" />
             </listitem>
             </template> -->
         </listbox>
