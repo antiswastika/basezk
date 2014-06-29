@@ -23,11 +23,11 @@
                 <vbox sclass="baseFormVBoxMultiCol1" align="start">
                     <hbox>
                         <label sclass="baseFormFieldLabel" value="User Name" />
-                        <textbox value="" width="140px" readonly="true"/>
+                        <textbox value="@bind(vm.strSelectedUser)" width="140px" readonly="true"/>
                     </hbox>
                     <listbox
-                        id="listboxNyaUser" rows="10" width="215px"
-                        multiple="false" model="@bind(vm.allUsers)"
+                        rows="10" width="215px" selectedItem="@bind(frm.cuser)"
+                        multiple="false" model="@bind(vm.allUsers)" onSelect="@command('onSelectUser', data=self.selectedItems)"
                         style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                         <listhead sizable="true" visible="false">
                             <listheader width="20px" align="right"  />
@@ -44,11 +44,11 @@
                 <vbox sclass="baseFormVBoxMultiCol2" align="start">
                     <hbox>
                         <label sclass="baseFormFieldLabel" value="Role List" />
-                        <textbox value="" width="340px" readonly="true"/>
+                        <textbox value="@bind(vm.strSelectedRoles)" width="340px" readonly="true"/>
                     </hbox>
                     <listbox
-                        id="listboxNya" checkmark="true" rows="10" width="400px"
-                        multiple="true" model="@bind(vm.allRoles)"
+                        checkmark="true" rows="10" width="400px"
+                        multiple="true" model="@bind(vm.allRoles)" onSelect="@command('onSelectRole', data=self.selectedItems)"
                         style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                         <listhead sizable="true" visible="false">
                             <listheader width="40px" align="center" />
