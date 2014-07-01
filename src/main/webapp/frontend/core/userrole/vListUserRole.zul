@@ -39,29 +39,8 @@
                 <listheader width="40px" align="center" />
                 <listheader width="50px" align="right"  />
                 <listheader width="150px" label="User Name" align="left" />
-                <listheader width="500px" label="Role List" align="left" />
-                <listheader visible="false" width="80px" label="Deleted" align="center" />
-                <listheader visible="false" width="140px" label="Deleted On" align="center" />
-                <listheader width="100px" label="Input By" align="center" />
-                <listheader width="140px" label="Input On" align="center" />
-                <listheader width="100px" label="Update By" align="center" />
-                <listheader hflex="true" label="Update On" align="center" />
+                <listheader label="Role List" align="left" />
             </listhead>
-            <!-- <template name="model">
-            <listitem>
-                <listcell/>
-                <listcell image="/assets/img/icon16x16/Modify.png" tooltiptext="${labels.toolbarW.Edit}" onClick="@command('doEdit', record=each)" />
-                <listcell label="@bind(forEachStatus.index+1)" />
-                <listcell label="@bind(each.cuserUsername)" />
-                <listcell label="@bind(each.cuserUsername)" />
-                <listcell visible="false" label="" />
-                <listcell visible="false" label="" />
-                <listcell label="" />
-                <listcell label="" />
-                <listcell label="" />
-                <listcell label="" />
-            </listitem>
-            </template> -->
         </listbox>
     </panelchildren>
 </panel>

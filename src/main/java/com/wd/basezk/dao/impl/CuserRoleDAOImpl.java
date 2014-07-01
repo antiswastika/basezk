@@ -44,26 +44,6 @@ public class CuserRoleDAOImpl implements CuserRoleDAO {
 
     }
 
-    public Boolean updateData(CuserRole objNya) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        Date d1 = new Date();
-        String formattedDate = df.format(d1);
-        final Timestamp nowTs = Timestamp.valueOf(formattedDate);
-
-        //Set defaut UpdateBy
-        objNya.setCuserRoleUpdateby("System");
-        //Set defaut UpdateOn
-        objNya.setCuserRoleUpdateon(nowTs);
-        //Finaly Save
-
-        try {
-            sessionFactory.getCurrentSession().update(objNya);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public Boolean deleteData(String idNya) {
         CuserRole objNya = getById(idNya);
 

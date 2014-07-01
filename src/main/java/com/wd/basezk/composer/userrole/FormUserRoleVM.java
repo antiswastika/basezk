@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.AfterCompose;
@@ -33,6 +34,7 @@ import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.Crole;
 import com.wd.basezk.model.Cuser;
+import com.wd.basezk.model.CuserRole;
 import com.wd.basezk.service.CroleService;
 import com.wd.basezk.service.CuserRoleService;
 import com.wd.basezk.service.CuserService;
@@ -69,7 +71,8 @@ public class FormUserRoleVM {
     private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private Cuser selectedUser = new Cuser();
+    private Cuser selected = new Cuser();
+    private Cuser selectedFromList = new Cuser();
     private List<Crole> selectedRoles = new ArrayList<Crole>();
     private Map<String, Integer> txtMaxLength;
     private List<Cuser> allUsers;
@@ -83,11 +86,11 @@ public class FormUserRoleVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserRoleVM arg, @ExecutionArgParam("selected") Cuser arg2) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListUserRoleVM arg, @ExecutionArgParam("selectedFromList") Cuser arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
-        if (arg2 != null) { setSelected(arg2); }
+        if (arg2 != null) { setSelectedFromList(arg2); }
         initComponent();
         prepareAll();
     }
@@ -101,8 +104,20 @@ public class FormUserRoleVM {
         setAllUsers(getCuserService().getByRequest(requestMapUser, false, null));
 
         Map<String, String> requestMapRole = new HashMap<String, String>();
-        requestMapRole.put("null",null);
+        requestMapRole.put("null", "null");
         setAllRoles(getCroleService().getByRequest(requestMapRole, false, null));
+
+        //Pindah focus object dari "selectedFromList" ke "selected"
+        if (allUsers.size()>0) {
+            for (int i=0; i<allUsers.size(); i++) {
+                if (allUsers.get(i).getCuserId().equals(selectedFromList.getCuserId())) {
+                    //Set "selected" supaya sama dengan "selectedFormList"
+                    setSelected(allUsers.get(i));
+                    syncDataAfterSaveOrUpdate();
+                    break;
+                }
+            }
+        }
     }
 
 /*************************************************************************************
@@ -113,25 +128,39 @@ public class FormUserRoleVM {
     public void doSave() throws InterruptedException {
         if (selectedRoles.size() > 0) {
             Set<Crole> selectedRoles2 = new HashSet<Crole>(selectedRoles);
-            getCuserRoleService().insertData(selectedUser, selectedRoles2);
+            getCuserRoleService().insertData(selected, selectedRoles2);
+            syncDataAfterSaveOrUpdate();
             getwObjList().doRefresh();
-        } else {
-            doEdit();
         }
-    }
-
-    private void doEdit() {
-
     }
 
     @Command
     public void doDelete() {
-
+//        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
+//        final Window windowNya = dialogWindow;
+//        objsToDel.put(selected.getCuserId(), selected);
+//
+//        // ----------------------------------------------------------
+//        // Show a confirm box
+//        // ----------------------------------------------------------
+//        //TODO: Labeling!
+//        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+//            @Override
+//            public void onEvent(Event event) throws Exception {
+//                if(((Integer)event.getData()).intValue()==Messagebox.YES){
+//                    getwObjList().getDeletingData(objsToDel);
+//                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
+//                }
+//            }
+//        });
+//        // ----------------------------------------------------------
     }
 
     @Command
-    @NotifyChange("selected")
-    public void doReload() { }
+    @NotifyChange("*")
+    public void doReload() {
+        syncDataAfterSaveOrUpdate();
+    }
 
     @Command
     public void doClose(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
@@ -141,6 +170,33 @@ public class FormUserRoleVM {
 /*************************************************************************************
  * Event dan Listener (Diawali dengan "on" / Fungsinya sama dengan Do's, yaitu Command)
  **************************************************************************************/
+    @SuppressWarnings({ "rawtypes" })
+    @NotifyChange({"strSelectedRoles","selectedRoles"})
+    @Command
+    public void onSelectUser(@BindingParam("event") Event eventNya, @BindingParam("data") Listitem dataNya) throws InterruptedException {
+//        setStrSelectedRoles("");
+        if (selectedRoles != null) { selectedRoles.clear(); }
+        Cuser userNya = dataNya.getValue();
+
+        if (userNya.getCuserRoles().size()>0) {
+            Iterator iterator = userNya.getCuserRoles().iterator();
+//            List<String> listStrCrole = new ArrayList<String>();
+            while (iterator.hasNext()){
+                CuserRole userRoleNya = (CuserRole) iterator.next();
+                Crole roleNya = userRoleNya.getCrole();
+//                listStrCrole.add(roleNya.getCroleRolename());
+                selectedRoles.add(roleNya);
+            }
+//            String strRoles = "";
+//            for (int i=0; i<listStrCrole.size(); i++) {
+//                strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
+//            }
+//            setStrSelectedRoles(strRoles);
+
+            syncDataAfterSaveOrUpdate();
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     @NotifyChange({"strSelectedRoles","selectedRoles"})
     @Command
@@ -165,7 +221,60 @@ public class FormUserRoleVM {
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
+    @SuppressWarnings("rawtypes")
+    private void syncDataAfterSaveOrUpdate() {
+        //Refresh List Kiri Form
+        Map<String, String> requestMapUser = new HashMap<String, String>();
+        requestMapUser.put("null", "null");
+        setAllUsers(getCuserService().getByRequest(requestMapUser, false, null));
+        BindUtils.postNotifyChange(null, null, this, "allUsers");
 
+        //Pindah focus object dari "selectedFromList" ke "selected"
+        if (allUsers.size()>0) {
+            for (int i=0; i<allUsers.size(); i++) {
+                if (allUsers.get(i).getCuserId().equals(selected.getCuserId())) {
+                    //Set "selected" supaya sama dengan "selectedFormList"
+                    setSelected(allUsers.get(i));
+                    BindUtils.postNotifyChange(null, null, this, "selected");
+                    break;
+                }
+            }
+        }
+
+        //Refresh List Kiri Form
+        Map<String, String> requestMapRole = new HashMap<String, String>();
+        requestMapRole.put("null",null);
+        setAllRoles(getCroleService().getByRequest(requestMapRole, false, null));
+        BindUtils.postNotifyChange(null, null, this, "allRoles");
+
+        setStrSelectedRoles("");
+        List<String> listStrCrole = new ArrayList<String>();
+
+        List<Crole> newSelectedRoles = new ArrayList<Crole>();
+        if (allRoles.size()>0) {
+            for (int i=0; i<allRoles.size(); i++) {
+
+                Iterator iterator = selected.getCuserRoles().iterator();
+                while (iterator.hasNext()){
+                    CuserRole userRoleNya = (CuserRole) iterator.next();
+                    if (allRoles.get(i).getCroleId().equals(userRoleNya.getCrole().getCroleId())) {
+                        newSelectedRoles.add(allRoles.get(i));
+                        listStrCrole.add(allRoles.get(i).getCroleRolename());
+                        break;
+                    }
+                }
+
+            }
+        }
+        setSelectedRoles(newSelectedRoles);
+        BindUtils.postNotifyChange(null, null, this, "selectedRoles");
+
+        String strRoles = "";
+        for (int i=0; i<listStrCrole.size(); i++) {
+            strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
+        }
+        setStrSelectedRoles(strRoles);
+    }
 
 /*************************************************************************************
  * Validator
@@ -210,10 +319,17 @@ public class FormUserRoleVM {
     }
 
     public Cuser getSelected() {
-        return selectedUser;
+        return selected;
     }
-    public void setSelected(Cuser selectedUser) {
-        this.selectedUser = selectedUser;
+    public void setSelected(Cuser selected) {
+        this.selected = selected;
+    }
+
+    public Cuser getSelectedFromList() {
+        return selectedFromList;
+    }
+    public void setSelectedFromList(Cuser selectedFromList) {
+        this.selectedFromList = selectedFromList;
     }
 
     public List<Crole> getSelectedRoles() {

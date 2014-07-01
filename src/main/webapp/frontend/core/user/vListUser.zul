@@ -40,11 +40,10 @@
                 <listheader width="50px" align="right"  />
                 <listheader width="150px" label="User Name" align="left" />
                 <listheader width="150px" label="Email" align="left" />
-                <listheader width="150px" label="Desc" align="left" />
+                <listheader width="200px" label="Desc" align="left" />
                 <listheader width="100px" label="Password" align="left" />
-                <listheader width="100px" label="Group" align="left" />
-                <listheader width="100px" label="Hint Question" align="left" />
-                <listheader width="100px" label="Hint Answer" align="left" />
+                <listheader width="150px" label="Hint Question" align="left" />
+                <listheader width="150px" label="Hint Answer" align="left" />
                 <listheader width="50px" label="Active" align="center" />
                 <listheader width="80px" label="Deleted" align="center" />
                 <listheader width="140px" label="Deleted On" align="center" />
@@ -62,7 +61,6 @@
                 <listcell label="@bind(each.cuserEmail)" />
                 <listcell label="@bind(each.cuserDesc)" />
                 <listcell label="@bind(each.cuserPassword)" />
-                <listcell label="@bind(each.cuserGrp.cuserGrpName)" />
                 <listcell label="@bind(each.cuserHintQ)" />
                 <listcell label="@bind(each.cuserHintA)" />
                 <listcell label="@bind(each.cuserActive)" />

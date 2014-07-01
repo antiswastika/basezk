@@ -8,8 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -67,11 +65,6 @@ public class Cuser implements Serializable {
 
     @Column(name="cuser_username", nullable=false, length=30)
     private String cuserUsername;
-
-    //bi-directional many-to-one association to CuserGrp
-    @ManyToOne
-    @JoinColumn(name="cuser_grp_id", nullable=false)
-    private CuserGrp cuserGrp;
 
     //bi-directional many-to-one association to CuserRole
     @OneToMany(mappedBy="cuser", fetch=FetchType.EAGER)
@@ -198,14 +191,6 @@ public class Cuser implements Serializable {
 
     public void setCuserUsername(String cuserUsername) {
         this.cuserUsername = cuserUsername;
-    }
-
-    public CuserGrp getCuserGrp() {
-        return this.cuserGrp;
-    }
-
-    public void setCuserGrp(CuserGrp cuserGrp) {
-        this.cuserGrp = cuserGrp;
     }
 
     public Set<CuserRole> getCuserRoles() {

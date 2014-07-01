@@ -4,11 +4,11 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 <zscript>
-    String ModuleName = " User Role ";
+    String FormName = " User Role ";
 </zscript>
 
-<window id="dialogWindow" title="Insert User Role"
-    height="450px" width="650px" mode="modal" border="normal" closable="false" position="center,center"
+<window id="dialogWindow" title="@bind(empty vm.selected.cuserRoles ? (labels.toolbarW.Insert).concat(FormName) : (labels.toolbarW.Edit).concat(FormName))"
+    height="455px" width="650px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.userrole.FormUserRoleVM')">
@@ -25,11 +25,11 @@
                         <textbox value="@bind(vm.selected.cuserUsername)" width="140px" readonly="true"/>
                     </hbox>
                     <listbox
-                        rows="10" width="215px"
-                        multiple="false" model="@bind(vm.allUsers)" selectedItem="@bind(vm.selected)"
+                        rows="10" width="215px" disabled="true" selectedItem="@bind(vm.selected)"
+                        multiple="false" model="@bind(vm.allUsers)" onSelect="@command('onSelectUser', eventNya=event, data=self.selectedItem)"
                         style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                         <listhead sizable="true" visible="false">
-                            <listheader width="20px" align="right"  />
+                            <listheader width="20px" align="right" />
                             <listheader label="User Name" align="left" />
                         </listhead>
                         <template name="model">
@@ -46,7 +46,7 @@
                         <textbox value="@bind(vm.strSelectedRoles)" width="340px" readonly="true"/>
                     </hbox>
                     <listbox
-                        checkmark="true" rows="10" width="400px" selectedItem="@bind(vm.selectedRoles)"
+                        checkmark="true" rows="10" width="400px" selectedItems="@bind(vm.selectedRoles)"
                         multiple="true" model="@bind(vm.allRoles)" onSelect="@command('onSelectRole', eventNya=event, data=self.selectedItems)"
                         style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                         <listhead sizable="true" visible="false">
@@ -71,7 +71,7 @@
             <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="Save" type="submit" onClick="@command('doSave')" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cuserRoles ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
             <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="true" />
             <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>

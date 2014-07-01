@@ -1,6 +1,8 @@
 package com.wd.basezk.composer.userrole;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +30,8 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 
 import com.wd.basezk.model.Cuser;
+import com.wd.basezk.model.CuserRole;
+import com.wd.basezk.service.CuserRoleService;
 import com.wd.basezk.service.CuserService;
 
 /**
@@ -55,6 +59,8 @@ public class ListUserRoleVM {
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
     private CuserService cuserService;
+    @WireVariable
+    private CuserRoleService cuserRoleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private List<Cuser> allUsers;
@@ -169,7 +175,7 @@ public class ListUserRoleVM {
     private void executeDetail(Cuser cuserNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
-        map.put("selected", cuserNya);
+        map.put("selectedFromList", cuserNya);
 
         try {
             Executions.createComponents("/frontend/core/userrole/vFormUserRole.zul", null, map);
@@ -190,7 +196,7 @@ public class ListUserRoleVM {
         for (Map.Entry<String, Cuser> mapNya : objsToDel.entrySet()) {
             try {
                 Cuser v = mapNya.getValue();
-                getCuserService().deleteData(v.getCuserId());
+                getCuserRoleService().deleteData(v.getCuserId());
             } catch (Exception e) {
                 //
             }
@@ -240,7 +246,18 @@ public class ListUserRoleVM {
                 lc = new Listcell(objNya.getCuserUsername());
                 lc.setParent(li);
                 //----------------------//
-                lc = new Listcell(objNya.getCuserRoles().toString());
+                lc = new Listcell();
+                Iterator iterator = objNya.getCuserRoles().iterator();
+                List<String> listStrCrole = new ArrayList<String>();
+                while (iterator.hasNext()){
+                    CuserRole userRole = (CuserRole) iterator.next();
+                    listStrCrole.add(userRole.getCrole().getCroleRolename());
+                }
+                String strRoles = "";
+                for (int i=0; i<listStrCrole.size(); i++) {
+                    strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
+                }
+                lc.setLabel(strRoles);
                 lc.setParent(li);
                 //----------------------//
                 li.setAttribute("data", data);
@@ -277,6 +294,13 @@ public class ListUserRoleVM {
     }
     public void setCuserService(CuserService cuserService) {
         this.cuserService = cuserService;
+    }
+
+    public CuserRoleService getCuserRoleService() {
+        return cuserRoleService;
+    }
+    public void setCuserRoleService(CuserRoleService cuserRoleService) {
+        this.cuserRoleService = cuserRoleService;
     }
 
     public void getDeletingData(final Map<String, Cuser> objsToDel) {

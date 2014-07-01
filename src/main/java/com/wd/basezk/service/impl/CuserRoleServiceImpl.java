@@ -57,12 +57,26 @@ public class CuserRoleServiceImpl implements CuserRoleService {
 
     @Transactional
     public void updateData(Cuser objNya, Set<Crole> objNya2) {
-        //cuserRoleDAO.updateData(objNya);
+        deleteData(objNya.getCuserId());
+        insertData(objNya, objNya2);
     }
 
+    @SuppressWarnings("rawtypes")
     @Transactional
     public void deleteData(String idNya) {
-        cuserRoleDAO.deleteData(idNya);
+        //Step 1: Get Object Parent Untuk Kepentingan Proxy (Lazy)
+        Cuser userNya = cuserDAO.getById(idNya);
+
+        //Step 2: Delete Semua Child
+        Iterator iterator = userNya.getCuserRoles().iterator();
+        while (iterator.hasNext()){
+            CuserRole objToDel = (CuserRole) iterator.next();
+            cuserRoleDAO.deleteData(objToDel.getCuserRoleId());
+        }
+        userNya.getCuserRoles().clear();
+
+        //Step 3: Update Parent
+        cuserDAO.updateData(userNya);
     }
 
     @Transactional

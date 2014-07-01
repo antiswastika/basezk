@@ -1,9 +1,7 @@
 package com.wd.basezk.composer.user;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -37,8 +35,6 @@ import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.Cuser;
-import com.wd.basezk.model.CuserGrp;
-import com.wd.basezk.service.CuserGrpService;
 import com.wd.basezk.service.CuserService;
 
 /**
@@ -71,14 +67,11 @@ public class FormUserVM {
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
     private CuserService cuserService;
-    @WireVariable
-    private CuserGrpService cuserGrpService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private String confirmPassword = "";
     private Cuser selected = new Cuser();
     private Map<String, Integer> txtMaxLength;
-    private List<CuserGrp> allUserGrps = new ArrayList<CuserGrp>();
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -112,10 +105,6 @@ public class FormUserVM {
         if (selected.getCuserId() != null) {
             confirmPassword = selected.getCuserPassword();
         }
-
-        Map<String, String> requestMap = new HashMap<String, String>();
-        requestMap.put("null", "null");
-        setAllUserGrps( getCuserGrpService().getByRequest(requestMap, false, null) );
     }
 
 /*************************************************************************************
@@ -218,12 +207,6 @@ public class FormUserVM {
             }
         }
 
-        //Cek combobox.
-        if (selected.getCuserGrp() == null) {
-            cmbUserGrp.setFocus(true);
-            throw new WrongValueException(cmbUserGrp, "Required Field!");
-        }
-
         //Set boolean status aktif.
         if (selected.getCuserActive() == null) {
             selected.setCuserActive(false);
@@ -275,25 +258,11 @@ public class FormUserVM {
         this.cuserService = cuserService;
     }
 
-    public CuserGrpService getCuserGrpService() {
-        return cuserGrpService;
-    }
-    public void setCuserGrpService(CuserGrpService cuserGrpService) {
-        this.cuserGrpService = cuserGrpService;
-    }
-
     public String getConfirmPassword() {
         return confirmPassword;
     }
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
-    }
-
-    public List<CuserGrp> getAllUserGrps() {
-        return allUserGrps;
-    }
-    public void setAllUserGrps(List<CuserGrp> allUserGrps) {
-        this.allUserGrps = allUserGrps;
     }
 
 }
