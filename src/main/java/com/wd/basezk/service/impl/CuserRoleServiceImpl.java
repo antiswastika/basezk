@@ -29,6 +29,9 @@ public class CuserRoleServiceImpl implements CuserRoleService {
     @SuppressWarnings("rawtypes")
     @Transactional
     public void insertData(Cuser objNya, Set<Crole> objNya2) {
+        //Delete dulu semua data yang bersangkutan
+        deleteData(objNya.getCuserId());
+
         CuserRole objToSave;
         List<CuserRole> cuserRoleNya = new ArrayList<CuserRole>();
 
@@ -57,7 +60,6 @@ public class CuserRoleServiceImpl implements CuserRoleService {
 
     @Transactional
     public void updateData(Cuser objNya, Set<Crole> objNya2) {
-        deleteData(objNya.getCuserId());
         insertData(objNya, objNya2);
     }
 

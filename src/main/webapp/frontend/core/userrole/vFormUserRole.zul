@@ -72,7 +72,7 @@
         </div>
         <div style="float: right; padding-right: 10px">
             <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cuserRoles ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="true" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cuserRoles ? true : false)" />
             <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 

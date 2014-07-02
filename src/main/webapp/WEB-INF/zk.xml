@@ -25,4 +25,16 @@
         <label-location>/assets/lang/core/en_message_core.properties</label-location>
     </system-config>
 
+    <!-- ========================================================== -->
+    <!-- ZK Libraries -->
+    <!-- ========================================================== -->
+    <library-property>
+        <name>org.zkoss.zul.tree.checkmarkDeselectOthers</name>
+        <value>true</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.zul.tree.rightSelect</name>
+        <value>false</value>
+    </library-property>
+
 </zk>

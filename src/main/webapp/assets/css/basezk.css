@@ -33,6 +33,12 @@ BODY {
 .z-listitem {
     height: 15px;
 }
+.z-listcell {
+    vertical-align: top;
+}
+.z-treecell-content {
+    padding: 5px;
+}
 .z-errorbox-content {
     padding-left: 30px;
     padding-top: 10px;

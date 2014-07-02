@@ -33,13 +33,12 @@
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true" itemRenderer="@bind(vm.allCusersItemRenderer)"
             vflex="true" multiple="true" model="@bind(vm.allUsers)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
-            <frozen columns="4" />
             <listhead sizable="true">
                 <listheader width="30px" align="center" />
                 <listheader width="40px" align="center" />
                 <listheader width="50px" align="right"  />
                 <listheader width="150px" label="User Name" align="left" />
-                <listheader label="Role List" align="left" />
+                <listheader hflex="1" label="Role List" align="left" />
             </listhead>
         </listbox>
     </panelchildren>

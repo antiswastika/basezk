@@ -1,0 +1,129 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<zscript>
+    String ModuleName = " Menu ";
+
+    private void onDataSelected() {
+        this.btnDelete.setDisabled( this.listboxNya.getSelectedCount() > 0 ? false : true );
+    }
+</zscript>
+
+<panel height="100%"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.menu.ListMenuVM')">
+    <panelchildren>
+        <auxhead>
+            <auxheader label="@bind(ModuleName.concat((labels.labelG.List)))" />
+        </auxhead>
+        <toolbar>
+            <toolbarbutton image="/assets/img/icon16x16/Insert.png" label="${labels.toolbarW.Insert}" onClick="@command('doNew')" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Delete.png" id="btnDelete" label="${labels.toolbarW.Delete}" disabled="true" onClick="@command('doDelete')" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Search.png" label="${labels.toolbarW.Search}" mode="toggle" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Preview.png" label="${labels.toolbarW.PrintPreview}" />
+            <space bar="true" sclass="z-separator-vertical-bar-plus" />
+            <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
+        </toolbar>
+        <tree
+            id="treeNya" checkmark="true" nonselectableTags="*"
+            vflex="true" multiple="true"
+            style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
+            <frozen columns="2"></frozen>
+            <treecols sizable="true">
+                <treecol label="Label" width="200px" />
+                <treecol label="Source" width="250px" />
+                <treecol label="Tab" width="80px" />
+                <treecol label="Popup" width="80px" />
+                <treecol label="Width" width="80px" />
+                <treecol label="Height" width="80px" />
+                <treecol label="Resizeable" width="80px" />
+                <treecol label="Closeable" width="80px" />
+                <treecol label="Description" width="200px" />
+                <treecol label="Icon" width="80px" />
+                <treecol label="Create Shortcut" width="120px" />
+                <treecol label="Icon Shortcut" width="120px" />
+                <treecol label="Toolbar" width="150px" />
+            </treecols>
+            <treechildren>
+                <treeitem>
+                    <treerow>
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                    </treerow>
+                    <treechildren>
+                        <treeitem>
+                            <treerow>
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                                <treecell label="Test" />
+                            </treerow>
+                        </treeitem>
+                    </treechildren>
+                </treeitem>
+                <treeitem>
+                    <treerow>
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                    </treerow>
+                </treeitem>
+                <treeitem>
+                    <treerow>
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                        <treecell label="Test" />
+                    </treerow>
+                </treeitem>
+            </treechildren>
+        </tree>
+
+    </panelchildren>
+</panel>
+
+</zk>

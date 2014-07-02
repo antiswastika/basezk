@@ -23,12 +23,15 @@ import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
@@ -113,7 +116,7 @@ public class FormUserRoleVM {
                 if (allUsers.get(i).getCuserId().equals(selectedFromList.getCuserId())) {
                     //Set "selected" supaya sama dengan "selectedFormList"
                     setSelected(allUsers.get(i));
-                    syncDataAfterSaveOrUpdate();
+                    syncDataAfterSaveOrUpdateOrDelete();
                     break;
                 }
             }
@@ -129,37 +132,38 @@ public class FormUserRoleVM {
         if (selectedRoles.size() > 0) {
             Set<Crole> selectedRoles2 = new HashSet<Crole>(selectedRoles);
             getCuserRoleService().insertData(selected, selectedRoles2);
-            syncDataAfterSaveOrUpdate();
+            syncDataAfterSaveOrUpdateOrDelete();
             getwObjList().doRefresh();
         }
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doDelete() {
-//        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
-//        final Window windowNya = dialogWindow;
-//        objsToDel.put(selected.getCuserId(), selected);
-//
-//        // ----------------------------------------------------------
-//        // Show a confirm box
-//        // ----------------------------------------------------------
-//        //TODO: Labeling!
-//        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
-//            @Override
-//            public void onEvent(Event event) throws Exception {
-//                if(((Integer)event.getData()).intValue()==Messagebox.YES){
-//                    getwObjList().getDeletingData(objsToDel);
-//                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
-//                }
-//            }
-//        });
-//        // ----------------------------------------------------------
+        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
+        final Window windowNya = dialogWindow;
+        objsToDel.put(selected.getCuserId(), selected);
+
+        // ----------------------------------------------------------
+        // Show a confirm box
+        // ----------------------------------------------------------
+        //TODO: Labeling!
+        Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+            @Override
+            public void onEvent(Event event) throws Exception {
+                if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                    getwObjList().getDeletingData(objsToDel);
+                    Events.postEvent(Events.ON_CLOSE, windowNya, null);
+                }
+            }
+        });
+        // ----------------------------------------------------------
     }
 
     @Command
     @NotifyChange("*")
     public void doReload() {
-        syncDataAfterSaveOrUpdate();
+        syncDataAfterSaveOrUpdateOrDelete();
     }
 
     @Command
@@ -174,26 +178,20 @@ public class FormUserRoleVM {
     @NotifyChange({"strSelectedRoles","selectedRoles"})
     @Command
     public void onSelectUser(@BindingParam("event") Event eventNya, @BindingParam("data") Listitem dataNya) throws InterruptedException {
-//        setStrSelectedRoles("");
+        setStrSelectedRoles("");
+
         if (selectedRoles != null) { selectedRoles.clear(); }
         Cuser userNya = dataNya.getValue();
 
         if (userNya.getCuserRoles().size()>0) {
             Iterator iterator = userNya.getCuserRoles().iterator();
-//            List<String> listStrCrole = new ArrayList<String>();
             while (iterator.hasNext()){
                 CuserRole userRoleNya = (CuserRole) iterator.next();
                 Crole roleNya = userRoleNya.getCrole();
-//                listStrCrole.add(roleNya.getCroleRolename());
                 selectedRoles.add(roleNya);
             }
-//            String strRoles = "";
-//            for (int i=0; i<listStrCrole.size(); i++) {
-//                strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
-//            }
-//            setStrSelectedRoles(strRoles);
 
-            syncDataAfterSaveOrUpdate();
+            syncDataAfterSaveOrUpdateOrDelete();
         }
     }
 
@@ -222,7 +220,7 @@ public class FormUserRoleVM {
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
     @SuppressWarnings("rawtypes")
-    private void syncDataAfterSaveOrUpdate() {
+    private void syncDataAfterSaveOrUpdateOrDelete() {
         //Refresh List Kiri Form
         Map<String, String> requestMapUser = new HashMap<String, String>();
         requestMapUser.put("null", "null");
@@ -274,6 +272,7 @@ public class FormUserRoleVM {
             strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
         }
         setStrSelectedRoles(strRoles);
+        BindUtils.postNotifyChange(null, null, this, "strSelectedRoles");
     }
 
 /*************************************************************************************
