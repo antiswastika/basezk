@@ -30,8 +30,8 @@
             <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <tree
-            id="treeNya" checkmark="true" nonselectableTags="*"
-            vflex="true" multiple="true"
+            id="treeNya" nonselectableTags="*"
+            vflex="true" checkmark="true"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="2"></frozen>
             <treecols sizable="true">
@@ -39,8 +39,8 @@
                 <treecol label="Source" width="250px" />
                 <treecol label="Tab" width="80px" />
                 <treecol label="Popup" width="80px" />
-                <treecol label="Width" width="80px" />
-                <treecol label="Height" width="80px" />
+                <treecol label="Width (px)" width="80px" />
+                <treecol label="Height (px)" width="80px" />
                 <treecol label="Resizeable" width="80px" />
                 <treecol label="Closeable" width="80px" />
                 <treecol label="Description" width="200px" />
@@ -49,78 +49,6 @@
                 <treecol label="Icon Shortcut" width="120px" />
                 <treecol label="Toolbar" width="150px" />
             </treecols>
-            <treechildren>
-                <treeitem>
-                    <treerow>
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                    </treerow>
-                    <treechildren>
-                        <treeitem>
-                            <treerow>
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                                <treecell label="Test" />
-                            </treerow>
-                        </treeitem>
-                    </treechildren>
-                </treeitem>
-                <treeitem>
-                    <treerow>
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                    </treerow>
-                </treeitem>
-                <treeitem>
-                    <treerow>
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                        <treecell label="Test" />
-                    </treerow>
-                </treeitem>
-            </treechildren>
         </tree>
 
     </panelchildren>
