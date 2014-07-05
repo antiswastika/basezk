@@ -35,8 +35,8 @@
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="2"></frozen>
             <treecols sizable="true">
-                <treecol label="Label" width="200px" />
-                <treecol label="Source" width="250px" />
+                <treecol label="Label" width="250px" />
+                <treecol label="Source" width="300px" />
                 <treecol label="Tab" width="80px" />
                 <treecol label="Popup" width="80px" />
                 <treecol label="Width (px)" width="80px" />

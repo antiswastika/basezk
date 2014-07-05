@@ -21,7 +21,6 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Tree;
-import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
@@ -134,7 +133,7 @@ public class ListMenuVM {
     }
 
     private void loadData() {
-        treeNya.setModel(generateTreeModel());
+        treeNya.setModel(getTreeModel());
         treeNya.setItemRenderer(rendering_tree_allMenus());
         treeNya.setMultiple(true);
         treeNya.setCheckmark(true);
@@ -152,65 +151,44 @@ public class ListMenuVM {
         doRefresh();
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private TreeModel generateTreeModel() {
-        /* CONTOH 1:
-         * TreeModel model = new DefaultTreeModel(
-                new DefaultTreeNode(null,
-                    new DefaultTreeNode[] {
-                        new DefaultTreeNode(new FileInfo("/doc", "Release and License Notes")),
-                        new DefaultTreeNode(new FileInfo("/dist", "Distribution"),
-                        new DefaultTreeNode[] {
-                            new DefaultTreeNode(new FileInfo("/lib", "ZK Libraries"),
-                                new DefaultTreeNode[] {
-                                    new DefaultTreeNode(new FileInfo("zcommon.jar", "ZK Common Library")),
-                                    new DefaultTreeNode(new FileInfo("zk.jar", "ZK Core Library"))
-                                }),
-                                new DefaultTreeNode(new FileInfo("/src", "Source Code")),
-                                new DefaultTreeNode(new FileInfo("/xsd", "XSD Files"))
-                            }
-                        )
-                    }
-                )
-            );*/
+    public DefaultTreeModel<Cmenu> getTreeModel() {
+        return new DefaultTreeModel<Cmenu>(generateTreeModel());
+    }
 
-        /* CONTOH 2:
-         * TreeModel model = new DefaultTreeModel(
-            new DefaultTreeNode(null,
-                new DefaultTreeNode[] {
-                    new DefaultTreeNode(new FileInfo("/doc", "Release and License Notes")),
-                    new DefaultTreeNode(new FileInfo("/dist", "Distribution"))
-                }
-            )
-        );*/
-
-        //Cari Menu Level 1 (BERHASIL)
-        /*List<Cmenu> allMenus = new ArrayList<Cmenu>();
-        allMenus = createMenuRoot();
-        List<DefaultTreeNode> newCol = new ArrayList<DefaultTreeNode>();
-        for (int i=0; i<allMenus.size(); i++) {
-            newCol.add(
-                new DefaultTreeNode( allMenus.get(i) )
-            );
-        }*/
+    private DefaultTreeNode<Cmenu> generateTreeModel() {
+        List<DefaultTreeNode<Cmenu>> inner1 = new ArrayList<DefaultTreeNode<Cmenu>>();
 
         List<Cmenu> allMenus = new ArrayList<Cmenu>();
         allMenus = createMenuRoot();
-        List<DefaultTreeNode> newCol = new ArrayList<DefaultTreeNode>();
+
         for (int i=0; i<allMenus.size(); i++) {
-            newCol.add(
-                    new DefaultTreeNode( allMenus.get(i) )
-            );
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allMenus.get(i), inner2);
+
+            if (inner2.size() == 0) {
+                inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i)));
+            } else {
+                inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i), inner2));
+            }
         }
 
-        //Definisikan Treemodel
-        TreeModel model = new DefaultTreeModel(
-            new DefaultTreeNode(null,
-                newCol
-            )
-        );
+        return new DefaultTreeNode<Cmenu>(null, inner1);
+    }
 
-        return model;
+    private void generateSubTreeModel(Cmenu parent, List<DefaultTreeNode<Cmenu>> innerList) {
+        List<Cmenu> allSubMenus = new ArrayList<Cmenu>();
+        allSubMenus = createMenuChildByParentId(parent);
+
+        for (int i=0; i<allSubMenus.size(); i++) {
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allSubMenus.get(i), inner2);
+
+            if (inner2.size() == 0) {
+                innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i)));
+            } else {
+                innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i), inner2));
+            }
+        }
     }
 
     private List<Cmenu> createMenuRoot() {
@@ -224,11 +202,11 @@ public class ListMenuVM {
         return retVal;
     }
 
-    private List<Cmenu> createMenuChildByParentId(String parentId) {
+    private List<Cmenu> createMenuChildByParentId(Cmenu parentMenu) {
         List<Cmenu> retVal = new ArrayList<Cmenu>();
 
         Map<String, String> requestMap = new HashMap<String, String>();
-        requestMap.put("cmenu_parent_id", parentId);
+        requestMap.put("cmenu_parent_id", parentMenu.getCmenuId());
         retVal = getCmenuService().getByRequest(requestMap, false, null);
 
         return retVal;
@@ -250,14 +228,6 @@ public class ListMenuVM {
     private TreeitemRenderer rendering_tree_allMenus() {
         return new TreeitemRenderer() {
             public void render(Treeitem ti, Object data, int index) throws Exception {
-                /*DefaultTreeNode tn = (DefaultTreeNode) data;
-                FileInfo menuNya = (FileInfo) tn.getData();
-                Treerow tr = new Treerow();
-                ti.appendChild(tr);
-                tr.appendChild(new Treecell(menuNya.path));
-                tr.appendChild(new Treecell(menuNya.description));
-                ti.setOpen(true);*/
-
                 DefaultTreeNode tn = (DefaultTreeNode) data;
                 Cmenu menuNya = (Cmenu) tn.getData();
                 Treerow tr = new Treerow();
