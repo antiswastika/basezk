@@ -1,7 +1,9 @@
 package com.wd.basezk.composer.menu;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -28,12 +30,19 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.DefaultTreeModel;
+import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treecell;
+import org.zkoss.zul.Treeitem;
+import org.zkoss.zul.TreeitemRenderer;
+import org.zkoss.zul.Treerow;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.impl.InputElement;
 
-import com.wd.basezk.model.Crole;
-import com.wd.basezk.service.CroleService;
+import com.wd.basezk.model.Cmenu;
+import com.wd.basezk.service.CmenuService;
 
 /**
  * @author (ariv.wd@gmail.com)
@@ -50,6 +59,8 @@ public class FormMenuVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
+    @Wire("#treeNya")
+    private Tree treeNya;
 
     // Default Variables untuk VM-Model
     //--------------------------> [TidakAda]
@@ -60,10 +71,10 @@ public class FormMenuVM {
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
-    private CroleService croleService;
+    private CmenuService cmenuService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private Crole selected = new Crole();
+    private Cmenu selected = new Cmenu();
     private Map<String, Integer> txtMaxLength;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
@@ -73,7 +84,7 @@ public class FormMenuVM {
  * Initialize
  **************************************************************************************/
     @AfterCompose
-    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListMenuVM arg, @ExecutionArgParam("selected") Crole arg2) {
+    public void onCreate(@ContextParam(ContextType.VIEW) Component view, @ExecutionArgParam("objListCtrl") ListMenuVM arg, @ExecutionArgParam("selected") Cmenu arg2) {
         Selectors.wireComponents(view, this, false);
         setwComSel(view);
         if (arg != null) { setwObjList(arg); }
@@ -94,6 +105,8 @@ public class FormMenuVM {
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+
+        loadData();
     }
 
 /*************************************************************************************
@@ -102,8 +115,8 @@ public class FormMenuVM {
     @Command
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        if (selected.getCroleId() == null) {
-            getCroleService().insertData(selected);
+        if (selected.getCmenuId() == null) {
+            getCmenuService().insertData(selected);
             getwObjList().doRefresh();
         } else {
             doEdit();
@@ -111,7 +124,7 @@ public class FormMenuVM {
     }
 
     private void doEdit() {
-        getCroleService().updateData(selected);
+        getCmenuService().updateData(selected);
         getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
     }
@@ -119,9 +132,9 @@ public class FormMenuVM {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
-        final Map<String, Crole> objsToDel = new HashMap<String, Crole>();
+        final Map<String, Cmenu> objsToDel = new HashMap<String, Cmenu>();
         final Window windowNya = dialogWindow;
-        objsToDel.put(selected.getCroleId(), selected);
+        objsToDel.put(selected.getCmenuId(), selected);
 
         // ----------------------------------------------------------
         // Show a confirm box
@@ -165,6 +178,74 @@ public class FormMenuVM {
         }
     }
 
+    private void loadData() {
+        treeNya.setModel(getTreeModel());
+        treeNya.setItemRenderer(rendering_tree_allMenus());
+        treeNya.setMultiple(false);
+        treeNya.setCheckmark(true);
+    }
+
+    public DefaultTreeModel<Cmenu> getTreeModel() {
+        return new DefaultTreeModel<Cmenu>(generateTreeModel());
+    }
+
+    private DefaultTreeNode<Cmenu> generateTreeModel() {
+        List<DefaultTreeNode<Cmenu>> inner1 = new ArrayList<DefaultTreeNode<Cmenu>>();
+
+        List<Cmenu> allMenus = new ArrayList<Cmenu>();
+        allMenus = createMenuRoot();
+
+        for (int i=0; i<allMenus.size(); i++) {
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allMenus.get(i), inner2);
+
+            if (inner2.size() == 0) {
+                inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i)));
+            } else {
+                inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i), inner2));
+            }
+        }
+
+        return new DefaultTreeNode<Cmenu>(null, inner1);
+    }
+
+    private void generateSubTreeModel(Cmenu parent, List<DefaultTreeNode<Cmenu>> innerList) {
+        List<Cmenu> allSubMenus = new ArrayList<Cmenu>();
+        allSubMenus = createMenuChildByParentId(parent);
+
+        for (int i=0; i<allSubMenus.size(); i++) {
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allSubMenus.get(i), inner2);
+
+            if (inner2.size() == 0) {
+                innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i)));
+            } else {
+                innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i), inner2));
+            }
+        }
+    }
+
+    private List<Cmenu> createMenuRoot() {
+        List<Cmenu> retVal = new ArrayList<Cmenu>();
+
+        String[] whereArgs = { "AND (cmenu_parent_id IS NULL OR cmenu_parent_id = '')" };
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("null", "null");
+        retVal = getCmenuService().getByRequest(requestMap, false, whereArgs);
+
+        return retVal;
+    }
+
+    private List<Cmenu> createMenuChildByParentId(Cmenu parentMenu) {
+        List<Cmenu> retVal = new ArrayList<Cmenu>();
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("cmenu_parent_id", parentMenu.getCmenuId());
+        retVal = getCmenuService().getByRequest(requestMap, false, null);
+
+        return retVal;
+    }
+
 /*************************************************************************************
  * Validator
  **************************************************************************************/
@@ -190,6 +271,35 @@ public class FormMenuVM {
 
     }
 
+    @SuppressWarnings("rawtypes")
+    private TreeitemRenderer rendering_tree_allMenus() {
+        return new TreeitemRenderer() {
+
+            public void render(final Treeitem ti, Object data, int index) throws Exception {
+                DefaultTreeNode tn = (DefaultTreeNode) data;
+                final Cmenu menuNya = (Cmenu) tn.getData();
+
+                Treerow tr = new Treerow();
+                ti.appendChild(tr);
+                //----------------------//
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
+
+                ti.setOpen(true);
+
+                if (selected.getCmenuId() != null && selected.getCmenuParentId() != null) {
+                    Cmenu parentNya = getCmenuService().getById(selected.getCmenuParentId());
+                    if (menuNya.getCmenuId().equals(parentNya.getCmenuId())) {
+                        ti.setSelected(true);
+                        ti.setFocus(true);
+                    } else {
+                        ti.setSelected(false);
+                        ti.setFocus(false);
+                    }
+                }
+            }
+        };
+    }
+
 /*************************************************************************************
  * Set dan Get
  **************************************************************************************/
@@ -207,10 +317,10 @@ public class FormMenuVM {
         this.wObjList = wObjList;
     }
 
-    public Crole getSelected() {
+    public Cmenu getSelected() {
         return selected;
     }
-    public void setSelected(Crole selected) {
+    public void setSelected(Cmenu selected) {
         this.selected = selected;
     }
 
@@ -221,11 +331,11 @@ public class FormMenuVM {
         this.txtMaxLength = txtMaxLength;
     }
 
-    public CroleService getCroleService() {
-        return croleService;
+    public CmenuService getCmenuService() {
+        return cmenuService;
     }
-    public void setCroleService(CroleService croleService) {
-        this.croleService = croleService;
+    public void setCmenuService(CmenuService cmenuService) {
+        this.cmenuService = cmenuService;
     }
 
 }

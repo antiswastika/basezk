@@ -13,6 +13,8 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
@@ -27,6 +29,7 @@ import org.zkoss.zul.TreeitemRenderer;
 import org.zkoss.zul.Treerow;
 
 import com.wd.basezk.model.Cmenu;
+import com.wd.basezk.model.Cuser;
 import com.wd.basezk.service.CmenuService;
 
 /**
@@ -77,17 +80,22 @@ public class ListMenuVM {
  **************************************************************************************/
 
 
+
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doNew() throws InterruptedException {
-
+        DefaultTreeModel<Cuser> dtm = (DefaultTreeModel) treeNya.getModel();
+        dtm.clearSelection();
+        this.executeDetail( new Cmenu() );
     }
 
     @Command
     public void doEdit(@BindingParam("record") Cmenu objNya) throws InterruptedException {
-
+        this.executeDetail( objNya );
+        treeNya.invalidate();
     }
 
     @Command
@@ -119,7 +127,6 @@ public class ListMenuVM {
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
-    @SuppressWarnings("unused")
     private void executeDetail(Cmenu cmenuNya) throws InterruptedException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
@@ -227,24 +234,67 @@ public class ListMenuVM {
     @SuppressWarnings("rawtypes")
     private TreeitemRenderer rendering_tree_allMenus() {
         return new TreeitemRenderer() {
-            public void render(Treeitem ti, Object data, int index) throws Exception {
+
+            @SuppressWarnings({ "unchecked" })
+            public void render(final Treeitem ti, Object data, int index) throws Exception {
                 DefaultTreeNode tn = (DefaultTreeNode) data;
-                Cmenu menuNya = (Cmenu) tn.getData();
+                final Cmenu menuNya = (Cmenu) tn.getData();
+
                 Treerow tr = new Treerow();
                 ti.appendChild(tr);
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
+                if (menuNya.getCmenuDeleteable().equals(false)) {
+                    ti.setCheckable(false);
+                } else {
+                    ti.setCheckable(true);
+                }
+                //----------------------//
+                Treecell tc = new Treecell();
+                tc.setImage("/assets/img/icon16x16/Modify.png");
+                tc.setStyle("text-align: center");
+                tr.appendChild(tc);
+                tc.addEventListener("onClick", new EventListener() {
+                    @Override
+                    public void onEvent(Event event) throws Exception {
+                        doEdit(menuNya);
+                    }
+                });
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuSrc())));
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuIsTab())));
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuIsPopup())));
-                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuPopupWidth())));
-                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuPopupHeight())));
+                //----------------------//
+                Treecell tc2 = new Treecell(String.valueOf(menuNya.getCmenuPopupWidth()));
+                tc2.setStyle("text-align: right");
+                tr.appendChild(tc2);
+                //----------------------//
+                Treecell tc3 = new Treecell(String.valueOf(menuNya.getCmenuPopupHeight()));
+                tc3.setStyle("text-align: right");
+                tr.appendChild(tc3);
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuPopupIsResizeable())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuCloseable())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuDesc())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuIconMenu())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuIsCreateShortcut())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuIconShortcut())));
+                //----------------------//
                 tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuToolbar())));
+                //----------------------//
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuInputby())));
+                //----------------------//
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuInputon())));
+                //----------------------//
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuUpdateby())));
+                //----------------------//
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuUpdateon())));
+
                 ti.setOpen(true);
             }
         };

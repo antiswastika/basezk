@@ -30,17 +30,18 @@
             <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <tree
-            id="treeNya" nonselectableTags="*"
-            vflex="true" checkmark="true"
+            id="treeNya"
+            vflex="true"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="2"></frozen>
             <treecols sizable="true">
                 <treecol label="Label" width="250px" />
+                <treecol label="" width="40px" />
                 <treecol label="Source" width="300px" />
                 <treecol label="Tab" width="80px" />
                 <treecol label="Popup" width="80px" />
-                <treecol label="Width (px)" width="80px" />
-                <treecol label="Height (px)" width="80px" />
+                <treecol label="Width (px)" align="right" width="80px" />
+                <treecol label="Height (px)" align="right" width="80px" />
                 <treecol label="Resizeable" width="80px" />
                 <treecol label="Closeable" width="80px" />
                 <treecol label="Description" width="200px" />
@@ -48,6 +49,10 @@
                 <treecol label="Create Shortcut" width="120px" />
                 <treecol label="Icon Shortcut" width="120px" />
                 <treecol label="Toolbar" width="150px" />
+                <treecol width="100px" label="Input By" align="center" />
+                <treecol width="140px" label="Input On" align="center" />
+                <treecol width="100px" label="Update By" align="center" />
+                <treecol hflex="true" label="Update On" align="center" />
             </treecols>
         </tree>
 

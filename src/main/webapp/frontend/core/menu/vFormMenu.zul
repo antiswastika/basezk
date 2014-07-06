@@ -4,35 +4,143 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 <zscript>
-    String ModuleName = " Role ";
+    String ModuleName = " Menu ";
 </zscript>
 
-<window id="dialogWindow" title="@bind(empty vm.selected.croleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
-    height="180px" width="400px" mode="modal" border="normal" closable="false" position="center,center"
+<window id="dialogWindow" title="@bind(empty vm.selected.cmenuId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
+    height="470px" width="700px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
-    viewModel="@id('vm') @init('com.wd.basezk.composer.role.FormRoleVM')">
+    viewModel="@id('vm') @init('com.wd.basezk.composer.menu.FormMenuVM')">
 
 <panel height="100%" sclass="baseLayoutPanel"
     form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
     <panelchildren>
-
+        <radiogroup id="openAs1"/>
         <vlayout style="padding: 10px;">
 
             <hbox width="100%">
-                <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="Role Name" />
+                <vbox>
+                    <div align="left"><label sclass="baseFormFieldLabel" value="Menu Parent" /></div>
+                    <tree id="treeNya" width="265px" height="345px"
+                        vflex="true" style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
+                    </tree>
                 </vbox>
-                <vbox align="start">
-                    <textbox style="width: 160px" value="@bind(frm.croleRolename) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['croleRolename'])"/>
-                </vbox>
-            </hbox>
-            <hbox width="100%">
-                <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="Note" />
-                </vbox>
-                <vbox align="start">
-                    <textbox rows="3" style="width: 240px" value="@bind(frm.croleDesc)" maxlength="@bind(vm.txtMaxLength['croleDesc'])"/>
+
+                <space />
+
+                <vbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Menu Label" />
+                        </vbox>
+                        <vbox align="start">
+                            <textbox style="width: 260px" value="@bind(frm.cmenuLabel) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cmenuLabel'])"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Sequence" />
+                        </vbox>
+                        <vbox align="start">
+                            <intbox style="width: 40px" value="@bind(frm.cmenuSeq) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="2"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Source" />
+                        </vbox>
+                        <vbox align="start">
+                            <textbox style="width: 260px" value="@bind(frm.cmenuSrc) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cmenuSrc'])"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Open As" />
+                        </vbox>
+                        <vbox align="start">
+                            <hbox>
+                            <radio id="ra1" label="Tab" checked="@bind(frm.cmenuIsTab)" radiogroup="openAs1" />
+                            <radio id="ra2" label="Popup" checked="@bind(frm.cmenuIsPopup)" radiogroup="openAs1" />
+                            </hbox>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Popup Width(px)" />
+                        </vbox>
+                        <vbox align="start">
+                            <intbox style="width: 40px" value="@bind(empty frm.cmenuPopupWidth ? '200' : frm.cmenuPopupWidth) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="4"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Popup Height(px)" />
+                        </vbox>
+                        <vbox align="start">
+                            <intbox style="width: 40px" value="@bind(empty frm.cmenuPopupHeight ? '200' : frm.cmenuPopupHeight) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="4"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Resizeable" />
+                        </vbox>
+                        <vbox align="start">
+                            <checkbox value="1" checked="@bind(frm.cmenuPopupIsResizeable)" />
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Closeable" />
+                        </vbox>
+                        <vbox align="start">
+                            <checkbox value="1" checked="@bind(frm.cmenuCloseable)" />
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Description " />
+                        </vbox>
+                        <vbox align="start">
+                            <textbox style="width: 260px" value="@bind(frm.cmenuDesc)" maxlength="@bind(empty frm.cmenuDesc ? 0 : vm.txtMaxLength['cmenuDesc'])"/>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Icon" />
+                        </vbox>
+                        <vbox align="start">
+                            <hbox>
+                            <textbox style="width: 160px" value=""/><button label="..." upload="true,maxsize=300" />
+                            </hbox>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Create Shortcut" />
+                        </vbox>
+                        <vbox align="start">
+                            <checkbox value="1" checked="@bind(frm.cmenuIsCreateShortcut)" />
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Icon Shortcut" />
+                        </vbox>
+                        <vbox align="start">
+                            <hbox>
+                            <textbox style="width: 160px" value=""/><button label="..." upload="true,maxsize=300" />
+                            </hbox>
+                        </vbox>
+                    </hbox>
+                    <hbox>
+                        <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                            <label sclass="baseFormFieldLabel" value="Toolbar" />
+                        </vbox>
+                        <vbox align="start">
+                            <textbox style="width: 260px" value="@bind(frm.cmenuToolbar)" maxlength="@bind(empty frm.cmenuToolbar ? 0 : vm.txtMaxLength['cmenuToolbar'])"/>
+                        </vbox>
+                    </hbox>
                 </vbox>
             </hbox>
 
@@ -42,8 +150,8 @@
             <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.croleId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.croleId ? true : false)" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cmenuId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cmenuId ? true : false)" />
             <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
