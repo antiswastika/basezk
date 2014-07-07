@@ -25,6 +25,7 @@ import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -165,6 +166,16 @@ public class FormMenuVM {
     @Command
     public void doClose(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
         dialogWindow.onClose();
+    }
+
+    @Command
+    public void doUpload(@BindingParam("eventNya") UploadEvent eventNya, @BindingParam("whatType") String whatType) {
+        System.out.println("uploading");
+        if (whatType.equalsIgnoreCase("icon1")) {
+
+        } else {
+
+        }
     }
 
 /*************************************************************************************
