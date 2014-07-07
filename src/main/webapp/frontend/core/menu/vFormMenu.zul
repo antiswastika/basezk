@@ -5,6 +5,17 @@
 
 <zscript>
     String ModuleName = " Menu ";
+
+    private void creatingTab(Intbox pw, Intbox ph, Checkbox rz) {
+        pw.setDisabled(true); pw.setValue(0);
+        ph.setDisabled(true); ph.setValue(0);
+        rz.setDisabled(true); rz.setChecked(false);
+    }
+    private void creatingPopup(Intbox pw, Intbox ph, Checkbox rz) {
+        pw.setDisabled(false);
+        ph.setDisabled(false);
+        rz.setDisabled(false);
+    }
 </zscript>
 
 <window id="dialogWindow" title="@bind(empty vm.selected.cmenuId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
@@ -16,7 +27,6 @@
 <panel height="100%" sclass="baseLayoutPanel"
     form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
     <panelchildren>
-        <radiogroup id="openAs1"/>
         <vlayout style="padding: 10px;">
 
             <hbox width="100%">
@@ -43,7 +53,7 @@
                             <label sclass="baseFormFieldLabel" value="Sequence" />
                         </vbox>
                         <vbox align="start">
-                            <intbox style="width: 40px" value="@bind(frm.cmenuSeq) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="2"/>
+                            <intbox style="width: 40px" value="@bind(empty frm.cmenuId ? 1 : frm.cmenuSeq) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="2"/>
                         </vbox>
                     </hbox>
                     <hbox>
@@ -60,8 +70,10 @@
                         </vbox>
                         <vbox align="start">
                             <hbox>
-                            <radio id="ra1" label="Tab" checked="@bind(frm.cmenuIsTab)" radiogroup="openAs1" />
-                            <radio id="ra2" label="Popup" checked="@bind(frm.cmenuIsPopup)" radiogroup="openAs1" />
+                            <radiogroup id="openAs1" selectedItem="@bind(vm.strValueOfTab)">
+                                <radio id="ra1" value="true" label="Tab" radiogroup="openAs1" onCheck="creatingTab(pw ,ph ,rz)" />
+                                <radio id="ra2" value="false" label="Popup" radiogroup="openAs1" onCheck="creatingPopup(pw ,ph ,rz)" />
+                            </radiogroup>
                             </hbox>
                         </vbox>
                     </hbox>
@@ -70,7 +82,7 @@
                             <label sclass="baseFormFieldLabel" value="Popup Width(px)" />
                         </vbox>
                         <vbox align="start">
-                            <intbox style="width: 40px" value="@bind(empty frm.cmenuPopupWidth ? '200' : frm.cmenuPopupWidth) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="4"/>
+                            <intbox id="pw" style="width: 40px" value="@bind(frm.cmenuPopupWidth)" maxlength="4" disabled="@bind(frm.cmenuIsTab ? true : false)"/>
                         </vbox>
                     </hbox>
                     <hbox>
@@ -78,7 +90,7 @@
                             <label sclass="baseFormFieldLabel" value="Popup Height(px)" />
                         </vbox>
                         <vbox align="start">
-                            <intbox style="width: 40px" value="@bind(empty frm.cmenuPopupHeight ? '200' : frm.cmenuPopupHeight) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="4"/>
+                            <intbox id="ph" style="width: 40px" value="@bind(frm.cmenuPopupHeight)" maxlength="4" disabled="@bind(frm.cmenuIsTab ? true : false)"/>
                         </vbox>
                     </hbox>
                     <hbox>
@@ -86,7 +98,7 @@
                             <label sclass="baseFormFieldLabel" value="Resizeable" />
                         </vbox>
                         <vbox align="start">
-                            <checkbox value="1" checked="@bind(frm.cmenuPopupIsResizeable)" />
+                            <checkbox id="rz" checked="@bind(frm.cmenuPopupIsResizeable)" disabled="@bind(frm.cmenuIsTab ? true : false)"/>
                         </vbox>
                     </hbox>
                     <hbox>
@@ -94,7 +106,7 @@
                             <label sclass="baseFormFieldLabel" value="Closeable" />
                         </vbox>
                         <vbox align="start">
-                            <checkbox value="1" checked="@bind(frm.cmenuCloseable)" />
+                            <checkbox checked="@bind(frm.cmenuCloseable)" />
                         </vbox>
                     </hbox>
                     <hbox>

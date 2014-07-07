@@ -107,6 +107,12 @@ public class FormMenuVM {
         }
 
         loadData();
+
+        if (selected.getCmenuId() == null) {
+            selected.setCmenuIsTab(true);
+            selected.setCmenuPopupWidth(0);
+            selected.setCmenuPopupHeight(0);
+        }
     }
 
 /*************************************************************************************
@@ -329,6 +335,18 @@ public class FormMenuVM {
     }
     public void setTxtMaxLength(Map<String, Integer> txtMaxLength) {
         this.txtMaxLength = txtMaxLength;
+    }
+
+    public String getStrValueOfTab() {
+        return String.valueOf(selected.getCmenuIsTab());
+    }
+    public void setStrValueOfTab(String strValueOfTab) {
+        selected.setCmenuIsTab(Boolean.valueOf(strValueOfTab));
+        selected.setCmenuIsPopup(!Boolean.valueOf(strValueOfTab));
+        if (selected.getCmenuIsTab().equals(true)) {
+            selected.setCmenuPopupWidth(0);
+            selected.setCmenuPopupHeight(0);
+        }
     }
 
     public CmenuService getCmenuService() {
