@@ -22,6 +22,7 @@
         ]]>
     </attribute>
     <include id="mainFrame" src="/frontend/core/index/vFrameMain.zul" />
+
 </window>
 
 </zk>

@@ -2,8 +2,10 @@ package com.wd.basezk.composer.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.zkoss.bind.annotation.AfterCompose;
@@ -15,6 +17,8 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueue;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
@@ -22,6 +26,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
@@ -98,9 +103,45 @@ public class ListMenuVM {
         treeNya.invalidate();
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doDelete() {
+        DefaultTreeModel treeModelNya = (DefaultTreeModel) treeNya.getModel();
+        final Map<String, Cmenu> objsToDel = new HashMap<String, Cmenu>();
+        Set<Cmenu> selectedNodes = treeModelNya.getSelection();
 
+        Iterator iterator = selectedNodes.iterator();
+        while (iterator.hasNext()){
+            DefaultTreeNode nodes = (DefaultTreeNode) iterator.next();
+            Cmenu objs = (Cmenu) nodes.getData();
+            objsToDel.put(objs.getCmenuId(), objs);
+        }
+
+        if (objsToDel.size()>0) {
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("XXXXXXXXXXXX", "Confirmation", Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, new EventListener() {
+                @Override
+                public void onEvent(Event event) throws Exception {
+                    if(((Integer)event.getData()).intValue()==Messagebox.YES){
+                        deletingData(objsToDel);
+                        syncMenubar();
+                    }
+                }
+            });
+            // ----------------------------------------------------------
+
+        } else {
+            // ----------------------------------------------------------
+            // Show a confirm box
+            // ----------------------------------------------------------
+            //TODO: Labeling!
+            Messagebox.show("XXXXXXXXXXXX", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+            return;
+            // ----------------------------------------------------------
+        }
     }
 
     @Command
@@ -139,11 +180,27 @@ public class ListMenuVM {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void loadData() {
-        treeNya.setModel(getTreeModel());
+        if (treeNya.getModel() == null) {
+            DefaultTreeModel<Cmenu> treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel());
+            treeModelNya.setMultiple(true);
+            treeNya.setModel(treeModelNya);
+        } else {
+            DefaultTreeModel treeModelNya = (DefaultTreeModel) treeNya.getModel();
+            treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel());
+            treeModelNya.setMultiple(true);
+            treeNya.setModel(treeModelNya);
+        }
+
         treeNya.setItemRenderer(rendering_tree_allMenus());
-        treeNya.setMultiple(true);
         treeNya.setCheckmark(true);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void syncMenubar() {
+        EventQueue updateMenubarEvent = EventQueues.lookup("updateMenubarEvent", EventQueues.APPLICATION, false);
+        updateMenubarEvent.publish(new Event("onUpdating", null, "Sync-From-" + this.getClass().getCanonicalName()));
     }
 
     private void deletingData(final Map<String, Cmenu> objsToDel) {
@@ -156,10 +213,6 @@ public class ListMenuVM {
             }
         }
         doRefresh();
-    }
-
-    public DefaultTreeModel<Cmenu> getTreeModel() {
-        return new DefaultTreeModel<Cmenu>(generateTreeModel());
     }
 
     private DefaultTreeNode<Cmenu> generateTreeModel() {

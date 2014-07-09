@@ -24,6 +24,8 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueue;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
@@ -111,8 +113,13 @@ public class FormMenuVM {
 
         if (selected.getCmenuId() == null) {
             selected.setCmenuIsTab(true);
+            selected.setCmenuSeq(1);
+            selected.setCmenuIsPopup(false);
             selected.setCmenuPopupWidth(0);
             selected.setCmenuPopupHeight(0);
+            selected.setCmenuPopupIsResizeable(false);
+            selected.setCmenuCloseable(true);
+            selected.setCmenuIsCreateShortcut(false);
         }
     }
 
@@ -128,12 +135,17 @@ public class FormMenuVM {
         } else {
             doEdit();
         }
+        loadData();
+        dialogWindow.setPosition("nocenter");
+        syncMenubar();
     }
 
     private void doEdit() {
         getCmenuService().updateData(selected);
         getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
+        dialogWindow.setPosition("nocenter");
+        syncMenubar();
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -152,11 +164,13 @@ public class FormMenuVM {
             public void onEvent(Event event) throws Exception {
                 if(((Integer)event.getData()).intValue()==Messagebox.YES){
                     getwObjList().getDeletingData(objsToDel);
+                    syncMenubar();
                     Events.postEvent(Events.ON_CLOSE, windowNya, null);
                 }
             }
         });
         // ----------------------------------------------------------
+        dialogWindow.setPosition("nocenter");
     }
 
     @Command
@@ -195,15 +209,27 @@ public class FormMenuVM {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void loadData() {
-        treeNya.setModel(getTreeModel());
+        if (treeNya.getModel() == null) {
+            DefaultTreeModel<Cmenu> treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel());
+            treeModelNya.setMultiple(false);
+            treeNya.setModel(treeModelNya);
+        } else {
+            DefaultTreeModel treeModelNya = (DefaultTreeModel) treeNya.getModel();
+            treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel());
+            treeModelNya.setMultiple(false);
+            treeNya.setModel(treeModelNya);
+        }
+
         treeNya.setItemRenderer(rendering_tree_allMenus());
-        treeNya.setMultiple(false);
         treeNya.setCheckmark(true);
     }
 
-    public DefaultTreeModel<Cmenu> getTreeModel() {
-        return new DefaultTreeModel<Cmenu>(generateTreeModel());
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void syncMenubar() {
+        EventQueue updateMenubarEvent = EventQueues.lookup("updateMenubarEvent", EventQueues.APPLICATION, false);
+        updateMenubarEvent.publish(new Event("onUpdating", null, "Sync-From-" + this.getClass().getCanonicalName()));
     }
 
     private DefaultTreeNode<Cmenu> generateTreeModel() {
@@ -245,7 +271,7 @@ public class FormMenuVM {
     private List<Cmenu> createMenuRoot() {
         List<Cmenu> retVal = new ArrayList<Cmenu>();
 
-        String[] whereArgs = { "AND (cmenu_parent_id IS NULL OR cmenu_parent_id = '')" };
+        String[] whereArgs = { "AND (cmenu_parent_id IS NULL OR cmenu_parent_id = '') AND cmenu_id <> '" + selected.getCmenuId() + "'" };
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
         retVal = getCmenuService().getByRequest(requestMap, false, whereArgs);
@@ -256,9 +282,10 @@ public class FormMenuVM {
     private List<Cmenu> createMenuChildByParentId(Cmenu parentMenu) {
         List<Cmenu> retVal = new ArrayList<Cmenu>();
 
+        String[] whereArgs = { "AND cmenu_id <> '" + selected.getCmenuId() + "'" };
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("cmenu_parent_id", parentMenu.getCmenuId());
-        retVal = getCmenuService().getByRequest(requestMap, false, null);
+        retVal = getCmenuService().getByRequest(requestMap, false, whereArgs);
 
         return retVal;
     }
@@ -292,27 +319,34 @@ public class FormMenuVM {
     private TreeitemRenderer rendering_tree_allMenus() {
         return new TreeitemRenderer() {
 
+            @SuppressWarnings("unchecked")
             public void render(final Treeitem ti, Object data, int index) throws Exception {
                 DefaultTreeNode tn = (DefaultTreeNode) data;
                 final Cmenu menuNya = (Cmenu) tn.getData();
 
-                Treerow tr = new Treerow();
-                ti.appendChild(tr);
-                //----------------------//
-                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
+                if (menuNya.getCmenuId().equals(selected.getCmenuId()) == false) {
+                    Treerow tr = new Treerow();
+                    ti.appendChild(tr);
+                    //----------------------//
+                    tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
 
-                ti.setOpen(true);
+                    ti.setOpen(true);
+                    ti.addEventListener("onClick", new EventListener() {
+                        @Override
+                        public void onEvent(Event event) throws Exception {
+                            selected.setCmenuParentId(menuNya.getCmenuId());
+                        }
+                    });
 
-                if (selected.getCmenuId() != null && selected.getCmenuParentId() != null) {
-                    Cmenu parentNya = getCmenuService().getById(selected.getCmenuParentId());
-                    if (menuNya.getCmenuId().equals(parentNya.getCmenuId())) {
-                        ti.setSelected(true);
-                        ti.setFocus(true);
-                    } else {
-                        ti.setSelected(false);
-                        ti.setFocus(false);
+                    if (selected.getCmenuId() != null && selected.getCmenuParentId() != null) {
+                        Cmenu parentNya = getCmenuService().getById(selected.getCmenuParentId());
+                        if (menuNya.getCmenuId().equals(parentNya.getCmenuId())) {
+                            ti.setSelected(true);
+                            ti.setFocus(true);
+                        }
                     }
                 }
+
             }
         };
     }

@@ -108,12 +108,14 @@ public class FormRoleVM {
         } else {
             doEdit();
         }
+        dialogWindow.setPosition("nocenter");
     }
 
     private void doEdit() {
         getCroleService().updateData(selected);
         getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
+        dialogWindow.setPosition("nocenter");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -137,6 +139,7 @@ public class FormRoleVM {
             }
         });
         // ----------------------------------------------------------
+        dialogWindow.setPosition("nocenter");
     }
 
     @Command

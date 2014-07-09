@@ -7,7 +7,7 @@
     String ModuleName = " Menu ";
 
     private void onDataSelected() {
-        this.btnDelete.setDisabled( this.listboxNya.getSelectedCount() > 0 ? false : true );
+        this.btnDelete.setDisabled( this.treeNya.getSelectedCount() > 0 ? false : true );
     }
 </zscript>
 
@@ -31,7 +31,7 @@
         </toolbar>
         <tree
             id="treeNya"
-            vflex="true"
+            vflex="true" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="2"></frozen>
             <treecols sizable="true">

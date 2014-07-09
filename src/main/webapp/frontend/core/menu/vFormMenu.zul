@@ -53,7 +53,7 @@
                             <label sclass="baseFormFieldLabel" value="Sequence" />
                         </vbox>
                         <vbox align="start">
-                            <intbox style="width: 40px" value="@bind(empty frm.cmenuId ? 1 : frm.cmenuSeq) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="2"/>
+                            <intbox style="width: 40px" value="@bind(frm.cmenuSeq)" maxlength="2"/>
                         </vbox>
                     </hbox>
                     <hbox>

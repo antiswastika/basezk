@@ -135,6 +135,7 @@ public class FormUserRoleVM {
             syncDataAfterSaveOrUpdateOrDelete();
             getwObjList().doRefresh();
         }
+        dialogWindow.setPosition("nocenter");
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -158,6 +159,7 @@ public class FormUserRoleVM {
             }
         });
         // ----------------------------------------------------------
+        dialogWindow.setPosition("nocenter");
     }
 
     @Command

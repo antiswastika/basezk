@@ -14,6 +14,8 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.EventQueue;
+import org.zkoss.zk.ui.event.EventQueues;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
@@ -63,7 +65,7 @@ public class MenubarVM {
     private Menubar menubarNorthNya;
 
     // Default Variables untuk VM-Model
-    //--------------------------> [TidakAda]
+
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -87,14 +89,33 @@ public class MenubarVM {
         setwComSel(view);
         wiringComponent();
         prepareToView();
+        startServerPush();
     }
 
 /*************************************************************************************
  * Preparation (Load Variables Value)
  **************************************************************************************/
     private void prepareToView() {
-        createDashboard();
+        createDashboard(true);
         createMenu();
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void startServerPush() {
+        //1. updateMenubarEvent
+        //------------------------------------------------------------------------------------------------------
+        EventQueue updateMenubarEvent = EventQueues.lookup("updateMenubarEvent", EventQueues.APPLICATION, true);
+        updateMenubarEvent.subscribe(new EventListener() {
+            public void onEvent(Event evt) {
+                menubarNorthNya.getChildren().clear();
+                menubarNorthNya.invalidate();
+
+                createDashboard(false);
+                createMenu();
+
+                System.out.println("evt.getData() ===> " + evt.getData());
+            }
+        });
     }
 
 /*************************************************************************************
@@ -179,7 +200,7 @@ public class MenubarVM {
 /*************************************************************************************
  * Custom Methods
  **************************************************************************************/
-    private void createDashboard() {
+    private void createDashboard(Boolean alsoCreateTab) {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
         String[] whereArgs = {" AND cmenuParentId IS NULL AND cmenuSeq = 0"};
@@ -188,7 +209,9 @@ public class MenubarVM {
         for (int i=0; i<listNyaCMenu.size(); i++) {
             Cmenu cmenuNya = listNyaCMenu.get(i);
             createMenuItems(menubarNorthNya, cmenuNya);
-            doCreateTab(cmenuNya.getCmenuId(), cmenuNya.getCmenuSrc(), cmenuNya.getCmenuLabel(), cmenuNya.getCmenuCloseable());
+            if (alsoCreateTab.equals(true)) {
+                doCreateTab(cmenuNya.getCmenuId(), cmenuNya.getCmenuSrc(), cmenuNya.getCmenuLabel(), cmenuNya.getCmenuCloseable());
+            }
         }
     }
 

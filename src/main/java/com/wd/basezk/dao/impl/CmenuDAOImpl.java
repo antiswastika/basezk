@@ -91,7 +91,17 @@ public class CmenuDAOImpl implements CmenuDAO {
 
                 //Untuk Delete Permanent, uncomment statement dibawah ini.
                 //===========================================================
-                sessionFactory.getCurrentSession().delete(objNya);
+
+                //1. Cek dulu apakah ada data lain yang mempunyai parent data ini.
+                Map<String, String> requestMap = new HashMap<String, String>();
+                requestMap.put("null", "null");
+                String[] whereArgs = { " AND cmenu_parent_id = '" + objNya.getCmenuId() + "'" };
+                List<Cmenu> resultNya = getByRequest(requestMap, false, whereArgs);
+
+                //2. Delete looping
+                if (resultNya.size()==0) {
+                    sessionFactory.getCurrentSession().delete(objNya);
+                }
 
                 return true;
             } else {

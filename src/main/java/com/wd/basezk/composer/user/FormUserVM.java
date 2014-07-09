@@ -121,12 +121,14 @@ public class FormUserVM {
             manualValidateForm();
             doEdit();
         }
+        dialogWindow.setPosition("nocenter");
     }
 
     private void doEdit() {
         getCuserService().updateData(selected);
         getwObjList().doRefresh();
         BindUtils.postNotifyChange(null, null, this, "selected");
+        dialogWindow.setPosition("nocenter");
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -150,6 +152,7 @@ public class FormUserVM {
             }
         });
         // ----------------------------------------------------------
+        dialogWindow.setPosition("nocenter");
     }
 
     @Command
