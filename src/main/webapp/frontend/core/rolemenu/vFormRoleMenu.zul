@@ -1,0 +1,80 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<zscript>
+    String ModuleName = " Role Menu ";
+</zscript>
+
+<window id="dialogWindow" title="@bind(empty vm.selected.croleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
+    height="380px" width="550px" mode="modal" border="normal" closable="false" position="center,center"
+    onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.rolemenu.FormRoleMenuVM')">
+
+<panel height="100%" sclass="baseLayoutPanel"
+    form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
+    <panelchildren>
+
+        <vlayout style="padding: 10px;">
+
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Role" />
+                </vbox>
+                <vbox align="start">
+                    <combobox value="@bind(frm.croleRolename)" model="@bind(vm.allRoles)" readonly="true" autodrop="true">
+                    <template name="model">
+                        <comboitem label="@bind(each.croleRolename)" />
+                    </template>
+                    </combobox>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Menu" />
+                </vbox>
+                <vbox>
+                    <tree id="treeNya" width="395px" height="195px"
+                        vflex="true" style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
+                    </tree>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <space />
+                </vbox>
+                <vbox align="start">
+                    <hbox>
+                      <button id="btnSelectAll" label="${labels.toolbarF.SelectAll}" onClick="@command('doSelectAll', eventNya=event)" style="color: blue; font-size: 10px;" />
+                      <button id="btnSelectNone" label="${labels.toolbarF.SelectNone}" onClick="@command('doSelectNone', eventNya=event)" style="color: blue; font-size: 10px;" />
+                    </hbox>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Note" />
+                </vbox>
+                <vbox align="start">
+                    <textbox style="width: 395px" value="@bind(frm.croleDesc)" maxlength="@bind(vm.txtMaxLength['croleDesc'])"/>
+                </vbox>
+            </hbox>
+
+        </vlayout>
+
+        <div style="float: left; padding-left: 10px">
+            <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
+        </div>
+        <div style="float: right; padding-right: 10px">
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.croleId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.croleId ? true : false)" />
+            <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
+        </div>
+
+    </panelchildren>
+</panel>
+
+</window>
+
+</zk>

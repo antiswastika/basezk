@@ -1,9 +1,7 @@
-package com.wd.basezk.composer.userrole;
+package com.wd.basezk.composer.rolemenu;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +28,8 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 
-import com.wd.basezk.model.Cuser;
-import com.wd.basezk.model.CuserRole;
-import com.wd.basezk.service.CuserRoleService;
-import com.wd.basezk.service.CuserService;
+import com.wd.basezk.model.Crole;
+import com.wd.basezk.service.CroleService;
 
 /**
  * @author (ariv.wd@gmail.com)
@@ -46,7 +42,7 @@ import com.wd.basezk.service.CuserService;
 /*Anotasi supaya semua Spring-Bean bisa dideteksi oleh ZK*/
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 
-public class ListUserRoleVM {
+public class ListRoleMenuVM {
     // Default Variables untuk VM-Component
     @Wire("#listboxNya")
     private Listbox listboxNya;
@@ -59,15 +55,13 @@ public class ListUserRoleVM {
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
-    private CuserService cuserService;
-    @WireVariable
-    private CuserRoleService cuserRoleService;
+    private CroleService croleService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
-    private List<Cuser> allUsers;
+    private List<Crole> allRoles;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
-    private ListitemRenderer<Cuser> allCusersItemRenderer;
+    private ListitemRenderer<Crole> allCrolesItemRenderer;
 
 /*************************************************************************************
  * Initialize
@@ -91,15 +85,15 @@ public class ListUserRoleVM {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doNew() throws InterruptedException {
-        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+        ListModelList<Crole> lml = (ListModelList) listboxNya.getModel();
         lml.clearSelection();
-        this.executeDetail( new Cuser() );
+        this.executeDetail( new Crole() );
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
-    public void doEdit(@BindingParam("record") Cuser objNya) throws InterruptedException {
-        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
+    public void doEdit(@BindingParam("record") Crole objNya) throws InterruptedException {
+        ListModelList<Crole> lml = (ListModelList) listboxNya.getModel();
         lml.clearSelection();
         for (int i=0; i<lml.size(); i++) {
             if (lml.get(i).equals(objNya)) {
@@ -114,12 +108,12 @@ public class ListUserRoleVM {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doDelete() {
-        ListModelList<Cuser> lml = (ListModelList) listboxNya.getModel();
-        final Map<String, Cuser> objsToDel = new HashMap<String, Cuser>();
+        ListModelList<Crole> lml = (ListModelList) listboxNya.getModel();
+        final Map<String, Crole> objsToDel = new HashMap<String, Crole>();
 
-        for (Cuser objs : lml) {
+        for (Crole objs : lml) {
             if (lml.isSelected(objs)) {
-                objsToDel.put(objs.getCuserId(), objs);
+                objsToDel.put(objs.getCroleId(), objs);
             }
         }
 
@@ -173,13 +167,13 @@ public class ListUserRoleVM {
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
  **************************************************************************************/
-    private void executeDetail(Cuser cuserNya) throws InterruptedException {
+    private void executeDetail(Crole croleNya) throws InterruptedException {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("objListCtrl", this);
-        map.put("selectedFromList", cuserNya);
+        map.put("selected", croleNya);
 
         try {
-            Executions.createComponents("/frontend/core/userrole/vFormUserRole.zul", null, map);
+            Executions.createComponents("/frontend/core/rolemenu/vFormRoleMenu.zul", null, map);
         } catch (Exception e) {
             //LOGGING
         }
@@ -188,16 +182,16 @@ public class ListUserRoleVM {
     private void loadData() {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
-        allUsers = getCuserService().getByRequest(requestMap, false, null);
+        allRoles = getCroleService().getByRequest(requestMap, false, null);
 
-        BindUtils.postNotifyChange(null, null, this, "allUsers");
+        BindUtils.postNotifyChange(null, null, this, "allRoles");
     }
 
-    private void deletingData(final Map<String, Cuser> objsToDel) {
-        for (Map.Entry<String, Cuser> mapNya : objsToDel.entrySet()) {
+    private void deletingData(final Map<String, Crole> objsToDel) {
+        for (Map.Entry<String, Crole> mapNya : objsToDel.entrySet()) {
             try {
-                Cuser v = mapNya.getValue();
-                getCuserRoleService().deleteData(v.getCuserId());
+                Crole v = mapNya.getValue();
+                getCroleService().deleteData(v.getCroleId());
             } catch (Exception e) {
                 //
             }
@@ -216,15 +210,15 @@ public class ListUserRoleVM {
     @SuppressWarnings("unchecked")
     private void initComponent() {
         listboxNya.getPagingChild().setAutohide(false);
-        setAllCusersItemRenderer(rendering_listbox_allUsers());
+        setAllCrolesItemRenderer(rendering_listbox_allRoles());
     }
 
     @SuppressWarnings("rawtypes")
-    private ListitemRenderer rendering_listbox_allUsers() {
+    private ListitemRenderer rendering_listbox_allRoles() {
         return new ListitemRenderer() {
             @SuppressWarnings("unchecked")
             public void render(Listitem li, Object data, int arg) throws Exception {
-                final Cuser objNya = (Cuser) data;
+                final Crole objNya = (Crole) data;
 
                 Listcell lc;
                 //----------------------//
@@ -244,11 +238,11 @@ public class ListUserRoleVM {
                 lc = new Listcell(Integer.toString(arg+1));
                 lc.setParent(li);
                 //----------------------//
-                lc = new Listcell(objNya.getCuserUsername());
+                lc = new Listcell(objNya.getCroleRolename());
                 lc.setParent(li);
                 //----------------------//
                 lc = new Listcell();
-                Iterator iterator = objNya.getCuserRoles().iterator();
+                /*Iterator iterator = objNya.getCuserRoles().iterator();
                 List<String> listStrCrole = new ArrayList<String>();
                 while (iterator.hasNext()){
                     CuserRole userRole = (CuserRole) iterator.next();
@@ -258,29 +252,31 @@ public class ListUserRoleVM {
                 for (int i=0; i<listStrCrole.size(); i++) {
                     strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
                 }
-                lc.setLabel(strRoles);
-                lc.setStyle("white-space: normal;");
+                lc.setLabel(strRoles);*/
                 lc.setParent(li);
                 //----------------------//
-                lc = new Listcell(objNya.getCuserInputby());
+                lc = new Listcell(objNya.getCroleDesc());
+                lc.setParent(li);
+                //----------------------//
+                lc = new Listcell(objNya.getCroleDeleteon() == null ? "No" : "Yes");
                 lc.setParent(li);
                 //----------------------//
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                lc = new Listcell(objNya.getCuserInputon() == null ? "" : df.format(objNya.getCuserInputon()));
+                lc = new Listcell(objNya.getCroleDeleteon() == null ? "" : df.format(objNya.getCroleDeleteon()));
                 lc.setParent(li);
                 //----------------------//
-                lc = new Listcell( objNya.getCuserDeleteon() == null ? "No" : "Yes" );
+                lc = new Listcell(objNya.getCroleInputby());
                 lc.setParent(li);
                 //----------------------//
                 SimpleDateFormat df2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                lc = new Listcell(objNya.getCuserDeleteon() == null ? "" : df2.format(objNya.getCuserDeleteon()));
+                lc = new Listcell(objNya.getCroleInputon() == null ? "" : df2.format(objNya.getCroleInputon()));
                 lc.setParent(li);
                 //----------------------//
-                lc = new Listcell(objNya.getCuserUpdateby());
+                lc = new Listcell(objNya.getCroleUpdateby());
                 lc.setParent(li);
                 //----------------------//
                 SimpleDateFormat df3 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                lc = new Listcell(objNya.getCuserUpdateon() == null ? "" : df3.format(objNya.getCuserUpdateon()));
+                lc = new Listcell(objNya.getCroleUpdateon() == null ? "" : df3.format(objNya.getCroleUpdateon()));
                 lc.setParent(li);
                 //----------------------//
                 li.setAttribute("data", data);
@@ -298,35 +294,28 @@ public class ListUserRoleVM {
         this.wComSel = wComSel;
     }
 
-    public List<Cuser> getAllUsers() {
-        return allUsers;
+    public List<Crole> getAllRoles() {
+        return allRoles;
     }
-    public void setAllUsers(List<Cuser> allUsers) {
-        this.allUsers = allUsers;
-    }
-
-    public ListitemRenderer<Cuser> getAllCusersItemRenderer() {
-        return allCusersItemRenderer;
-    }
-    public void setAllCusersItemRenderer(ListitemRenderer<Cuser> allCusersItemRenderer) {
-        this.allCusersItemRenderer = allCusersItemRenderer;
+    public void setAllRoles(List<Crole> allRoles) {
+        this.allRoles = allRoles;
     }
 
-    public CuserService getCuserService() {
-        return cuserService;
+    public ListitemRenderer<Crole> getAllCrolesItemRenderer() {
+        return allCrolesItemRenderer;
     }
-    public void setCuserService(CuserService cuserService) {
-        this.cuserService = cuserService;
-    }
-
-    public CuserRoleService getCuserRoleService() {
-        return cuserRoleService;
-    }
-    public void setCuserRoleService(CuserRoleService cuserRoleService) {
-        this.cuserRoleService = cuserRoleService;
+    public void setAllCrolesItemRenderer(ListitemRenderer<Crole> allCrolesItemRenderer) {
+        this.allCrolesItemRenderer = allCrolesItemRenderer;
     }
 
-    public void getDeletingData(final Map<String, Cuser> objsToDel) {
+    public CroleService getCroleService() {
+        return croleService;
+    }
+    public void setCroleService(CroleService croleService) {
+        this.croleService = croleService;
+    }
+
+    public void getDeletingData(final Map<String, Crole> objsToDel) {
         this.deletingData(objsToDel);
     }
 

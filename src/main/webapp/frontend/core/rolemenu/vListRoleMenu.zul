@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
 <zscript>
-    String ModuleName = " User Role ";
+    String ModuleName = " Role Menu ";
 
     private void onDataSelected() {
         this.btnDelete.setDisabled( this.listboxNya.getSelectedCount() > 0 ? false : true );
@@ -13,7 +13,7 @@
 
 <panel height="100%"
     apply="org.zkoss.bind.BindComposer"
-    viewModel="@id('vm') @init('com.wd.basezk.composer.userrole.ListUserRoleVM')">
+    viewModel="@id('vm') @init('com.wd.basezk.composer.rolemenu.ListRoleMenuVM')">
     <panelchildren>
         <auxhead>
             <auxheader label="@bind(ModuleName.concat((labels.labelG.List)))" />
@@ -30,16 +30,17 @@
             <toolbarbutton image="/assets/img/icon16x16/Refresh.png" label="${labels.toolbarW.Refresh}" onClick="@command('doRefresh')" />
         </toolbar>
         <listbox
-            id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true" itemRenderer="@bind(vm.allCusersItemRenderer)"
-            vflex="true" multiple="true" model="@bind(vm.allUsers)" onSelect="onDataSelected()"
+            id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true" itemRenderer="@bind(vm.allCrolesItemRenderer)"
+            vflex="true" multiple="true" model="@bind(vm.allRoles)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
             <frozen columns="4" />
             <listhead sizable="true">
                 <listheader width="30px" align="center" />
                 <listheader width="40px" align="center" />
                 <listheader width="50px" align="right"  />
-                <listheader width="150px" label="User Name" align="left" />
-                <listheader width="450px" label="Role List" align="left" />
+                <listheader width="150px" label="Role Name" align="left" />
+                <listheader width="250px" label="Menu" align="left" />
+                <listheader width="200px" label="Desc" align="left" />
                 <listheader visible="false" width="80px" label="Deleted" align="center" />
                 <listheader visible="false" width="140px" label="Deleted On" align="center" />
                 <listheader width="100px" label="Input By" align="center" />

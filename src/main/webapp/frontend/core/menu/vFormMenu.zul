@@ -69,7 +69,7 @@
                             <label sclass="baseFormFieldLabel" value="Open As" />
                         </vbox>
                         <vbox align="start">
-                            <hbox>
+                            <hbox sclass="baseFormTdRadioButton">
                             <radiogroup id="openAs1" selectedItem="@bind(vm.strValueOfTab)">
                                 <radio id="ra1" value="true" label="Tab" radiogroup="openAs1" onCheck="creatingTab(pw ,ph ,rz)" />
                                 <radio id="ra2" value="false" label="Popup" radiogroup="openAs1" onCheck="creatingPopup(pw ,ph ,rz)" />
@@ -123,7 +123,7 @@
                         </vbox>
                         <vbox align="start">
                             <hbox>
-                            <textbox style="width: 160px" value=""/><button label="..." upload="true,maxsize=300" onUpload="@command('doUpload', eventNya=event, whatType='icon1')" />
+                            <textbox style="width: 160px" value="" readonly="true"/><button label="..." upload="true,maxsize=300" onUpload="@command('doUpload', eventNya=event, whatType='icon1')" />
                             </hbox>
                         </vbox>
                     </hbox>
@@ -141,16 +141,16 @@
                         </vbox>
                         <vbox align="start">
                             <hbox>
-                            <textbox style="width: 160px" value=""/><button label="..." upload="true,maxsize=300" onUpload="@command('doUpload', eventNya=event, whatType='icon2')" />
+                            <textbox style="width: 160px" value="" readonly="true"/><button label="..." upload="true,maxsize=300" onUpload="@command('doUpload', eventNya=event, whatType='icon2')" />
                             </hbox>
                         </vbox>
                     </hbox>
                     <hbox>
                         <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                            <label sclass="baseFormFieldLabel" value="Toolbar" />
+                            <label sclass="baseFormFieldLabel" value="Toolbar Source" />
                         </vbox>
                         <vbox align="start">
-                            <textbox style="width: 260px" value="@bind(frm.cmenuToolbar)" maxlength="@bind(empty frm.cmenuToolbar ? 0 : vm.txtMaxLength['cmenuToolbar'])"/>
+                            <textbox style="width: 260px" value="@bind(frm.cmenuToolbar)" maxlength="@bind(empty frm.cmenuToolbar ? 0 : vm.txtMaxLength['cmenuToolbar'])" readonly="true"/>
                         </vbox>
                     </hbox>
                 </vbox>
