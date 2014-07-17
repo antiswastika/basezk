@@ -28,7 +28,6 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -52,8 +51,6 @@ public class FormUserVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
-    @Wire("#cmbUserGrp")
-    private Combobox cmbUserGrp;
     @Wire("#txtCpass")
     private Textbox txtCpass;
 

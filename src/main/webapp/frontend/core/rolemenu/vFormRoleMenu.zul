@@ -24,7 +24,7 @@
                     <label sclass="baseFormFieldLabel" value="Role" />
                 </vbox>
                 <vbox align="start">
-                    <combobox value="@bind(frm.croleRolename)" model="@bind(vm.allRoles)" readonly="true" autodrop="true">
+                    <combobox id="cmbRoles" value="@bind(frm.croleRolename)" model="@bind(vm.allRoles)" readonly="true" autodrop="true">
                     <template name="model">
                         <comboitem label="@bind(each.croleRolename)" />
                     </template>
@@ -36,7 +36,7 @@
                     <label sclass="baseFormFieldLabel" value="Menu" />
                 </vbox>
                 <vbox>
-                    <tree id="treeNya" width="395px" height="195px"
+                    <tree id="treeNya" width="395px" height="195px" selectedItems="@save(frm.croleMenus)"
                         vflex="true" style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                     </tree>
                 </vbox>
@@ -47,8 +47,8 @@
                 </vbox>
                 <vbox align="start">
                     <hbox>
-                      <button id="btnSelectAll" label="${labels.toolbarF.SelectAll}" onClick="@command('doSelectAll', eventNya=event)" style="color: blue; font-size: 10px;" />
-                      <button id="btnSelectNone" label="${labels.toolbarF.SelectNone}" onClick="@command('doSelectNone', eventNya=event)" style="color: blue; font-size: 10px;" />
+                      <button id="btnSelectAll" label="${labels.toolbarF.SelectAll}" onClick="@command('doSelectAll', eventNya=event)" sclass="baseFormButtonExtra" />
+                      <button id="btnSelectNone" label="${labels.toolbarF.SelectNone}" onClick="@command('doSelectNone', eventNya=event)" sclass="baseFormButtonExtra" />
                     </hbox>
                 </vbox>
             </hbox>

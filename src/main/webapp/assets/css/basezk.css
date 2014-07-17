@@ -123,3 +123,7 @@ input[type="checkbox"] {
 .baseFormTdRadioButton {
     margin-top: 4px;
 }
+.baseFormButtonExtra {
+   color: #0000FF;
+   font-size: 10px;
+}

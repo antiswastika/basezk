@@ -3,7 +3,6 @@ package com.wd.basezk.composer.rolemenu;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,12 +30,13 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treecell;
-import org.zkoss.zul.Treechildren;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
 import org.zkoss.zul.Treerow;
@@ -63,6 +63,8 @@ public class FormRoleMenuVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
+    @Wire("#cmbRoles")
+    private Combobox cmbRoles;
     @Wire("#treeNya")
     private Tree treeNya;
 
@@ -127,9 +129,11 @@ public class FormRoleMenuVM {
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
         if (selected.getCroleId() == null) {
+            manualValidateForm();
             getCroleService().insertData(selected);
             getwObjList().doRefresh();
         } else {
+            manualValidateForm();
             doEdit();
         }
         dialogWindow.setPosition("nocenter");
@@ -175,15 +179,28 @@ public class FormRoleMenuVM {
         dialogWindow.onClose();
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doSelectAll(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
-        System.out.println( treeNya.getChildren() );
+        //System.out.println( treeNya.getSelectedItems() );
+        //System.out.println( treeNya.getModel() );
+
+        DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
+        TreeNode rootNya = dtm.getRoot();
+        //System.out.println( rootNya );
+        //System.out.println( dtm.getChild(rootNya, 1) );
+        //System.out.println( dtm.getChildCount(rootNya) );
+
+        selectAlsoTreeNodeChilds(dtm, rootNya, true);
+        treeNya.invalidate();
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Command
     public void doSelectNone(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
-        treeNya.setSelectedItem(null);
+        DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
+        TreeNode rootNya = dtm.getRoot();
+        selectAlsoTreeNodeChilds(dtm, rootNya, false);
     }
 
 /*************************************************************************************
@@ -277,6 +294,22 @@ public class FormRoleMenuVM {
         return retVal;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void selectAlsoTreeNodeChilds(DefaultTreeModel<Cmenu> dtm, TreeNode parentNya, Boolean select) {
+        int counterChildren = dtm.getChildCount(parentNya);
+        if (counterChildren > 0) {
+            for (int i=0; i<counterChildren; i++) {
+                TreeNode childNya = dtm.getChild(parentNya, i);
+                if (select.equals(true)) {
+                    dtm.addToSelection(childNya);
+                } else {
+                    dtm.removeFromSelection(childNya);
+                }
+                selectAlsoTreeNodeChilds(dtm, childNya, select);
+            }
+        }
+    }
+
 /*************************************************************************************
  * Validator
  **************************************************************************************/
@@ -293,6 +326,14 @@ public class FormRoleMenuVM {
                 }
             }
         };
+    }
+
+    private void manualValidateForm() {
+        //Cek Roles
+        if (selected.getCroleId() == null) {
+            cmbRoles.setFocus(true);
+            throw new WrongValueException(cmbRoles, "Required Field!");
+        }
     }
 
 /*************************************************************************************
