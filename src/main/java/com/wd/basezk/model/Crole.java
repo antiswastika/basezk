@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -55,7 +56,7 @@ public class Crole implements Serializable {
     private Set<Cpriv> cprivs;
 
     //bi-directional many-to-one association to CroleMenu
-    @OneToMany(mappedBy="crole")
+    @OneToMany(mappedBy="crole", fetch=FetchType.EAGER)
     private Set<CroleMenu> croleMenus;
 
     //bi-directional many-to-one association to CuserRole

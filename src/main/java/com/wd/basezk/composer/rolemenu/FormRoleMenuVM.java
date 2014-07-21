@@ -3,8 +3,11 @@ package com.wd.basezk.composer.rolemenu;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 
@@ -31,6 +34,7 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Messagebox;
@@ -45,7 +49,9 @@ import org.zkoss.zul.impl.InputElement;
 
 import com.wd.basezk.model.Cmenu;
 import com.wd.basezk.model.Crole;
+import com.wd.basezk.model.CroleMenu;
 import com.wd.basezk.service.CmenuService;
+import com.wd.basezk.service.CroleMenuService;
 import com.wd.basezk.service.CroleService;
 
 /**
@@ -77,6 +83,8 @@ public class FormRoleMenuVM {
 
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
+    private CroleMenuService croleMenuService;
+    @WireVariable
     private CroleService croleService;
     @WireVariable
     private CmenuService cmenuService;
@@ -85,6 +93,7 @@ public class FormRoleMenuVM {
     private Crole selected = new Crole();
     private Map<String, Integer> txtMaxLength;
     private List<Crole> allRoles;
+    private List<Cmenu> selectedMenus = new ArrayList<Cmenu>();
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -105,6 +114,7 @@ public class FormRoleMenuVM {
 /*************************************************************************************
  * Preparation (Load Variables Value)
  **************************************************************************************/
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private void prepareAll() {
         txtMaxLength = new HashMap<String, Integer>();
         try {
@@ -120,29 +130,46 @@ public class FormRoleMenuVM {
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("null", "null");
         allRoles = getCroleService().getByRequest(requestMap, false, null);
+
+        for (int i=0; i<allRoles.size(); i++) {
+            if (allRoles.get(i).getCroleId().equals(selected.getCroleId())) {
+                setSelected(allRoles.get(i));
+
+                DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
+                TreeNode rootNya = dtm.getRoot();
+                if (dtm.getSelectionCount() > 0) { dtm.clearSelection(); }
+                Crole roleNya = selected;
+                selected = roleNya;
+                if (roleNya.getCroleMenus().size()>0) {
+                    selectedOnlyTreeNodeChilds(roleNya, dtm, rootNya);
+                }
+
+                break;
+            }
+        }
     }
 
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
+    @SuppressWarnings("rawtypes")
     @Command
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
-        if (selected.getCroleId() == null) {
+        if (selectedMenus.size() > 0) {
             manualValidateForm();
-            getCroleService().insertData(selected);
-            getwObjList().doRefresh();
-        } else {
-            manualValidateForm();
-            doEdit();
-        }
-        dialogWindow.setPosition("nocenter");
-    }
+            Set<Cmenu> selectedMenus2 = new HashSet<Cmenu>();
 
-    private void doEdit() {
-        getCroleService().updateData(selected);
-        getwObjList().doRefresh();
-        BindUtils.postNotifyChange(null, null, this, "selected");
+            Iterator iterator = selectedMenus.iterator();
+            while (iterator.hasNext()){
+                TreeNode tn = (TreeNode) iterator.next();
+                Cmenu cmenuNya = (Cmenu) tn.getData();
+                selectedMenus2.add(cmenuNya);
+            }
+
+            getCroleMenuService().insertData(selected, selectedMenus2);
+            getwObjList().doRefresh();
+        }
         dialogWindow.setPosition("nocenter");
     }
 
@@ -182,15 +209,8 @@ public class FormRoleMenuVM {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Command
     public void doSelectAll(@BindingParam("eventNya") Event eventNya) throws InterruptedException {
-        //System.out.println( treeNya.getSelectedItems() );
-        //System.out.println( treeNya.getModel() );
-
         DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
         TreeNode rootNya = dtm.getRoot();
-        //System.out.println( rootNya );
-        //System.out.println( dtm.getChild(rootNya, 1) );
-        //System.out.println( dtm.getChildCount(rootNya) );
-
         selectAlsoTreeNodeChilds(dtm, rootNya, true);
         treeNya.invalidate();
     }
@@ -206,7 +226,22 @@ public class FormRoleMenuVM {
 /*************************************************************************************
  * Event dan Listener (Diawali dengan "on" / Fungsinya sama dengan Do's, yaitu Command)
  **************************************************************************************/
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @NotifyChange("selected")
+    @Command
+    public void onChangeRole(@BindingParam("event") Event eventNya, @BindingParam("data") Comboitem dataNya) throws InterruptedException {
+        DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
+        TreeNode rootNya = dtm.getRoot();
 
+        if (dtm.getSelectionCount() > 0) { dtm.clearSelection(); }
+        Crole roleNya = dataNya.getValue();
+        selected = roleNya;
+        if (roleNya.getCroleMenus().size()>0) {
+            selectedOnlyTreeNodeChilds(dataNya, dtm, rootNya);
+        }
+        treeNya.invalidate();
+        dialogWindow.setPosition("nocenter");
+    }
 
 /*************************************************************************************
  * Custom Methods (Untuk method-method private)
@@ -300,14 +335,75 @@ public class FormRoleMenuVM {
         if (counterChildren > 0) {
             for (int i=0; i<counterChildren; i++) {
                 TreeNode childNya = dtm.getChild(parentNya, i);
+                Cmenu cmenuNya = (Cmenu) childNya.getData();
                 if (select.equals(true)) {
                     dtm.addToSelection(childNya);
+                    selectedMenus.add(cmenuNya);
                 } else {
                     dtm.removeFromSelection(childNya);
+                    selectedMenus.remove(cmenuNya);
                 }
                 selectAlsoTreeNodeChilds(dtm, childNya, select);
             }
         }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void selectedOnlyTreeNodeChilds(Comboitem dataNya, DefaultTreeModel<Cmenu> dtm, TreeNode parentNya) {
+        int counterChildren = dtm.getChildCount(parentNya);
+        if (counterChildren > 0) {
+            for (int i=0; i<counterChildren; i++) {
+                TreeNode childNya = dtm.getChild(parentNya, i);
+                Cmenu cmenuNya = (Cmenu) childNya.getData();
+
+                Crole roleNya = dataNya.getValue();
+                Iterator iterator = roleNya.getCroleMenus().iterator();
+                while (iterator.hasNext()){
+                    CroleMenu roleMenuNya = (CroleMenu) iterator.next();
+                    Cmenu menuNya2 = roleMenuNya.getCmenu();
+
+                    if (menuNya2.getCmenuId().equals(cmenuNya.getCmenuId())) {
+                        dtm.addToSelection(childNya);
+                        selectedMenus.add(menuNya2);
+                        System.out.println( menuNya2.getCmenuLabel() + " == " + cmenuNya.getCmenuLabel() );
+                        break;
+                    }
+                }
+
+
+                selectedOnlyTreeNodeChilds(dataNya, dtm, childNya);
+            }
+        }
+        BindUtils.postNotifyChange(null, null, this, "selectedMenus");
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void selectedOnlyTreeNodeChilds(Crole dataNya, DefaultTreeModel<Cmenu> dtm, TreeNode parentNya) {
+        int counterChildren = dtm.getChildCount(parentNya);
+        if (counterChildren > 0) {
+            for (int i=0; i<counterChildren; i++) {
+                TreeNode childNya = dtm.getChild(parentNya, i);
+                Cmenu cmenuNya = (Cmenu) childNya.getData();
+
+                Crole roleNya = dataNya;
+                Iterator iterator = roleNya.getCroleMenus().iterator();
+                while (iterator.hasNext()){
+                    CroleMenu roleMenuNya = (CroleMenu) iterator.next();
+                    Cmenu menuNya2 = roleMenuNya.getCmenu();
+
+                    if (menuNya2.getCmenuId().equals(cmenuNya.getCmenuId())) {
+                        dtm.addToSelection(childNya);
+                        selectedMenus.add(menuNya2);
+                        System.out.println( menuNya2.getCmenuLabel() + " == " + cmenuNya.getCmenuLabel() );
+                        break;
+                    }
+                }
+
+
+                selectedOnlyTreeNodeChilds(dataNya, dtm, childNya);
+            }
+        }
+        BindUtils.postNotifyChange(null, null, this, "selectedMenus");
     }
 
 /*************************************************************************************
@@ -378,6 +474,13 @@ public class FormRoleMenuVM {
         this.wObjList = wObjList;
     }
 
+    public CroleMenuService getCroleMenuService() {
+        return croleMenuService;
+    }
+    public void setCroleMenuService(CroleMenuService croleMenuService) {
+        this.croleMenuService = croleMenuService;
+    }
+
     public Crole getSelected() {
         return selected;
     }
@@ -397,6 +500,13 @@ public class FormRoleMenuVM {
     }
     public void setAllRoles(List<Crole> allRoles) {
         this.allRoles = allRoles;
+    }
+
+    public List<Cmenu> getSelectedMenus() {
+        return selectedMenus;
+    }
+    public void setSelectedMenus(List<Cmenu> selectedMenus) {
+        this.selectedMenus = selectedMenus;
     }
 
     public CroleService getCroleService() {

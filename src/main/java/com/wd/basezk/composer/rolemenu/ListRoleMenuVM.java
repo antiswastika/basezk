@@ -1,7 +1,9 @@
 package com.wd.basezk.composer.rolemenu;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,7 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 
 import com.wd.basezk.model.Crole;
+import com.wd.basezk.model.CroleMenu;
 import com.wd.basezk.service.CroleService;
 
 /**
@@ -242,17 +245,17 @@ public class ListRoleMenuVM {
                 lc.setParent(li);
                 //----------------------//
                 lc = new Listcell();
-                /*Iterator iterator = objNya.getCuserRoles().iterator();
+                Iterator iterator = objNya.getCroleMenus().iterator();
                 List<String> listStrCrole = new ArrayList<String>();
                 while (iterator.hasNext()){
-                    CuserRole userRole = (CuserRole) iterator.next();
-                    listStrCrole.add(userRole.getCrole().getCroleRolename());
+                    CroleMenu roleMenu = (CroleMenu) iterator.next();
+                    listStrCrole.add(roleMenu.getCmenu().getCmenuLabel());
                 }
                 String strRoles = "";
                 for (int i=0; i<listStrCrole.size(); i++) {
                     strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
                 }
-                lc.setLabel(strRoles);*/
+                lc.setLabel(strRoles);
                 lc.setParent(li);
                 //----------------------//
                 lc = new Listcell(objNya.getCroleDesc());

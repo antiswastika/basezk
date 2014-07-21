@@ -195,6 +195,7 @@ public class FormUserRoleVM {
 
             syncDataAfterSaveOrUpdateOrDelete();
         }
+        dialogWindow.setPosition("nocenter");
     }
 
     @SuppressWarnings("rawtypes")
@@ -216,6 +217,7 @@ public class FormUserRoleVM {
             strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
         }
         setStrSelectedRoles(strRoles);
+        dialogWindow.setPosition("nocenter");
     }
 
 /*************************************************************************************

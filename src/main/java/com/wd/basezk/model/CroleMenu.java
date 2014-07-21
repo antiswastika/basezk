@@ -32,9 +32,6 @@ public class CroleMenu implements Serializable {
     @Column(name="crole_menu_deleteon")
     private Timestamp croleMenuDeleteon;
 
-    @Column(name="crole_menu_desc", length=100)
-    private String croleMenuDesc;
-
     @Column(name="crole_menu_inputby", length=15)
     private String croleMenuInputby;
 

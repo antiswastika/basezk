@@ -7,8 +7,8 @@
     String ModuleName = " Role Menu ";
 </zscript>
 
-<window id="dialogWindow" title="@bind(empty vm.selected.croleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
-    height="380px" width="550px" mode="modal" border="normal" closable="false" position="center,center"
+<window id="dialogWindow" title="@bind(empty vm.selected.croleMenus ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
+    height="355px" width="550px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.rolemenu.FormRoleMenuVM')">
@@ -24,7 +24,9 @@
                     <label sclass="baseFormFieldLabel" value="Role" />
                 </vbox>
                 <vbox align="start">
-                    <combobox id="cmbRoles" value="@bind(frm.croleRolename)" model="@bind(vm.allRoles)" readonly="true" autodrop="true">
+                    <combobox id="cmbRoles" selectedItem="@bind(vm.selected)" model="@bind(vm.allRoles)"
+                         onChange="@command('onChangeRole', eventNya=event, data=self.selectedItem)"
+                        readonly="true" autodrop="true">
                     <template name="model">
                         <comboitem label="@bind(each.croleRolename)" />
                     </template>
@@ -36,7 +38,7 @@
                     <label sclass="baseFormFieldLabel" value="Menu" />
                 </vbox>
                 <vbox>
-                    <tree id="treeNya" width="395px" height="195px" selectedItems="@save(frm.croleMenus)"
+                    <tree id="treeNya" width="395px" height="195px" selectedItems="@save(vm.selectedMenus)"
                         vflex="true" style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
                     </tree>
                 </vbox>
@@ -52,14 +54,6 @@
                     </hbox>
                 </vbox>
             </hbox>
-            <hbox width="100%">
-                <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="Note" />
-                </vbox>
-                <vbox align="start">
-                    <textbox style="width: 395px" value="@bind(frm.croleDesc)" maxlength="@bind(vm.txtMaxLength['croleDesc'])"/>
-                </vbox>
-            </hbox>
 
         </vlayout>
 
@@ -67,8 +61,8 @@
             <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
         </div>
         <div style="float: right; padding-right: 10px">
-            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.croleId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
-            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.croleId ? true : false)" />
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.croleMenus ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.croleMenus ? true : false)" />
             <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
         </div>
 
