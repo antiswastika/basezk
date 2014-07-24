@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.zkoss.bind.BindUtils;
@@ -23,15 +24,24 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
+import org.zkoss.zul.DefaultTreeModel;
+import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Tree;
+import org.zkoss.zul.Treecell;
+import org.zkoss.zul.Treeitem;
+import org.zkoss.zul.TreeitemRenderer;
+import org.zkoss.zul.Treerow;
 
+import com.wd.basezk.model.Cmenu;
 import com.wd.basezk.model.Crole;
 import com.wd.basezk.model.CroleMenu;
+import com.wd.basezk.service.CmenuService;
 import com.wd.basezk.service.CroleMenuService;
 import com.wd.basezk.service.CroleService;
 
@@ -62,6 +72,8 @@ public class ListRoleMenuVM {
     private CroleService croleService;
     @WireVariable
     private CroleMenuService croleMenuService;
+    @WireVariable
+    private CmenuService cmenuService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private List<Crole> allRoles;
@@ -205,6 +217,83 @@ public class ListRoleMenuVM {
         doRefresh();
     }
 
+    @SuppressWarnings("rawtypes")
+    private DefaultTreeNode<Cmenu> generateTreeModel(Set<CroleMenu> croleMenus) {
+        List<DefaultTreeNode<Cmenu>> inner1 = new ArrayList<DefaultTreeNode<Cmenu>>();
+
+        List<Cmenu> allMenus = new ArrayList<Cmenu>();
+        allMenus = createMenuRoot();
+
+        for (int i=0; i<allMenus.size(); i++) {
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allMenus.get(i), inner2, croleMenus);
+
+            Iterator iterator = croleMenus.iterator();
+            while (iterator.hasNext()){
+                CroleMenu roleMenuNya = (CroleMenu) iterator.next();
+                Cmenu menuNya2 = roleMenuNya.getCmenu();
+
+                if (menuNya2.getCmenuId().equals(allMenus.get(i).getCmenuId())) {
+                    if (inner2.size() == 0) {
+                        inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i)));
+                    } else {
+                        inner1.add(new DefaultTreeNode<Cmenu>(allMenus.get(i), inner2));
+                    }
+                }
+            }
+
+        }
+
+        return new DefaultTreeNode<Cmenu>(null, inner1);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void generateSubTreeModel(Cmenu parent, List<DefaultTreeNode<Cmenu>> innerList, Set<CroleMenu> croleMenus) {
+        List<Cmenu> allSubMenus = new ArrayList<Cmenu>();
+        allSubMenus = createMenuChildByParentId(parent);
+
+        for (int i=0; i<allSubMenus.size(); i++) {
+            List<DefaultTreeNode<Cmenu>> inner2 = new ArrayList<DefaultTreeNode<Cmenu>>();
+            generateSubTreeModel(allSubMenus.get(i), inner2, croleMenus);
+
+            Iterator iterator = croleMenus.iterator();
+            while (iterator.hasNext()){
+                CroleMenu roleMenuNya = (CroleMenu) iterator.next();
+                Cmenu menuNya2 = roleMenuNya.getCmenu();
+
+                if (menuNya2.getCmenuId().equals(allSubMenus.get(i).getCmenuId())) {
+                    if (inner2.size() == 0) {
+                        innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i)));
+                    } else {
+                        innerList.add(new DefaultTreeNode<Cmenu>(allSubMenus.get(i), inner2));
+                    }
+                }
+            }
+
+        }
+    }
+
+    private List<Cmenu> createMenuRoot() {
+        List<Cmenu> retVal = new ArrayList<Cmenu>();
+
+        String[] whereArgs = { "AND (cmenu_parent_id IS NULL OR cmenu_parent_id = '') " };
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("null", "null");
+        retVal = getCmenuService().getByRequest(requestMap, false, whereArgs);
+
+        return retVal;
+    }
+
+    private List<Cmenu> createMenuChildByParentId(Cmenu parentMenu) {
+        List<Cmenu> retVal = new ArrayList<Cmenu>();
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("cmenu_parent_id", parentMenu.getCmenuId());
+        retVal = getCmenuService().getByRequest(requestMap, false, null);
+
+        return retVal;
+    }
+
 /*************************************************************************************
  * Validator
  **************************************************************************************/
@@ -217,6 +306,23 @@ public class ListRoleMenuVM {
     private void initComponent() {
         listboxNya.getPagingChild().setAutohide(false);
         setAllCrolesItemRenderer(rendering_listbox_allRoles());
+    }
+
+    @SuppressWarnings("rawtypes")
+    private TreeitemRenderer rendering_tree_allMenus(final Tree treeNya) {
+        return new TreeitemRenderer() {
+
+            public void render(final Treeitem ti, Object data, int index) throws Exception {
+                final DefaultTreeNode tn = (DefaultTreeNode) data;
+                final Cmenu menuNya = (Cmenu) tn.getData();
+
+                Treerow tr = new Treerow();
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
+                ti.appendChild(tr);
+                //----------------------//
+                ti.setOpen(true);
+            }
+        };
     }
 
     @SuppressWarnings("rawtypes")
@@ -248,17 +354,17 @@ public class ListRoleMenuVM {
                 lc.setParent(li);
                 //----------------------//
                 lc = new Listcell();
-                Iterator iterator = objNya.getCroleMenus().iterator();
-                List<String> listStrCrole = new ArrayList<String>();
-                while (iterator.hasNext()){
-                    CroleMenu roleMenu = (CroleMenu) iterator.next();
-                    listStrCrole.add(roleMenu.getCmenu().getCmenuLabel());
-                }
-                String strRoles = "";
-                for (int i=0; i<listStrCrole.size(); i++) {
-                    strRoles = listStrCrole.get(i) + (i > 0 ? ", " : "") + strRoles;
-                }
-                lc.setLabel(strRoles);
+
+                Tree treeNya = new Tree();
+                treeNya.setHeight("210px");
+                treeNya.setVflex(true);
+                treeNya.setStyle("background-color: #ffffff; border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;");
+
+                DefaultTreeModel<Cmenu> treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel(objNya.getCroleMenus()));
+                treeNya.setModel(treeModelNya);
+                treeNya.setItemRenderer(rendering_tree_allMenus(treeNya));
+
+                lc.appendChild(treeNya);
                 lc.setParent(li);
                 //----------------------//
                 lc = new Listcell(objNya.getCroleDesc());
@@ -326,6 +432,13 @@ public class ListRoleMenuVM {
     }
     public void setCroleMenuService(CroleMenuService croleMenuService) {
         this.croleMenuService = croleMenuService;
+    }
+
+    public CmenuService getCmenuService() {
+        return cmenuService;
+    }
+    public void setCmenuService(CmenuService cmenuService) {
+        this.cmenuService = cmenuService;
     }
 
     public void getDeletingData(final Map<String, Crole> objsToDel) {

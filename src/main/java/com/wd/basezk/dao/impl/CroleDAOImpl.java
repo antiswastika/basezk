@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,13 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.wd.basezk.dao.CroleDAO;
+import com.wd.basezk.dao.CroleMenuDAO;
 import com.wd.basezk.model.Crole;
+import com.wd.basezk.model.CroleMenu;
 
 @Repository("croleDAO")
 public class CroleDAOImpl implements CroleDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private CroleMenuDAO croleMenuDAO;
 
     public Boolean insertData(Crole objNya) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -69,12 +74,21 @@ public class CroleDAOImpl implements CroleDAO {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public Boolean deleteData(String idNya) {
         Crole objNya = getById(idNya);
 
         try {
             //Cek apakah data BOLEH di-delete
             if (objNya.getCroleDeleteable() == true) {
+                //Delete dulu record-record "OneToMany"
+                //===========================================================\
+                Iterator iterator = objNya.getCroleMenus().iterator();
+                while (iterator.hasNext()){
+                    CroleMenu objToDel = (CroleMenu) iterator.next();
+                    croleMenuDAO.deleteData(objToDel.getCroleMenuId());
+                }
+                objNya.getCroleMenus().clear();
 
                 //Untuk Delete Hanya Status, uncomment statement dibawah ini.
                 //===========================================================

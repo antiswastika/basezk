@@ -147,9 +147,6 @@ public class FormRoleMenuVM {
                 break;
             }
         }
-
-        Set selectedMenusSet = new HashSet(selectedMenus);
-        selected.setCroleMenus(selectedMenusSet);
     }
 
 /*************************************************************************************
@@ -173,6 +170,9 @@ public class FormRoleMenuVM {
 
             getCroleMenuService().insertData(selected, selectedMenus2);
             getwObjList().doRefresh();
+
+            Set selectedMenusSet = new HashSet(selectedMenus);
+            selected.setCroleMenus(selectedMenusSet);
         }
         dialogWindow.setPosition("nocenter");
     }
@@ -243,9 +243,6 @@ public class FormRoleMenuVM {
         if (roleNya.getCroleMenus().size()>0) {
             selectedOnlyTreeNodeChilds(dataNya, dtm, rootNya);
         }
-
-        Set selectedMenusSet = new HashSet(selectedMenus);
-        selected.setCroleMenus(selectedMenusSet);
 
         treeNya.invalidate();
         dialogWindow.setPosition("nocenter");

@@ -33,7 +33,7 @@
             id="listboxNya" mold="paging" pagingPosition="bottom" checkmark="true" itemRenderer="@bind(vm.allCrolesItemRenderer)"
             vflex="true" multiple="true" model="@bind(vm.allRoles)" onSelect="onDataSelected()"
             style="border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;">
-            <frozen columns="4" />
+            <frozen columns="5" />
             <listhead sizable="true">
                 <listheader width="30px" align="center" />
                 <listheader width="40px" align="center" />
