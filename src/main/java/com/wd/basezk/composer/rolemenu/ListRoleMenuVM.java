@@ -361,7 +361,7 @@ public class ListRoleMenuVM {
                 treeNya.setStyle("background-color: #ffffff; border-top-width: 1px; border-left-width: 1px; border-right-width: 1px; border-bottom-width: 1px;");
 
                 DefaultTreeModel<Cmenu> treeModelNya = new DefaultTreeModel<Cmenu>(generateTreeModel(objNya.getCroleMenus()));
-                treeNya.setModel( treeModelNya );
+                treeNya.setModel(treeModelNya);
                 treeNya.setItemRenderer(rendering_tree_allMenus(treeNya));
 
                 lc.appendChild(treeNya);
