@@ -65,7 +65,7 @@ import com.wd.basezk.service.CroleService;
 /*Anotasi supaya semua Spring-Bean bisa dideteksi oleh ZK*/
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 
-public class FormRoleMenuVM {
+public class CopyOfFormRoleMenuVM {
     // Default Variables untuk VM-Component
     @Wire("#dialogWindow")
     private Window dialogWindow;
@@ -147,15 +147,12 @@ public class FormRoleMenuVM {
                 break;
             }
         }
-
-        Set selectedMenusSet = new HashSet(selectedMenus);
-        selected.setCroleMenus(selectedMenusSet);
     }
 
 /*************************************************************************************
  * Do's (Berisi kumpulan Command yang dipanggil dari ZUL, diawali dengan kata "do")
  **************************************************************************************/
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings("rawtypes")
     @Command
     @NotifyChange("selected")
     public void doSave() throws InterruptedException {
@@ -163,8 +160,7 @@ public class FormRoleMenuVM {
             manualValidateForm();
             Set<Cmenu> selectedMenus2 = new HashSet<Cmenu>();
 
-            DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
-            Iterator iterator = dtm.getSelection().iterator();
+            Iterator iterator = selectedMenus.iterator();
             while (iterator.hasNext()){
                 TreeNode tn = (TreeNode) iterator.next();
                 Cmenu cmenuNya = (Cmenu) tn.getData();
@@ -243,10 +239,6 @@ public class FormRoleMenuVM {
         if (roleNya.getCroleMenus().size()>0) {
             selectedOnlyTreeNodeChilds(dataNya, dtm, rootNya);
         }
-
-        Set selectedMenusSet = new HashSet(selectedMenus);
-        selected.setCroleMenus(selectedMenusSet);
-
         treeNya.invalidate();
         dialogWindow.setPosition("nocenter");
     }
@@ -373,9 +365,11 @@ public class FormRoleMenuVM {
                     if (menuNya2.getCmenuId().equals(cmenuNya.getCmenuId())) {
                         dtm.addToSelection(childNya);
                         selectedMenus.add(menuNya2);
+                        System.out.println( menuNya2.getCmenuLabel() + " == " + cmenuNya.getCmenuLabel() );
                         break;
                     }
                 }
+
 
                 selectedOnlyTreeNodeChilds(dataNya, dtm, childNya);
             }
@@ -400,9 +394,11 @@ public class FormRoleMenuVM {
                     if (menuNya2.getCmenuId().equals(cmenuNya.getCmenuId())) {
                         dtm.addToSelection(childNya);
                         selectedMenus.add(menuNya2);
+                        System.out.println( menuNya2.getCmenuLabel() + " == " + cmenuNya.getCmenuLabel() );
                         break;
                     }
                 }
+
 
                 selectedOnlyTreeNodeChilds(dataNya, dtm, childNya);
             }

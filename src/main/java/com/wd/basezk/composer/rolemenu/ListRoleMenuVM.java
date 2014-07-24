@@ -32,6 +32,7 @@ import org.zkoss.zul.Messagebox;
 
 import com.wd.basezk.model.Crole;
 import com.wd.basezk.model.CroleMenu;
+import com.wd.basezk.service.CroleMenuService;
 import com.wd.basezk.service.CroleService;
 
 /**
@@ -59,6 +60,8 @@ public class ListRoleMenuVM {
     // Untuk Wire Service Variables (butuh: Setter Getter)
     @WireVariable
     private CroleService croleService;
+    @WireVariable
+    private CroleMenuService croleMenuService;
 
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private List<Crole> allRoles;
@@ -194,7 +197,7 @@ public class ListRoleMenuVM {
         for (Map.Entry<String, Crole> mapNya : objsToDel.entrySet()) {
             try {
                 Crole v = mapNya.getValue();
-                getCroleService().deleteData(v.getCroleId());
+                getCroleMenuService().deleteData(v.getCroleId());
             } catch (Exception e) {
                 //
             }
@@ -316,6 +319,13 @@ public class ListRoleMenuVM {
     }
     public void setCroleService(CroleService croleService) {
         this.croleService = croleService;
+    }
+
+    public CroleMenuService getCroleMenuService() {
+        return croleMenuService;
+    }
+    public void setCroleMenuService(CroleMenuService croleMenuService) {
+        this.croleMenuService = croleMenuService;
     }
 
     public void getDeletingData(final Map<String, Crole> objsToDel) {

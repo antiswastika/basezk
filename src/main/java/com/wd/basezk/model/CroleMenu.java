@@ -89,14 +89,6 @@ public class CroleMenu implements Serializable {
         this.croleMenuDeleteon = croleMenuDeleteon;
     }
 
-    public String getCroleMenuDesc() {
-        return this.croleMenuDesc;
-    }
-
-    public void setCroleMenuDesc(String croleMenuDesc) {
-        this.croleMenuDesc = croleMenuDesc;
-    }
-
     public String getCroleMenuInputby() {
         return this.croleMenuInputby;
     }
