@@ -447,14 +447,23 @@ public class FormRoleMenuVM {
     private TreeitemRenderer rendering_tree_allMenus() {
         return new TreeitemRenderer() {
 
+            @SuppressWarnings("unchecked")
             public void render(final Treeitem ti, Object data, int index) throws Exception {
-                DefaultTreeNode tn = (DefaultTreeNode) data;
+                final DefaultTreeNode tn = (DefaultTreeNode) data;
                 final Cmenu menuNya = (Cmenu) tn.getData();
+                final DefaultTreeModel<Cmenu> dtm = (DefaultTreeModel) treeNya.getModel();
 
                 Treerow tr = new Treerow();
+                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
                 ti.appendChild(tr);
                 //----------------------//
-                tr.appendChild(new Treecell(String.valueOf(menuNya.getCmenuLabel())));
+
+                ti.addEventListener("onClick", new EventListener() {
+                    @Override
+                    public void onEvent(Event event) throws Exception {
+                        selectAlsoTreeNodeChilds(dtm, tn, ti.isSelected());
+                    }
+                });
 
                 ti.setOpen(true);
             }
