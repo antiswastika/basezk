@@ -1,0 +1,102 @@
+<zk xmlns="http://www.zkoss.org/2005/zul"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+
+<zscript>
+    String ModuleName = " Module ";
+</zscript>
+
+<window id="dialogWindow" title="@bind(empty vm.selected.cmoduleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
+    height="330px" width="500px" mode="modal" border="normal" closable="false" position="center,center"
+    onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
+    apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init('com.wd.basezk.composer.module.FormModuleVM')">
+
+<panel height="100%" sclass="baseLayoutPanel"
+    form="@id('frm') @load(vm.selected) @save(vm.selected, before='doSave')">
+    <panelchildren>
+
+        <vlayout style="padding: 10px;">
+
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Package" />
+                </vbox>
+                <vbox align="start">
+                    <textbox id="fileNya" readonly="true" style="width: 200px" value="" onUpload="processMedia(event.getMedias());"/>
+                    <zscript deferred="true"><![CDATA[
+                      import org.zkoss.util.media.Media;
+
+                      public void processMedia(Media[] media) {
+                          if (media != null) {
+                              for (int i = 0; i < media.length; i++) {
+                                  if (media[i] instanceof org.zkoss.image.Image) {
+                                      image.setContent(media[i]);
+                                  } else {
+                                      Messagebox.show("Not an image: " + media[i], "Error",
+                                              Messagebox.OK, Messagebox.ERROR);
+                                      break; //not to show too many errors
+                                  }
+                              }
+                          }
+                      }
+                  ]]></zscript>
+                </vbox>
+                <vbox align="start">
+                    <button id="btnUploadNya" label="Upload" onClick="Fileupload.get(-1);" />
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <separator width="100%" hflex="true"/>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Module Name" />
+                </vbox>
+                <vbox align="start">
+                    <textbox readonly="true" style="width: 340px" value="@bind(frm.cmoduleName) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cmoduleName'])"/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Classes" />
+                </vbox>
+                <vbox align="start">
+                    <textbox readonly="true" rows="3" style="width: 340px" value=""/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="User Interfaces" />
+                </vbox>
+                <vbox align="start">
+                    <textbox readonly="true" rows="3" style="width: 340px" value=""/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Note" />
+                </vbox>
+                <vbox align="start">
+                    <textbox readonly="true" rows="3" style="width: 340px" value="@bind(frm.cmoduleDesc)" maxlength="@bind(vm.txtMaxLength['cmoduleDesc'])"/>
+                </vbox>
+            </hbox>
+
+        </vlayout>
+
+        <div style="float: left; padding-left: 10px">
+            <button image="/assets/img/icon16x16/Reset.png" id="btnReset" label="${labels.toolbarF.Reset}" onClick="@command('doReload')" />
+        </div>
+        <div style="float: right; padding-right: 10px">
+            <button id="btnSave" image="/assets/img/icon16x16/Save.png" label="@bind(empty vm.selected.cmoduleId ? labels.toolbarF.Save : labels.toolbarF.Update)" type="submit" onClick="@command('doSave')" />
+            <button id="btnDelete" image="/assets/img/icon16x16/Delete.png" label="${labels.toolbarF.Delete}" onClick="@command('doDelete')" disabled="@bind(empty vm.selected.cmoduleId ? true : false)" />
+            <button id="btnClose" image="/assets/img/icon16x16/Exit.png" label="${labels.toolbarF.Close}" onClick="@command('doClose')" />
+        </div>
+
+    </panelchildren>
+</panel>
+
+</window>
+
+</zk>
