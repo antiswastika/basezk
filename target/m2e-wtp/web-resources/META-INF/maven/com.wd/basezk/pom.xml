@@ -7,7 +7,7 @@
     <properties>
         <zk.version>7.0.1</zk.version>
         <zkspring.version>3.1.1</zkspring.version>
-        <commons-io>20030203.000550</commons-io>
+        <commons-io>1.4</commons-io>
         <spring.version>4.0.3.RELEASE</spring.version>
         <spring-security.version>3.2.3.RELEASE</spring-security.version>
         <spring-security-ldap.version>3.0.3.RELEASE</spring-security-ldap.version>

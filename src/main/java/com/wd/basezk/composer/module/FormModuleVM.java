@@ -18,11 +18,13 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.ExecutionArgParam;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.bind.validator.AbstractValidator;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -52,7 +54,8 @@ public class FormModuleVM {
     private Window dialogWindow;
 
     // Default Variables untuk VM-Model
-    //--------------------------> [TidakAda]
+    private static final int FILE_SIZE = 10000;// 100k
+    private static final String SAVE_PATH = "\\home\\arif\\Downloads\\";
 
     // Untuk WireComponentSelector
     private Component wComSel;
@@ -65,6 +68,7 @@ public class FormModuleVM {
     // Untuk Inisiate Variable yang digunakan di ZUL (butuh: Setter Getter)
     private Cmodule selected = new Cmodule();
     private Map<String, Integer> txtMaxLength;
+    private Media fileUploadNya;
 
     // Untuk Wiring Renderer (butuh: Setter Getter)
     //--------------------------> [TidakAda]
@@ -151,6 +155,36 @@ public class FormModuleVM {
         dialogWindow.onClose();
     }
 
+    @NotifyChange({"selected","fileUploadNya"})
+    @Command
+    public void doUploadFile(@BindingParam("eventNya") UploadEvent eventNya) {
+        selected.setCmoduleName("");
+        selected.setCmoduleDesc("");
+        selected.setCmoduleListClass("");
+        selected.setCmoduleListUi("");
+
+        fileUploadNya = eventNya.getMedia();
+
+        try {
+
+            if(fileUploadNya == null){
+                // ----------------------------------------------------------
+                // Show a confirm box
+                // ----------------------------------------------------------
+                //TODO: Labeling!
+                Messagebox.show("XXXXXXXXXXXX", "Warning", Messagebox.OK, Messagebox.EXCLAMATION);
+                return;
+                // ----------------------------------------------------------
+            }
+
+            String type = fileUploadNya.getContentType().split("/")[0];
+            System.out.println( "type = " + type );
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
 /*************************************************************************************
  * Event dan Listener (Diawali dengan "on" / Fungsinya sama dengan Do's, yaitu Command)
  **************************************************************************************/
@@ -222,6 +256,13 @@ public class FormModuleVM {
     }
     public void setTxtMaxLength(Map<String, Integer> txtMaxLength) {
         this.txtMaxLength = txtMaxLength;
+    }
+
+    public Media getFileUploadNya() {
+        return fileUploadNya;
+    }
+    public void setFileUploadNya(Media fileUploadNya) {
+        this.fileUploadNya = fileUploadNya;
     }
 
     public CmoduleService getCmoduleService() {

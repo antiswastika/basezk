@@ -24,27 +24,10 @@
                     <label sclass="baseFormFieldLabel" value="Package" />
                 </vbox>
                 <vbox align="start">
-                    <textbox id="fileNya" readonly="true" style="width: 200px" value="" onUpload="processMedia(event.getMedias());"/>
-                    <zscript deferred="true"><![CDATA[
-                      import org.zkoss.util.media.Media;
-
-                      public void processMedia(Media[] media) {
-                          if (media != null) {
-                              for (int i = 0; i < media.length; i++) {
-                                  if (media[i] instanceof org.zkoss.image.Image) {
-                                      image.setContent(media[i]);
-                                  } else {
-                                      Messagebox.show("Not an image: " + media[i], "Error",
-                                              Messagebox.OK, Messagebox.ERROR);
-                                      break; //not to show too many errors
-                                  }
-                              }
-                          }
-                      }
-                  ]]></zscript>
+                    <textbox id="fileNya" readonly="true" style="width: 200px" value="@bind(vm.fileUploadNya.name)"/>
                 </vbox>
                 <vbox align="start">
-                    <button id="btnUploadNya" label="Upload" onClick="Fileupload.get(-1);" />
+                    <button id="btnUploadNya" upload="true" label="Upload" onUpload="@command('doUploadFile', eventNya=event)" />
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -55,7 +38,7 @@
                     <label sclass="baseFormFieldLabel" value="Module Name" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" style="width: 340px" value="@bind(frm.cmoduleName) @validator(vm.validateTextboxNotNull, text=self.rawText, component=self)" maxlength="@bind(vm.txtMaxLength['cmoduleName'])"/>
+                    <textbox readonly="true" style="width: 340px" value="@bind(frm.cmoduleName)" maxlength="@bind(vm.txtMaxLength['cmoduleName'])"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -63,7 +46,7 @@
                     <label sclass="baseFormFieldLabel" value="Classes" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" rows="3" style="width: 340px" value=""/>
+                    <textbox readonly="true" rows="4" style="width: 340px" value=""/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -71,7 +54,7 @@
                     <label sclass="baseFormFieldLabel" value="User Interfaces" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" rows="3" style="width: 340px" value=""/>
+                    <textbox readonly="true" rows="4" style="width: 340px" value=""/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -79,7 +62,7 @@
                     <label sclass="baseFormFieldLabel" value="Note" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" rows="3" style="width: 340px" value="@bind(frm.cmoduleDesc)" maxlength="@bind(vm.txtMaxLength['cmoduleDesc'])"/>
+                    <textbox readonly="false" style="width: 340px" value="@bind(frm.cmoduleDesc)" maxlength="@bind(vm.txtMaxLength['cmoduleDesc'])"/>
                 </vbox>
             </hbox>
 
