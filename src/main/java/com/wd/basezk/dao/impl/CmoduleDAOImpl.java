@@ -3,7 +3,6 @@ package com.wd.basezk.dao.impl;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,11 +25,6 @@ public class CmoduleDAOImpl implements CmoduleDAO {
         Date d1 = new Date();
         String formattedDate = df.format(d1);
         final Timestamp nowTs = Timestamp.valueOf(formattedDate);
-
-        if (objNya.getCmoduleId() == null || objNya.getCmoduleId().equals(null)) {
-            //Set default new ID
-            objNya.setCmoduleId( createPrimaryKey() );
-        }
 
         //Set defaut Deleteable
         objNya.setCmoduleDeleteable(true);
@@ -153,68 +147,6 @@ public class CmoduleDAOImpl implements CmoduleDAO {
 
         result = query.list();
         return result;
-    }
-
-    private int getMaxPKByRequest(Map<String, String> requestMap, int manyDigit) {
-        String finalQuery = "";
-        int result = 1; // init
-        String queryFrom = "SELECT MAX( CAST(SUBSTRING(cmodule_id, LENGTH(cmodule_id) - " + (manyDigit-1) + ", " + manyDigit + " ), int) ) FROM Cmodule ";
-        String queryWhere = " WHERE ";
-
-        Object params[] = new Object[requestMap.size()];
-        int a = 0;
-
-        for (Map.Entry<String, String> entry : requestMap.entrySet()) {
-            String q = entry.getKey();
-            String v = entry.getValue();
-
-            if (q=="section1") {
-                queryWhere = queryWhere + " SUBSTRING(cmodule_id, LENGTH(cmodule_id) - 16, 13) = ? AND ";
-                params[a] = v;
-            }
-
-            a++;
-        }
-        queryWhere = queryWhere + " 1=1 ";
-
-        finalQuery = queryFrom + queryWhere;
-        Query query = sessionFactory.getCurrentSession().createQuery(finalQuery);
-        if (params.length > 0) {
-            for (int i = 0; i < params.length; i++)
-                 query.setParameter( i, params[i] );
-        }
-
-        if ((query.list()).get(0) != null) {
-            result = (Integer) (query.list()).get(0);
-        }
-
-        return result;
-    }
-
-    private String createPrimaryKey() {
-        Date d1 = new Date();
-        SimpleDateFormat yf = new SimpleDateFormat("yyyy");
-        SimpleDateFormat mf = new SimpleDateFormat("MM");
-        SimpleDateFormat df = new SimpleDateFormat("dd");
-
-        final String section1 = "MOD" + yf.format(d1) + mf.format(d1) + df.format(d1);
-        final String strDigits = "0000";
-        int queryRet = 0;
-        String retVal = "0000";
-        String tempRetVal = "";
-
-        Map<String, String> requestMap = new HashMap<String, String>();
-        requestMap.put("section1", section1);
-        queryRet = getMaxPKByRequest(requestMap, strDigits.length());
-
-        if (queryRet > 0) {
-            tempRetVal = strDigits + Integer.toString(queryRet + 1);
-        } else {
-            tempRetVal = strDigits + "1";
-        }
-        retVal = section1 + (tempRetVal.substring(tempRetVal.length()-strDigits.length()));
-
-        return retVal;
     }
 
 }

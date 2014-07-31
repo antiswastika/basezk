@@ -8,7 +8,7 @@
 </zscript>
 
 <window id="dialogWindow" title="@bind(empty vm.selected.cmoduleId ? (labels.toolbarW.Insert).concat(ModuleName) : (labels.toolbarW.Edit).concat(ModuleName))"
-    height="330px" width="500px" mode="modal" border="normal" closable="false" position="center,center"
+    height="360px" width="550px" mode="modal" border="normal" closable="false" position="center,center"
     onCancel="self.detach(); event.stopPropagation();" onClose="@command('doClose', eventNya=event)"
     apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init('com.wd.basezk.composer.module.FormModuleVM')">
@@ -35,10 +35,18 @@
             </hbox>
             <hbox width="100%">
                 <vbox sclass="baseFormVBoxMultiCol1" align="end">
-                    <label sclass="baseFormFieldLabel" value="Module Name" />
+                    <label sclass="baseFormFieldLabel" value="Module" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" style="width: 340px" value="@bind(frm.cmoduleName)" maxlength="@bind(vm.txtMaxLength['cmoduleName'])"/>
+                    <textbox readonly="true" style="width: 390px" value="@bind(frm.cmoduleName)"/>
+                </vbox>
+            </hbox>
+            <hbox width="100%">
+                <vbox sclass="baseFormVBoxMultiCol1" align="end">
+                    <label sclass="baseFormFieldLabel" value="Sub Module" />
+                </vbox>
+                <vbox align="start">
+                    <textbox readonly="true" style="width: 390px" value="@bind(frm.cmoduleSubname)"/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -46,7 +54,7 @@
                     <label sclass="baseFormFieldLabel" value="Classes" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" rows="4" style="width: 340px" value=""/>
+                    <textbox readonly="true" rows="4" style="width: 390px" value=""/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -54,7 +62,7 @@
                     <label sclass="baseFormFieldLabel" value="User Interfaces" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="true" rows="4" style="width: 340px" value=""/>
+                    <textbox readonly="true" rows="4" style="width: 390px" value=""/>
                 </vbox>
             </hbox>
             <hbox width="100%">
@@ -62,7 +70,7 @@
                     <label sclass="baseFormFieldLabel" value="Note" />
                 </vbox>
                 <vbox align="start">
-                    <textbox readonly="false" style="width: 340px" value="@bind(frm.cmoduleDesc)" maxlength="@bind(vm.txtMaxLength['cmoduleDesc'])"/>
+                    <textbox readonly="false" style="width: 390px" value="@bind(frm.cmoduleDesc)" maxlength="@bind(vm.txtMaxLength['cmoduleDesc'])"/>
                 </vbox>
             </hbox>
 

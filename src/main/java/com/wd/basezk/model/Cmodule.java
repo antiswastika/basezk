@@ -50,6 +50,24 @@ public class Cmodule implements Serializable {
     @Column(name="cmodule_name", nullable=false, length=30)
     private String cmoduleName;
 
+    @Column(name="cmodule_subid", nullable=false, length=15)
+    private String cmoduleSubid;
+
+    @Column(name="cmodule_subid_req", nullable=false, length=15)
+    private String cmoduleSubidReq;
+
+    @Column(name="cmodule_subname", nullable=false, length=30)
+    private String cmoduleSubname;
+
+    @Column(name="cmodule_subreleaseon")
+    private Timestamp cmoduleSubreleaseon;
+
+    @Column(name="cmodule_subrevision", nullable=false, length=30)
+    private String cmoduleSubrevision;
+
+    @Column(name="cmodule_subversion", nullable=false, length=30)
+    private String cmoduleSubversion;
+
     @Column(name="cmodule_updateby", length=15)
     private String cmoduleUpdateby;
 
@@ -146,6 +164,54 @@ public class Cmodule implements Serializable {
         this.cmoduleName = cmoduleName;
     }
 
+    public String getCmoduleSubid() {
+        return this.cmoduleSubid;
+    }
+
+    public void setCmoduleSubid(String cmoduleSubid) {
+        this.cmoduleSubid = cmoduleSubid;
+    }
+
+    public String getCmoduleSubidReq() {
+        return this.cmoduleSubidReq;
+    }
+
+    public void setCmoduleSubidReq(String cmoduleSubidReq) {
+        this.cmoduleSubidReq = cmoduleSubidReq;
+    }
+
+    public String getCmoduleSubname() {
+        return this.cmoduleSubname;
+    }
+
+    public void setCmoduleSubname(String cmoduleSubname) {
+        this.cmoduleSubname = cmoduleSubname;
+    }
+
+    public Timestamp getCmoduleSubreleaseon() {
+        return this.cmoduleSubreleaseon;
+    }
+
+    public void setCmoduleSubreleaseon(Timestamp cmoduleSubreleaseon) {
+        this.cmoduleSubreleaseon = cmoduleSubreleaseon;
+    }
+
+    public String getCmoduleSubrevision() {
+        return this.cmoduleSubrevision;
+    }
+
+    public void setCmoduleSubrevision(String cmoduleSubrevision) {
+        this.cmoduleSubrevision = cmoduleSubrevision;
+    }
+
+    public String getCmoduleSubversion() {
+        return this.cmoduleSubversion;
+    }
+
+    public void setCmoduleSubversion(String cmoduleSubversion) {
+        this.cmoduleSubversion = cmoduleSubversion;
+    }
+
     public String getCmoduleUpdateby() {
         return this.cmoduleUpdateby;
     }
@@ -168,28 +234,6 @@ public class Cmodule implements Serializable {
 
     public void setCmoduleVersion(String cmoduleVersion) {
         this.cmoduleVersion = cmoduleVersion;
-    }
-
-    public Set<Cpriv> getCprivs() {
-        return this.cprivs;
-    }
-
-    public void setCprivs(Set<Cpriv> cprivs) {
-        this.cprivs = cprivs;
-    }
-
-    public Cpriv addCpriv(Cpriv cpriv) {
-        getCprivs().add(cpriv);
-        cpriv.setCmodule(this);
-
-        return cpriv;
-    }
-
-    public Cpriv removeCpriv(Cpriv cpriv) {
-        getCprivs().remove(cpriv);
-        cpriv.setCmodule(null);
-
-        return cpriv;
     }
 
 }
